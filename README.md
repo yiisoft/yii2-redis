@@ -1,70 +1,184 @@
-Yii PHP Framework Version 2
-===========================
+Redis Cache, Session and ActiveRecord for Yii 2
+===============================================
 
-Thank you for choosing Yii 2 - a modern PHP framework designed for professional Web development.
+This extension provides the [redis](http://redis.io/) key-value store support for the Yii2 framework.
+It includes a `Cache` and `Session` storage handler and implents the `ActiveRecord` pattern that allows
+you to store active records in redis.
 
-Yii 2 is a complete rewrite of its previous version Yii 1.1 which is one of the most popular PHP frameworks.
-Yii 2 inherits the main spirit behind Yii for being simple, fast and highly extensible.
-Yii 2 requires PHP 5.4 and embraces best practices and protocols found in modern Web application development.
+To use this extension, you have to configure the Connection class in your application configuration:
 
+```php
+return [
+	//....
+	'components' => [
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => 'localhost',
+            'port' => 6379,
+            'database' => 0,
+        ],
+	]
+];
+```
 
-**Yii 2 is not ready for production use yet.** We may make significant changes without prior notices.
-We expect to make the first stable release of Yii 2 in early 2014.
-
-If you mainly want to learn Yii with no real project development requirement, we highly recommend
-you start with Yii 2 as it will be our main focus for the next few years.
-
-If you have a real project with tight schedule, you should stick to [Yii 1.1](https://github.com/yiisoft/yii)
-which is the latest stable release of Yii.
-
-
-[![Latest Stable Version](https://poser.pugx.org/yiisoft/yii2/v/stable.png)](https://packagist.org/packages/yiisoft/yii2)
-[![Total Downloads](https://poser.pugx.org/yiisoft/yii2/downloads.png)](https://packagist.org/packages/yiisoft/yii2)
-[![Build Status](https://secure.travis-ci.org/yiisoft/yii2.png)](http://travis-ci.org/yiisoft/yii2)
-[![Dependency Status](https://www.versioneye.com/php/yiisoft:yii2/dev-master/badge.png)](https://www.versioneye.com/php/yiisoft:yii2/dev-master)
-
-
-DIRECTORY STRUCTURE
--------------------
-
-      apps/                ready-to-use application templates
-          advanced/        a template suitable for building sophisticated Web applications
-          basic/           a template suitable for building simple Web applications
-          benchmark/       an application demonstrating the performance of Yii
-      build/               internally used build tools
-      docs/                documentation
-      extensions/          extensions
-      framework/           core framework code
-      tests/               tests of the core framework code
-
-
-REQUIREMENTS
+Installation
 ------------
 
-The minimum requirement by Yii is that your Web server supports PHP 5.4.
+The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
+
+Either run
+
+```
+php composer.phar require --prefer-dist yiisoft/yii2-redis "*"
+```
+
+or add
+
+```json
+"yiisoft/yii2-redis": "*"
+```
+
+to the require section of your composer.json.
 
 
-DOCUMENTATION
--------------
+Using the Cache component
+-------------------------
 
-A draft of the [Definitive Guide](docs/guide/index.md) is available.
+To use the `Cache` component, in addtition to configuring the connection as described above,
+you also have to configure the `cache` component to be `yii\redis\Cache`:
 
-For 1.1 users, you may refer to [Upgrading from Yii 1.1](docs/guide/upgrade-from-v1.md)
-to have a general idea of what has changed in 2.0.
+```php
+return [
+	//....
+	'components' => [
+	    // ...
+        'cache' => [
+            'class' => 'yii\redis\Cache',
+        ],
+	]
+];
+```
+
+If you only use the redis cache, you can also configure the parameters of the connection within the
+cache component (no connection application component needs to be configured in this case):
+
+```php
+return [
+	//....
+	'components' => [
+	    // ...
+        'cache' => [
+            'class' => 'yii\redis\Cache',
+            'redis' => [
+                'hostname' => 'localhost',
+                'port' => 6379,
+                'database' => 0,
+            ],
+        ],
+	]
+];
+```
+
+Using the Session component
+---------------------------
+
+To use the `Session` component, in addtition to configuring the connection as described above,
+you also have to configure the `session` component to be `yii\redis\Session`:
+
+```php
+return [
+	//....
+	'components' => [
+	    // ...
+        'session' => [
+            'class' => 'yii\redis\Session',
+        ],
+	]
+];
+```
+
+If you only use the redis session, you can also configure the parameters of the connection within the
+cache component (no connection application component needs to be configured in this case):
+
+```php
+return [
+	//....
+	'components' => [
+	    // ...
+        'session' => [
+            'class' => 'yii\redis\Session',
+            'redis' => [
+                'hostname' => 'localhost',
+                'port' => 6379,
+                'database' => 0,
+            ],
+        ],
+	]
+];
+```
 
 
-HOW TO PARTICIPATE
-------------------
+Using the redis ActiveRecord
+----------------------------
 
-**Your participation to Yii 2 development is very welcome!**
+For general information on how to use yii's ActiveRecord please refer to the [guide](https://github.com/yiisoft/yii2/blob/master/docs/guide/active-record.md).
 
-You may participate in the following ways:
+For defining a redis ActiveRecord class your record class needs to extend from `yii\redis\ActiveRecord` and
+implement at least the `attributes()` method to define the attributes of the record.
+A primary key can be defined via [[primaryKey()]] which defaults to `id` if not specified.
+The primaryKey needs to be part of the attributes so make sure you have an `id` attribute defined if you do
+not specify your own primary key.
 
-* [Report issues](https://github.com/yiisoft/yii2/issues)
-* [Give us feedback or start a design discussion](http://www.yiiframework.com/forum/index.php/forum/42-design-discussions-for-yii-20/)
-* Fix issues, develop features, write/polish documentation
-    - Before you start, please adopt an existing issue (labelled with "ready for adoption") or start a new one to avoid duplicated efforts.
-    - Please submit a merge request after you finish development.
+The following is an example model called `Customer`:
 
-In order to make it easier we've prepared [special `yii2-dev` Composer package](https://github.com/yiisoft/yii2/blob/master/docs/internals/getting-started.md).
+```php
+class Customer extends \yii\redis\ActiveRecord
+{
+     /**
+      * @return array the list of attributes for this record
+      */
+     public function attributes()
+     {
+         return ['id', 'name', 'address', 'registration_date'];
+     }
 
+     /**
+      * @return ActiveRelation defines a relation to the Order record (can be in other database, e.g. elasticsearch or sql)
+      */
+     public function getOrders()
+     {
+         return $this->hasMany(Order::className(), ['customer_id' => 'id']);
+     }
+
+     /**
+      * Defines a scope that modifies the `$query` to return only active(status = 1) customers
+      */
+     public static function active($query)
+     {
+         $query->andWhere(array('status' => 1));
+     }
+}
+```
+
+The general usage of redis ActiveRecord is very similar to the database ActiveRecord as described in the
+[guide](https://github.com/yiisoft/yii2/blob/master/docs/guide/active-record.md).
+It supports the same interface and features except the following limitations:
+
+- As redis does not support SQL the query API is limited to the following methods:
+  `where()`, `limit()`, `offset()`, `orderBy()` and `indexBy()`.
+  (orderBy() is not yet implemented: [#1305](https://github.com/yiisoft/yii2/issues/1305))
+- `via`-relations can not be defined via a table as there are not tables in redis. You can only define relations via other records.
+
+It is also possible to define relations from redis ActiveRecords to normal ActiveRecord classes and vice versa.
+
+Usage example:
+
+```php
+$customer = new Customer();
+$customer->attributes = ['name' => 'test'];
+$customer->save();
+echo $customer->id; // id will automatically be incremented if not set explicitly
+
+$customer = Customer::find()->where(['name' => 'test'])->one(); // find by query
+$customer = Customer::find()->active()->all(); // find all by query (using the `active` scope)
+```

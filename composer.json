@@ -1,121 +1,26 @@
 {
-	"name": "yiisoft/yii2-dev",
-	"description": "Yii PHP Framework Version 2 - Development Package",
-	"keywords": ["yii", "framework"],
-	"homepage": "http://www.yiiframework.com/",
+	"name": "yiisoft/yii2-redis",
+	"description": "Redis Cache, Session and ActiveRecord for the Yii framework",
+	"keywords": ["yii", "redis", "active-record", "cache", "session"],
 	"type": "yii2-extension",
 	"license": "BSD-3-Clause",
-	"authors": [
-		{
-			"name": "Qiang Xue",
-			"email": "qiang.xue@gmail.com",
-			"homepage": "http://www.yiiframework.com/",
-			"role": "Founder and project lead"
-		},
-		{
-			"name": "Alexander Makarov",
-			"email": "sam@rmcreative.ru",
-			"homepage": "http://rmcreative.ru/",
-			"role": "Core framework development"
-		},
-		{
-			"name": "Maurizio Domba",
-			"homepage": "http://mdomba.info/",
-			"role": "Core framework development"
-		},
-		{
-			"name": "Carsten Brandt",
-			"email": "mail@cebe.cc",
-			"homepage": "http://cebe.cc/",
-			"role": "Core framework development"
-		},
-		{
-			"name": "Timur Ruziev",
-			"email": "resurtm@gmail.com",
-			"homepage": "http://resurtm.com/",
-			"role": "Core framework development"
-		},
-		{
-			"name": "Paul Klimov",
-			"email": "klimov.paul@gmail.com",
-			"role": "Core framework development"
-		}
-	],
 	"support": {
-		"issues": "https://github.com/yiisoft/yii2/issues?state=open",
+		"issues": "https://github.com/yiisoft/yii2/issues?labels=ext%3Aredis",
 		"forum": "http://www.yiiframework.com/forum/",
 		"wiki": "http://www.yiiframework.com/wiki/",
 		"irc": "irc://irc.freenode.net/yii",
 		"source": "https://github.com/yiisoft/yii2"
 	},
-	"minimum-stability": "dev",
-	"replace": {
-		"yiisoft/yii2-apidoc": "self.version",
-		"yiisoft/yii2-authclient": "self.version",
-		"yiisoft/yii2-bootstrap": "self.version",
-		"yiisoft/yii2-codeception": "self.version",
-		"yiisoft/yii2-debug": "self.version",
-		"yiisoft/yii2-elasticsearch": "self.version",
-		"yiisoft/yii2-faker": "self.version",
-		"yiisoft/yii2-imagine": "self.version",
-		"yiisoft/yii2-gii": "self.version",
-		"yiisoft/yii2-jui": "self.version",
-		"yiisoft/yii2-mongodb": "self.version",
-		"yiisoft/yii2-redis": "self.version",
-		"yiisoft/yii2-smarty": "self.version",
-		"yiisoft/yii2-swiftmailer": "self.version",
-		"yiisoft/yii2-sphinx": "self.version",
-		"yiisoft/yii2-twig": "self.version",
-		"yiisoft/yii2": "self.version"
-	},
+	"authors": [
+		{
+			"name": "Carsten Brandt",
+			"email": "mail@cebe.cc"
+		}
+	],
 	"require": {
-		"php": ">=5.4.0",
-		"ext-mbstring": "*",
-		"lib-pcre": "*",
-		"yiisoft/yii2-composer": "*",
-		"yiisoft/jquery": "1.10.*",
-		"phpspec/php-diff": ">=1.0.2",
-		"ezyang/htmlpurifier": "4.6.*",
-		"michelf/php-markdown": "1.3.*"
-	},
-	"require-dev": {
-		"phpunit/phpunit": "3.7.*",
-		"twig/twig": "*"
-	},
-	"suggest": {
-		"phpdocumentor/reflection": "required by yii2-apidoc extension",
-		"twbs/bootstrap": "required by yii2-bootstrap, yii2-debug, yii2-gii extension",
-		"ext-curl": "required by yii2-elasticsearch extension",
-		"ext-mongo": "required by yii2-mongo extension",
-		"ext-pdo": "required by yii2-sphinx extension",
-		"ext-pdo_mysql": "required by yii2-sphinx extension",
-		"fzaninotto/faker": "required by yii2-faker extension",
-		"imagine/imagine": "required by yii2-imagine extension",
-		"smarty/smarty": "required by yii2-smarty extension",
-		"swiftmailer/swiftmailer": "required by yii2-swiftmailer extension",
-		"twig/twig": "required by yii2-twig extension"
+		"yiisoft/yii2": "*"
 	},
 	"autoload": {
-		"psr-4": {
-			"yii\\faker\\": "extensions/faker/",
-			"yii\\twig\\": "extensions/twig/"
-		},
-		"psr-0": {
-			"yii\\apidoc\\": "extensions/",
-			"yii\\authclient\\": "extensions/",
-			"yii\\bootstrap\\": "extensions/",
-			"yii\\codeception\\": "extensions/",
-			"yii\\debug\\": "extensions/",
-			"yii\\elasticsearch\\": "extensions/",
-			"yii\\gii\\": "extensions/",
-			"yii\\imagine\\" : "extensions/",
-			"yii\\jui\\": "extensions/",
-			"yii\\mongodb\\": "extensions/",
-			"yii\\redis\\": "extensions/",
-			"yii\\smarty\\": "extensions/",
-			"yii\\swiftmailer\\": "extensions/",
-			"yii\\sphinx\\": "extensions/",
-			"yii\\": "framework/"
-		}
+		"psr-4": { "yii\\redis\\": "" }
 	}
 }
