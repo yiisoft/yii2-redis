@@ -2,6 +2,7 @@ yii2-redis module with various fixes
 ====================================
 
 * [getting long string failure](https://github.com/E96/yii2-redis/commit/fdaf09f4d191c7bf29d5e75432385611b90759af)
+* [min and max number comparison](https://github.com/E96/yii2-redis/commit/c1e0f6e1c03007a1133ce7916a4683a242e3515f)
 
 original README below:
 
