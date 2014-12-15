@@ -118,7 +118,7 @@ class LuaScriptBuilder extends \yii\base\Object
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
-        return $this->build($query, "n=redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ") if v==nil or n<v then v=n end", 'v');
+        return $this->build($query, "n=tonumber(redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ")) if v==nil or n<v then v=n end", 'v');
     }
 
     /**
@@ -133,7 +133,7 @@ class LuaScriptBuilder extends \yii\base\Object
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
-        return $this->build($query, "n=redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ") if v==nil or n>v then v=n end", 'v');
+        return $this->build($query, "n=tonumber(redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ")) if v==nil or n>v then v=n end", 'v');
     }
 
     /**
