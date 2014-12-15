@@ -3,6 +3,8 @@ yii2-redis module with various fixes
 
 * [getting long string failire](https://github.com/E96/yii2-redis/commit/fdaf09f4d191c7bf29d5e75432385611b90759af)
 
+original README below:
+
 
 Redis Cache, Session and ActiveRecord for Yii 2
 ===============================================
