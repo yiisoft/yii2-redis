@@ -369,7 +369,7 @@ class Connection extends Component
             $command .= '$' . mb_strlen($arg, '8bit') . "\r\n" . $arg . "\r\n";
         }
 
-        \Yii::trace("Executing Redis Command: {$name}", __METHOD__);
+        \Yii::trace("Executing Redis Command: {$name} " . var_export($params, true), __METHOD__);
         fwrite($this->_socket, $command);
 
         return $this->parseResponse(implode(' ', $params));
