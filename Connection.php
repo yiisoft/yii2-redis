@@ -272,7 +272,9 @@ class Connection extends Component
             if ($this->password !== null) {
                 $this->executeCommand('AUTH', [$this->password]);
             }
-            $this->executeCommand('SELECT', [$this->database]);
+            if ($this->database != 0){
+                $this->executeCommand('SELECT', [$this->database]);
+            }
             $this->initConnection();
         } else {
             \Yii::error("Failed to open redis DB connection ($connection): $errorNumber - $errorDescription", __CLASS__);
