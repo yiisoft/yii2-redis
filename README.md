@@ -5,6 +5,7 @@ yii2-redis module with various fixes
 * [min and max number comparison](https://github.com/E96/yii2-redis/commit/c1e0f6e1c03007a1133ce7916a4683a242e3515f)
 * [a bit more info in traces](https://github.com/E96/yii2-redis/commit/fe8df386a0dadbbc192f1be48c2e4dd899c12b98)
 * [profiles in debugger DB panel](https://github.com/E96/yii2-redis/commit/05d8d208b25d57b41cb78e04689ccca5be33b473)
+* [convert inCondition for one key](https://github.com/E96/yii2-redis/commit/36d6a145acf109d86eb2aa7918f64bc91c935ebb)
 
 original README below:
 
