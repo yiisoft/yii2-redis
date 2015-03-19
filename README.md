@@ -6,6 +6,7 @@ yii2-redis module with various fixes
 * [a bit more info in traces](https://github.com/E96/yii2-redis/commit/fe8df386a0dadbbc192f1be48c2e4dd899c12b98)
 * [profiles in debugger DB panel](https://github.com/E96/yii2-redis/commit/05d8d208b25d57b41cb78e04689ccca5be33b473)
 * [convert inCondition for one key](https://github.com/E96/yii2-redis/commit/36d6a145acf109d86eb2aa7918f64bc91c935ebb)
+* [correct detection modified values](https://github.com/E96/yii2-redis/commit/e4040f0f5c91e291b4b014661d3e85731426f647)
 
 original README below:
 
