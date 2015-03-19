@@ -350,7 +350,17 @@ class ActiveRecord extends BaseActiveRecord
             }
         } else {
             foreach ($this->attributes as $name => $value) {
-                if (isset($names[$name]) && (!array_key_exists($name, $this->oldAttributes) || (string)$value !== (string)$this->oldAttributes[$name])) {
+                if (is_bool($newValue = $value)) {
+                    $newValue = (int)$value;
+                }
+                if (isset($this->oldAttributes[$name])) {
+                    if (is_bool($oldValue = $this->oldAttributes[$name])) {
+                        $oldValue = (int)$oldValue;
+                    }
+                } else {
+                    $oldValue = null;
+                }
+                if (isset($names[$name]) && (!array_key_exists($name, $this->oldAttributes) || (string)$newValue !== (string)$oldValue)) {
                     $attributes[$name] = $value;
                 }
             }
@@ -366,7 +376,13 @@ class ActiveRecord extends BaseActiveRecord
     public function isAttributeChanged($name)
     {
         if (isset($this->attributes[$name], $this->oldAttributes[$name])) {
-            return (string)$this->attributes[$name] !== (string)$this->oldAttributes[$name];
+            if (is_bool($newValue = $this->attributes[$name])) {
+                $newValue = (int)$this->attributes[$name];
+            }
+            if (is_bool($oldValue = $this->oldAttributes[$name])) {
+                $oldValue = (int)$this->oldAttributes[$name];
+            }
+            return (string)$newValue !== (string)$oldValue;
         } else {
             return isset($this->attributes[$name]) || isset($this->oldAttributes[$name]);
         }
