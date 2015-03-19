@@ -328,4 +328,47 @@ class ActiveRecord extends BaseActiveRecord
 
         return md5(json_encode($key));
     }
+
+    /**
+     * Returns the attribute values that have been modified since they are loaded or saved most recently.
+     * @param string[]|null $names the names of the attributes whose values may be returned if they are
+     * changed recently. If null, [[attributes()]] will be used.
+     * @return array the changed attribute values (name-value pairs)
+     */
+    public function getDirtyAttributes($names = null)
+    {
+        if ($names === null) {
+            $names = $this->attributes();
+        }
+        $names = array_flip($names);
+        $attributes = [];
+        if ($this->oldAttributes === null) {
+            foreach ($this->attributes as $name => $value) {
+                if (isset($names[$name])) {
+                    $attributes[$name] = $value;
+                }
+            }
+        } else {
+            foreach ($this->attributes as $name => $value) {
+                if (isset($names[$name]) && (!array_key_exists($name, $this->oldAttributes) || (string)$value !== (string)$this->oldAttributes[$name])) {
+                    $attributes[$name] = $value;
+                }
+            }
+        }
+        return $attributes;
+    }
+
+    /**
+     * Returns a value indicating whether the named attribute has been changed.
+     * @param string $name the name of the attribute
+     * @return boolean whether the attribute has been changed
+     */
+    public function isAttributeChanged($name)
+    {
+        if (isset($this->attributes[$name], $this->oldAttributes[$name])) {
+            return (string)$this->attributes[$name] !== (string)$this->oldAttributes[$name];
+        } else {
+            return isset($this->attributes[$name]) || isset($this->oldAttributes[$name]);
+        }
+    }
 }
