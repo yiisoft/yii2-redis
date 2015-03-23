@@ -360,6 +360,12 @@ class ActiveRecord extends BaseActiveRecord
                 } else {
                     $oldValue = null;
                 }
+                if (is_array($newValue)) {
+                    $newValue = serialize($newValue);
+                }
+                if (is_array($oldValue)) {
+                    $oldValue = serialize($oldValue);
+                }
                 if (isset($names[$name]) && (!array_key_exists($name, $this->oldAttributes) || (string)$newValue !== (string)$oldValue)) {
                     $attributes[$name] = $value;
                 }
@@ -381,6 +387,12 @@ class ActiveRecord extends BaseActiveRecord
             }
             if (is_bool($oldValue = $this->oldAttributes[$name])) {
                 $oldValue = (int)$this->oldAttributes[$name];
+            }
+            if (is_array($newValue)) {
+                $newValue = serialize($newValue);
+            }
+            if (is_array($oldValue)) {
+                $oldValue = serialize($oldValue);
             }
             return (string)$newValue !== (string)$oldValue;
         } else {
