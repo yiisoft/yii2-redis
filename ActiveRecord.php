@@ -399,4 +399,29 @@ class ActiveRecord extends BaseActiveRecord
             return isset($this->attributes[$name]) || isset($this->oldAttributes[$name]);
         }
     }
+
+    /**
+     * Populates an active record object using a row of data from the database/storage.
+     *
+     * This is an internal method meant to be called to create active record objects after
+     * fetching data from the database. It is mainly used by [[ActiveQuery]] to populate
+     * the query results into active records.
+     *
+     * When calling this method manually you should call [[afterFind()]] on the created
+     * record to trigger the [[EVENT_AFTER_FIND|afterFind Event]].
+     *
+     * @param BaseActiveRecord $record the record to be populated. In most cases this will be an instance
+     * created by [[instantiate()]] beforehand.
+     * @param array $row attribute values (name => value)
+     */
+    public static function populateRecord($record, $row)
+    {
+        foreach ($record->attributes() as $name) {
+            $record->setAttribute($name, isset($row[$name]) ? $row[$name] : null);
+            if (isset($row[$name]) && $record->canSetProperty($name)) {
+                $record->$name = $row[$name];
+            }
+        }
+        $record->setOldAttributes($record->attributes);
+    }
 }
