@@ -1,7 +1,7 @@
 Using the Cache component
 =========================
 
-To use the `Cache` component, in addition to configuring the connection as described above,
+To use the `Cache` component, in addition to configuring the connection as described in [Installation](installation.md) section,
 you also have to configure the `cache` component to be `yii\redis\Cache`:
 
 ```php
@@ -16,7 +16,7 @@ return [
 ];
 ```
 
-If you only use the redis cache, you can also configure the parameters of the connection within the
+If you use redis only as a cache, you can also configure the parameters of the connection within the
 cache component (no connection application component needs to be configured in this case):
 
 ```php
