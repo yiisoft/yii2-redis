@@ -326,7 +326,7 @@ class ActiveRecord extends BaseActiveRecord
             }
         }
 
-        return md5(json_encode($key));
+        return md5(json_encode($key, JSON_NUMERIC_CHECK));
     }
 
     /**
