@@ -7,8 +7,9 @@ yii2-redis module with various fixes
 * [profiles in debugger DB panel](https://github.com/E96/yii2-redis/commit/05d8d208b25d57b41cb78e04689ccca5be33b473)
 * [convert inCondition for one key](https://github.com/E96/yii2-redis/commit/36d6a145acf109d86eb2aa7918f64bc91c935ebb)
 * [correct detection modified values](https://github.com/E96/yii2-redis/commit/e4040f0f5c91e291b4b014661d3e85731426f647)
+* [correct detection modified values +](https://github.com/E96/yii2-redis/commit/2d2bd7fb72a5702c66f41bce5aee8d1f163e094b)
+* [correct detection modified values +](https://github.com/E96/yii2-redis/commit/0238c137ce7e1e76cc832d57538e675b2e462563)
 * [fix populate null attributes](https://github.com/E96/yii2-redis/commit/02c879b865937b39f47fb0664329310dcaf3ff94)
-* [support array for dirty attributes](https://github.com/E96/yii2-redis/commit/0238c137ce7e1e76cc832d57538e675b2e462563)
 * [fix integer values in buildKey](https://github.com/E96/yii2-redis/commit/da6ed85ed15bd33b4137083403c027a15b9fc03d)
 
 original README below:
