@@ -15,34 +15,34 @@ Yii::setAlias('@yiiunit/extensions/redis', __DIR__);
 Yii::setAlias('@yii/redis', dirname(__DIR__));
 
 if (!class_exists('yiiunit\framework\ar\ActiveRecordTestTrait')) {
-    if (is_file(__DIR__ . '/../../../tests/unit/framework/ar/ActiveRecordTestTrait.php')) {
-        require_once(__DIR__ . '/../../../tests/unit/framework/ar/ActiveRecordTestTrait.php');
+    if (is_file(__DIR__ . '/../../../tests/framework/ar/ActiveRecordTestTrait.php')) {
+        require_once(__DIR__ . '/../../../tests/framework/ar/ActiveRecordTestTrait.php');
     } elseif (is_file(__DIR__ . '/ActiveRecordTestTrait.php')) {
         require_once(__DIR__ . '/ActiveRecordTestTrait.php');
     } else {
-        file_put_contents(__DIR__ . '/ActiveRecordTestTrait.php', file_get_contents('https://raw.githubusercontent.com/yiisoft/yii2/master/tests/unit/framework/ar/ActiveRecordTestTrait.php'));
+        file_put_contents(__DIR__ . '/ActiveRecordTestTrait.php', file_get_contents('https://raw.githubusercontent.com/yiisoft/yii2/master/tests/framework/ar/ActiveRecordTestTrait.php'));
         require_once(__DIR__ . '/ActiveRecordTestTrait.php');
     }
 }
 
 if (!class_exists('yiiunit\TestCase')) {
-    if (is_file(__DIR__ . '/../../../tests/unit/TestCase.php')) {
-        require_once(__DIR__ . '/../../../tests/unit/TestCase.php');
+    if (is_file(__DIR__ . '/../../../tests/TestCase.php')) {
+        require_once(__DIR__ . '/../../../tests/TestCase.php');
     } elseif (is_file(__DIR__ . '/BaseTestCase.php')) {
         require_once(__DIR__ . '/BaseTestCase.php');
     } else {
-        file_put_contents(__DIR__ . '/BaseTestCase.php', file_get_contents('https://raw.githubusercontent.com/yiisoft/yii2/master/tests/unit/TestCase.php'));
+        file_put_contents(__DIR__ . '/BaseTestCase.php', file_get_contents('https://raw.githubusercontent.com/yiisoft/yii2/master/tests/TestCase.php'));
         require_once(__DIR__ . '/BaseTestCase.php');
     }
 }
 
 if (!class_exists('yiiunit\framework\caching\CacheTestCase')) {
-    if (is_file(__DIR__ . '/../../../tests/unit/framework/caching/CacheTestCase.php')) {
-        require_once(__DIR__ . '/../../../tests/unit/framework/caching/CacheTestCase.php');
+    if (is_file(__DIR__ . '/../../../tests/framework/caching/CacheTestCase.php')) {
+        require_once(__DIR__ . '/../../../tests/framework/caching/CacheTestCase.php');
     } elseif (is_file(__DIR__ . '/CacheTestCase.php')) {
         require_once(__DIR__ . '/CacheTestCase.php');
     } else {
-        file_put_contents(__DIR__ . '/CacheTestCase.php', file_get_contents('https://raw.githubusercontent.com/yiisoft/yii2/master/tests/unit/framework/caching/CacheTestCase.php'));
+        file_put_contents(__DIR__ . '/CacheTestCase.php', file_get_contents('https://raw.githubusercontent.com/yiisoft/yii2/master/tests/framework/caching/CacheTestCase.php'));
         require_once(__DIR__ . '/CacheTestCase.php');
     }
 }
