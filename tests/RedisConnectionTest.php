@@ -13,13 +13,14 @@ class ConnectionTest extends TestCase
     public function testConnect()
     {
         $db = $this->getConnection(false);
+        $database = $db->database;
         $db->open();
         $this->assertTrue($db->ping());
         $db->set('YIITESTKEY', 'YIITESTVALUE');
         $db->close();
 
         $db = $this->getConnection(false);
-        $db->database = 0;
+        $db->database = $database;
         $db->open();
         $this->assertEquals('YIITESTVALUE', $db->get('YIITESTKEY'));
         $db->close();
