@@ -370,12 +370,26 @@ class ActiveRecordTest extends TestCase
 
     public function testAutoIncrement()
     {
+        Customer::getDb()->executeCommand('FLUSHDB');
+
         $customer = new Customer();
         $customer->setAttributes(['id' => 4, 'email' => 'user4@example.com', 'name' => 'user4', 'address' => 'address4', 'status' => 1, 'profile_id' => null], false);
         $customer->save(false);
+        $this->assertEquals(4, $customer->id);
         $customer = new Customer();
         $customer->setAttributes(['email' => 'user5@example.com', 'name' => 'user5', 'address' => 'address5', 'status' => 1, 'profile_id' => null], false);
         $customer->save(false);
+        $this->assertEquals(5, $customer->id);
+
+        $customer = new Customer();
+        $customer->setAttributes(['id' => 1, 'email' => 'user1@example.com', 'name' => 'user1', 'address' => 'address1', 'status' => 1, 'profile_id' => null], false);
+        $customer->save(false);
+        $this->assertEquals(1, $customer->id);
+        $customer = new Customer();
+        $customer->setAttributes(['email' => 'user6@example.com', 'name' => 'user6', 'address' => 'address6', 'status' => 1, 'profile_id' => null], false);
+        $customer->save(false);
+        $this->assertEquals(6, $customer->id);
+
 
         $customer = Customer::findOne(4);
         $this->assertNotNull($customer);
@@ -385,5 +399,12 @@ class ActiveRecordTest extends TestCase
         $this->assertNotNull($customer);
         $this->assertEquals('user5', $customer->name);
 
+        $customer = Customer::findOne(1);
+        $this->assertNotNull($customer);
+        $this->assertEquals('user1', $customer->name);
+
+        $customer = Customer::findOne(6);
+        $this->assertNotNull($customer);
+        $this->assertEquals('user6', $customer->name);
     }
 }
