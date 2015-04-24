@@ -349,33 +349,9 @@ class ActiveRecord extends BaseActiveRecord
         }
         $names = array_flip($names);
         $attributes = [];
-        if ($this->oldAttributes === null) {
-            foreach ($this->attributes as $name => $value) {
-                if (isset($names[$name])) {
-                    $attributes[$name] = $value;
-                }
-            }
-        } else {
-            foreach ($this->attributes as $name => $value) {
-                if (is_bool($newValue = $value)) {
-                    $newValue = (int)$value;
-                }
-                if (isset($this->oldAttributes[$name])) {
-                    if (is_bool($oldValue = $this->oldAttributes[$name])) {
-                        $oldValue = (int)$oldValue;
-                    }
-                } else {
-                    $oldValue = null;
-                }
-                if (is_array($newValue)) {
-                    $newValue = serialize($newValue);
-                }
-                if (is_array($oldValue)) {
-                    $oldValue = serialize($oldValue);
-                }
-                if (isset($names[$name]) && (!array_key_exists($name, $this->oldAttributes) || (string)$newValue !== (string)$oldValue)) {
-                    $attributes[$name] = $value;
-                }
+        foreach ($this->attributes as $name => $value) {
+            if (isset($names[$name]) && (!array_key_exists($name, $this->oldAttributes) || $this->isAttributeChanged($name))) {
+                $attributes[$name] = $value;
             }
         }
         return $attributes;

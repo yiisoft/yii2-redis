@@ -10,6 +10,7 @@ use yiiunit\extensions\redis\data\ar\Order;
 use yiiunit\extensions\redis\data\ar\Item;
 use yiiunit\extensions\redis\data\ar\OrderItemWithNullFK;
 use yiiunit\extensions\redis\data\ar\OrderWithNullFK;
+use yiiunit\extensions\redis\data\ar\TestModel;
 use yiiunit\framework\ar\ActiveRecordTestTrait;
 
 /**
@@ -406,5 +407,39 @@ class ActiveRecordTest extends TestCase
         $customer = Customer::findOne(6);
         $this->assertNotNull($customer);
         $this->assertEquals('user6', $customer->name);
+    }
+
+    public function testAttributeChanged()
+    {
+        $model = new TestModel(['id' => 1, 'name' => 'test', 'isActive' => false]);
+        $model->save();
+        $this->assertEquals(
+            ['id', 'name', 'isActive', 'items'],
+            array_keys($model->changedAttributes),
+            'All attributes changed'
+        );
+
+        $model->save();
+        $this->assertEmpty($model->changedAttributes, 'Nothing changed');
+
+        /** @var TestModel $model */
+        $model = TestModel::findOne(1);
+        $model->name = 'test2';
+        $this->assertTrue($model->isAttributeChanged('name'));
+        $model->save();
+        $this->assertEquals(['name'], array_keys($model->changedAttributes), 'Changed name');
+
+        $model = TestModel::findOne(1);
+        $model->attributes = ['id' => 1, 'name' => 'test2', 'isActive' => false];
+        $this->assertFalse($model->isAttributeChanged('id'));
+        $this->assertFalse($model->isAttributeChanged('isActive'));
+        $model->save();
+        $this->assertEmpty($model->changedAttributes, 'Nothing changed');
+
+        $model->id = 2;
+        $this->assertTrue($model->isAttributeChanged('id'));
+
+        $model->items = [1, 2, 3];
+        $this->assertTrue($model->isAttributeChanged('items'));
     }
 }
