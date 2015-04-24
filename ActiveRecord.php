@@ -110,8 +110,15 @@ class ActiveRecord extends BaseActiveRecord
         foreach ($this->primaryKey() as $key) {
             $pk[$key] = $values[$key] = $this->getAttribute($key);
             if ($pk[$key] === null) {
+                // use auto increment if pk is null
                 $pk[$key] = $values[$key] = $db->executeCommand('INCR', [static::keyPrefix() . ':s:' . $key]);
                 $this->setAttribute($key, $values[$key]);
+            } elseif (is_numeric($pk[$key])) {
+                // if pk is numeric update auto increment value
+                $currentPk = $db->executeCommand('GET', [static::keyPrefix() . ':s:' . $key]);
+                if ($pk[$key] > $currentPk) {
+                    $db->executeCommand('SET', [static::keyPrefix() . ':s:' . $key, $pk[$key]]);
+                }
             }
         }
         // save pk in a findall pool
