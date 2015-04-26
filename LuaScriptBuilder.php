@@ -27,7 +27,6 @@ class LuaScriptBuilder extends \yii\base\BaseObject
      */
     public function buildAll($query)
     {
-        // TODO add support for orderBy
         /* @var $modelClass ActiveRecord */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
@@ -42,7 +41,6 @@ class LuaScriptBuilder extends \yii\base\BaseObject
      */
     public function buildOne($query)
     {
-        // TODO add support for orderBy
         /* @var $modelClass ActiveRecord */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
@@ -58,7 +56,7 @@ class LuaScriptBuilder extends \yii\base\BaseObject
      */
     public function buildColumn($query, $column)
     {
-        // TODO add support for orderBy and indexBy
+        // TODO add support for indexBy
         /* @var $modelClass ActiveRecord */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
@@ -145,10 +143,6 @@ class LuaScriptBuilder extends \yii\base\BaseObject
      */
     private function build($query, $buildResult, $return)
     {
-        if (!empty($query->orderBy)) {
-            throw new NotSupportedException('orderBy is currently not supported by redis ActiveRecord.');
-        }
-
         $columns = [];
         if ($query->where !== null) {
             $condition = $this->buildCondition($query->where, $columns);
@@ -167,8 +161,36 @@ class LuaScriptBuilder extends \yii\base\BaseObject
             $loadColumnValues .= "local $alias=redis.call('HGET',$key .. ':a:' .. pk, '$column')\n";
         }
 
-        return <<<EOF
+        $getAllPks = <<<EOF
 local allpks=redis.call('LRANGE',$key,0,-1)
+EOF;
+        if (!empty($query->orderBy)) {
+            if (!is_array($query->orderBy) || count($query->orderBy) > 1) {
+                throw new NotSupportedException(
+                    'orderBy by multiple columns is not currently supported by redis ActiveRecord.'
+                );
+            }
+
+            $k = key($query->orderBy);
+            $v = $query->orderBy[$k];
+            if (is_numeric($k)) {
+                $orderColumn = $v;
+                $orderType = 'ASC';
+            } else {
+                $orderColumn = $k;
+                $orderType = $v === SORT_DESC ? 'DESC' : 'ASC';
+            }
+
+            $getAllPks = <<<EOF
+local allpks=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType')
+if allpks['err'] then
+    allpks=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType', 'ALPHA')
+end
+EOF;
+        }
+
+        return <<<EOF
+$getAllPks
 local pks={}
 local n=0
 local v=nil

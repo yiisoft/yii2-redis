@@ -6,6 +6,7 @@ Yii Framework 2 redis extension Change Log
 
 - Bug #114: Fixed ActiveQuery `not between` and `not` conditions which where not working correctly (cebe, ak1987)
 - Bug #123: Fixed ActiveQuery to work with negative limit values, which are used in ActiveDataProvider for the count query (cebe)
+- Enh #9: Added orderBy support to redis ActiveQuery and LuaScriptBuilder (valinurovam)
 - Chg #127: Added PHP 7.2 compatibility (brandonkelly)
 
 

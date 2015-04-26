@@ -374,10 +374,6 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             }
         }
 
-        if (!empty($this->orderBy)) {
-            throw new NotSupportedException('orderBy is currently not supported by redis ActiveRecord.');
-        }
-
         /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;
 
@@ -411,6 +407,25 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     private function findByPk($db, $type, $columnName = null)
     {
+        $needSort = !empty($this->orderBy) && in_array($type, ['All', 'One', 'Column']);
+        if ($needSort) {
+            if (!is_array($this->orderBy) || count($this->orderBy) > 1) {
+                throw new NotSupportedException(
+                    'orderBy by multiple columns is not currently supported by redis ActiveRecord.'
+                );
+            }
+
+            $k = key($this->orderBy);
+            $v = $this->orderBy[$k];
+            if (is_numeric($k)) {
+                $orderColumn = $v;
+                $orderType = SORT_ASC;
+            } else {
+                $orderColumn = $k;
+                $orderType = $v;
+            }
+        }
+
         if (isset($this->where[0]) && $this->where[0] === 'in') {
             $pks = (array) $this->where[2];
         } elseif (count($this->where) == 1) {
@@ -428,7 +443,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
         /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;
 
-        if ($type == 'Count') {
+        if ($type === 'Count') {
             $start = 0;
             $limit = null;
         } else {
@@ -437,10 +452,14 @@ class ActiveQuery extends Component implements ActiveQueryInterface
         }
         $i = 0;
         $data = [];
+        $orderArray = [];
         foreach ($pks as $pk) {
             if (++$i > $start && ($limit === null || $i <= $start + $limit)) {
                 $key = $modelClass::keyPrefix() . ':a:' . $modelClass::buildKey($pk);
                 $result = $db->executeCommand('HGETALL', [$key]);
+                if ($needSort) {
+                    $orderArray[] = $db->executeCommand('HGET', [$key, $orderColumn]);
+                }
                 if (!empty($result)) {
                     $data[] = $result;
                     if ($type === 'One' && $this->orderBy === null) {
@@ -449,7 +468,19 @@ class ActiveQuery extends Component implements ActiveQueryInterface
                 }
             }
         }
-        // TODO support orderBy
+
+        if ($needSort) {
+            $resultData = [];
+            if ($orderType === SORT_ASC) {
+                asort($orderArray, SORT_NATURAL);
+            } else {
+                arsort($orderArray, SORT_NATURAL);
+            }
+            foreach ($orderArray as $orderKey => $orderItem) {
+                $resultData[] = $data[$orderKey];
+            }
+            $data = $resultData;
+        }
 
         switch ($type) {
             case 'All':
