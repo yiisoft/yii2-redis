@@ -145,10 +145,6 @@ class LuaScriptBuilder extends \yii\base\Object
      */
     private function build($query, $buildResult, $return)
     {
-        if (!empty($query->orderBy)) {
-            throw new NotSupportedException('orderBy is currently not supported by redis ActiveRecord.');
-        }
-
         $columns = [];
         if ($query->where !== null) {
             $condition = $this->buildCondition($query->where, $columns);
@@ -167,8 +163,32 @@ class LuaScriptBuilder extends \yii\base\Object
             $loadColumnValues .= "local $alias=redis.call('HGET',$key .. ':a:' .. pk, '$column')\n";
         }
 
+        $sortAbility = "";
+        if (!empty($query->orderBy)) {
+            $orderBy = array_slice($query->orderBy, 0);
+            $k = key($orderBy);
+            $v = $orderBy[$k];
+            if (is_numeric($k)) {
+                $orderColumn = $v;
+                $orderType = '<'; // ASC sort
+            } else {
+                $orderColumn = $k;
+                $orderType = $v === SORT_DESC ? '>' : '<';
+            }
+
+            $sortAbility = <<<EOF
+local sort_tbl = function (id_left, id_right)
+    local s0 = redis.call('HGET', $key .. ':a:' .. id_left, '$orderColumn')
+    local s1 = redis.call('HGET', $key .. ':a:' .. id_right, '$orderColumn')
+    return (s0 $orderType s1)
+end
+table.sort(allpks, sort_tbl)
+EOF;
+        }
+
         return <<<EOF
 local allpks=redis.call('LRANGE',$key,0,-1)
+$sortAbility
 local pks={}
 local n=0
 local v=nil
