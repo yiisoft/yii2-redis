@@ -165,12 +165,14 @@ class LuaScriptBuilder extends \yii\base\Object
 
         $sortAbility = "";
         if (!empty($query->orderBy)) {
-            $orderBy = array_slice($query->orderBy, 0);
-            $k = key($orderBy);
-            $v = $orderBy[$k];
+            if (count($query->orderBy) > 1)
+                throw new NotSupportedException('orderBy by multi columns is currently not supported by redis ActiveRecord.');
+
+            $k = key($query->orderBy);
+            $v = $query->orderBy[$k];
             if (is_numeric($k)) {
                 $orderColumn = $v;
-                $orderType = '<'; // ASC sort
+                $orderType = '<';
             } else {
                 $orderColumn = $k;
                 $orderType = $v === SORT_DESC ? '>' : '<';
