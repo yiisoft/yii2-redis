@@ -8,6 +8,7 @@
 namespace yii\redis;
 
 use yii\base\Component;
+use yii\base\Exception;
 use yii\base\InvalidParamException;
 use yii\base\NotSupportedException;
 use yii\db\ActiveQueryInterface;
@@ -365,13 +366,15 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     private function findByPk($db, $type, $columnName = null)
     {
-        if (!empty($this->orderBy) and in_array($type, ['All', 'One', 'Count', 'Column'])) {
-            $orderBy = array_slice($this->orderBy, 0);
-            $k = key($orderBy);
-            $v = $orderBy[$k];
+        if (!empty($this->orderBy) && in_array($type, ['All', 'One', 'Count', 'Column'])) {
+            if (count($this->orderBy) > 1)
+                throw new NotSupportedException('orderBy by multi columns is currently not supported by redis ActiveRecord.');
+
+            $k = key($this->orderBy);
+            $v = $this->orderBy[$k];
             if (is_numeric($k)) {
                 $orderColumn = $v;
-                $orderType = SORT_ASC; // ASC sort
+                $orderType = SORT_ASC;
             } else {
                 $orderColumn = $k;
                 $orderType = $v;
@@ -431,8 +434,9 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             }
         }
 
-        if (!empty($resultData))
+        if (!empty($resultData)) {
             $data = $resultData;
+        }
 
         switch ($type) {
             case 'All':
