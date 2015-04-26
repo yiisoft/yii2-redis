@@ -335,10 +335,6 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             }
         }
 
-        if (!empty($this->orderBy)) {
-            throw new NotSupportedException('orderBy is currently not supported by redis ActiveRecord.');
-        }
-
         /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;
 
@@ -369,6 +365,19 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     private function findByPk($db, $type, $columnName = null)
     {
+        if (!empty($this->orderBy) and in_array($type, ['All', 'One', 'Count', 'Column'])) {
+            $orderBy = array_slice($this->orderBy, 0);
+            $k = key($orderBy);
+            $v = $orderBy[$k];
+            if (is_numeric($k)) {
+                $orderColumn = $v;
+                $orderType = SORT_ASC; // ASC sort
+            } else {
+                $orderColumn = $k;
+                $orderType = $v;
+            }
+        }
+
         if (count($this->where) == 1) {
             $pks = (array) reset($this->where);
         } else {
@@ -393,10 +402,14 @@ class ActiveQuery extends Component implements ActiveQueryInterface
         }
         $i = 0;
         $data = [];
+        $orderArray = [];
         foreach ($pks as $pk) {
             if (++$i > $start && ($limit === null || $i <= $start + $limit)) {
                 $key = $modelClass::keyPrefix() . ':a:' . $modelClass::buildKey($pk);
                 $result = $db->executeCommand('HGETALL', [$key]);
+                if (!empty($this->orderBy) and in_array($type, ['All', 'One', 'Count', 'Column'])) {
+                    $orderArray[] = $db->executeCommand('HGET', [$key, $orderColumn]);
+                }
                 if (!empty($result)) {
                     $data[] = $result;
                     if ($type === 'One' && $this->orderBy === null) {
@@ -405,7 +418,21 @@ class ActiveQuery extends Component implements ActiveQueryInterface
                 }
             }
         }
-        // TODO support orderBy
+
+        $resultData = [];
+        if (!empty($this->orderBy) and in_array($type, ['All', 'One', 'Count', 'Column'])) {
+            if ($orderType === SORT_ASC) {
+                asort($orderArray);
+            } else {
+                arsort($orderArray);
+            }
+            foreach ($orderArray as $orderKey => $orderItem) {
+                $resultData[] = $data[$orderKey];
+            }
+        }
+
+        if (!empty($resultData))
+            $data = $resultData;
 
         switch ($type) {
             case 'All':
