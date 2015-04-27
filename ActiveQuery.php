@@ -425,9 +425,9 @@ class ActiveQuery extends Component implements ActiveQueryInterface
         $resultData = [];
         if (!empty($this->orderBy) and in_array($type, ['All', 'One', 'Count', 'Column'])) {
             if ($orderType === SORT_ASC) {
-                asort($orderArray);
+                asort($orderArray, SORT_NATURAL);
             } else {
-                arsort($orderArray);
+                arsort($orderArray, SORT_NATURAL);
             }
             foreach ($orderArray as $orderKey => $orderItem) {
                 $resultData[] = $data[$orderKey];
