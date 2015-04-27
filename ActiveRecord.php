@@ -110,8 +110,15 @@ class ActiveRecord extends BaseActiveRecord
         foreach ($this->primaryKey() as $key) {
             $pk[$key] = $values[$key] = $this->getAttribute($key);
             if ($pk[$key] === null) {
+                // use auto increment if pk is null
                 $pk[$key] = $values[$key] = $db->executeCommand('INCR', [static::keyPrefix() . ':s:' . $key]);
                 $this->setAttribute($key, $values[$key]);
+            } elseif (is_numeric($pk[$key])) {
+                // if pk is numeric update auto increment value
+                $currentPk = $db->executeCommand('GET', [static::keyPrefix() . ':s:' . $key]);
+                if ($pk[$key] > $currentPk) {
+                    $db->executeCommand('SET', [static::keyPrefix() . ':s:' . $key, $pk[$key]]);
+                }
             }
         }
         // save pk in a findall pool
@@ -342,33 +349,9 @@ class ActiveRecord extends BaseActiveRecord
         }
         $names = array_flip($names);
         $attributes = [];
-        if ($this->oldAttributes === null) {
-            foreach ($this->attributes as $name => $value) {
-                if (isset($names[$name])) {
-                    $attributes[$name] = $value;
-                }
-            }
-        } else {
-            foreach ($this->attributes as $name => $value) {
-                if (is_bool($newValue = $value)) {
-                    $newValue = (int)$value;
-                }
-                if (isset($this->oldAttributes[$name])) {
-                    if (is_bool($oldValue = $this->oldAttributes[$name])) {
-                        $oldValue = (int)$oldValue;
-                    }
-                } else {
-                    $oldValue = null;
-                }
-                if (is_array($newValue)) {
-                    $newValue = serialize($newValue);
-                }
-                if (is_array($oldValue)) {
-                    $oldValue = serialize($oldValue);
-                }
-                if (isset($names[$name]) && (!array_key_exists($name, $this->oldAttributes) || (string)$newValue !== (string)$oldValue)) {
-                    $attributes[$name] = $value;
-                }
+        foreach ($this->attributes as $name => $value) {
+            if (isset($names[$name]) && (!array_key_exists($name, $this->oldAttributes) || $this->isAttributeChanged($name))) {
+                $attributes[$name] = $value;
             }
         }
         return $attributes;
