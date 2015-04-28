@@ -172,25 +172,18 @@ class LuaScriptBuilder extends \yii\base\Object
             $v = $query->orderBy[$k];
             if (is_numeric($k)) {
                 $orderColumn = $v;
-                $orderType = '<';
+                $orderType = 'ASC';
             } else {
                 $orderColumn = $k;
-                $orderType = $v === SORT_DESC ? '>' : '<';
+                $orderType = $v === SORT_DESC ? 'DESC' : 'ASC';
             }
-
-            $sortAbility = <<<EOF
-local sort_tbl = function (id_left, id_right)
-    local s0 = redis.call('HGET', $key .. ':a:' .. id_left, '$orderColumn')
-    local s1 = redis.call('HGET', $key .. ':a:' .. id_right, '$orderColumn')
-    return (s0 $orderType s1)
-end
-table.sort(allpks, sort_tbl)
-EOF;
         }
 
         return <<<EOF
-local allpks=redis.call('LRANGE',$key,0,-1)
-$sortAbility
+local allpks, err=redis.pcall('sort', $key, 'by', $key .. ':a:*->' .. '$orderColumn', '$orderType')
+if err then
+    allpks=redis.pcall('sort', $key, 'by', $key .. ':a:*->' .. '$orderColumn', '$orderType', 'ALPHA')
+end
 local pks={}
 local n=0
 local v=nil
