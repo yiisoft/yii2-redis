@@ -163,7 +163,9 @@ class LuaScriptBuilder extends \yii\base\Object
             $loadColumnValues .= "local $alias=redis.call('HGET',$key .. ':a:' .. pk, '$column')\n";
         }
 
-        $sortAbility = "";
+        $getAllPks = <<<EOF
+local allpks=redis.call('LRANGE',$key,0,-1)
+EOF;
         if (!empty($query->orderBy)) {
             if (count($query->orderBy) > 1)
                 throw new NotSupportedException('orderBy by multi columns is currently not supported by redis ActiveRecord.');
@@ -177,13 +179,17 @@ class LuaScriptBuilder extends \yii\base\Object
                 $orderColumn = $k;
                 $orderType = $v === SORT_DESC ? 'DESC' : 'ASC';
             }
-        }
 
-        return <<<EOF
+            $getAllPks = <<<EOF
 local allpks, err=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType')
 if err then
     allpks=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType', 'ALPHA')
 end
+EOF;
+        }
+
+        return <<<EOF
+$getAllPks
 local pks={}
 local n=0
 local v=nil
