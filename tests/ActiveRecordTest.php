@@ -309,9 +309,4 @@ class ActiveRecordTest extends TestCase
         $this->assertNotNull($customer);
         $this->assertEquals('user6', $customer->name);
     }
-
-    public function test()
-    {
-        $this->assertEquals(false, true);
-    }
 }
