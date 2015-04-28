@@ -180,9 +180,9 @@ class LuaScriptBuilder extends \yii\base\Object
         }
 
         return <<<EOF
-local allpks, err=redis.pcall('sort', $key, 'by', $key .. ':a:*->' .. '$orderColumn', '$orderType')
+local allpks, err=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType')
 if err then
-    allpks=redis.pcall('sort', $key, 'by', $key .. ':a:*->' .. '$orderColumn', '$orderType', 'ALPHA')
+    allpks=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType', 'ALPHA')
 end
 local pks={}
 local n=0
