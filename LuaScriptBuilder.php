@@ -181,8 +181,8 @@ EOF;
             }
 
             $getAllPks = <<<EOF
-local allpks, err=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType')
-if err then
+local allpks=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType')
+if allpks['err'] then
     allpks=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType', 'ALPHA')
 end
 EOF;
