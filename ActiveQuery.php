@@ -366,7 +366,8 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     private function findByPk($db, $type, $columnName = null)
     {
-        if (!empty($this->orderBy) && in_array($type, ['All', 'One', 'Count', 'Column'])) {
+        $typesForOrder = ['All', 'One', 'Column'];
+        if (!empty($this->orderBy) && in_array($type, $typesForOrder)) {
             if (count($this->orderBy) > 1)
                 throw new NotSupportedException('orderBy by multi columns is currently not supported by redis ActiveRecord.');
 
@@ -410,7 +411,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             if (++$i > $start && ($limit === null || $i <= $start + $limit)) {
                 $key = $modelClass::keyPrefix() . ':a:' . $modelClass::buildKey($pk);
                 $result = $db->executeCommand('HGETALL', [$key]);
-                if (!empty($this->orderBy) and in_array($type, ['All', 'One', 'Count', 'Column'])) {
+                if (!empty($this->orderBy) and in_array($type, $typesForOrder)) {
                     $orderArray[] = $db->executeCommand('HGET', [$key, $orderColumn]);
                 }
                 if (!empty($result)) {
@@ -423,7 +424,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
         }
 
         $resultData = [];
-        if (!empty($this->orderBy) and in_array($type, ['All', 'One', 'Count', 'Column'])) {
+        if (!empty($this->orderBy) and in_array($type, $typesForOrder)) {
             if ($orderType === SORT_ASC) {
                 asort($orderArray, SORT_NATURAL);
             } else {
