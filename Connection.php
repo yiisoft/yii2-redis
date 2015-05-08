@@ -383,7 +383,7 @@ class Connection extends Component
      * @return mixed
      * @throws Exception on error
      */
-    private function parseResponse($command)
+    public function parseResponse($command)
     {
         if (($line = fgets($this->_socket)) === false) {
             throw new Exception("Failed to read from socket.\nRedis command was: " . $command);
