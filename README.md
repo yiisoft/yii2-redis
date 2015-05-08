@@ -11,6 +11,7 @@ yii2-redis module with various fixes
 * [correct detection modified values +](https://github.com/E96/yii2-redis/commit/0238c137ce7e1e76cc832d57538e675b2e462563)
 * [fix populate null attributes](https://github.com/E96/yii2-redis/commit/02c879b865937b39f47fb0664329310dcaf3ff94)
 * [fix integer values in buildKey](https://github.com/E96/yii2-redis/commit/da6ed85ed15bd33b4137083403c027a15b9fc03d)
+* [Make Connection::parseResponse public](https://github.com/E96/yii2-redis/commit/f5ce8325303cda6bd1bc1ecb62d310a5b01661e4)
 
 original README below:
 
