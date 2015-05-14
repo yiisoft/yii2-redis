@@ -359,25 +359,34 @@ class ActiveRecord extends BaseActiveRecord
 
     /**
      * Returns a value indicating whether the named attribute has been changed.
-     * @param string $name the name of the attribute
-     * @return boolean whether the attribute has been changed
+     * @param string $name the name of the attribute.
+     * @param bool $identical whether the comparison of new and old value is made for
+     * identical values using `===`, defaults to `true`. Otherwise `==` is used for comparison.
+     * This parameter is available since version 2.0.4.
+     * @return bool whether the attribute has been changed
      */
-    public function isAttributeChanged($name)
+    public function isAttributeChanged($name, $identical = true)
     {
         if (isset($this->attributes[$name], $this->oldAttributes[$name])) {
-            if (is_bool($newValue = $this->attributes[$name])) {
-                $newValue = (int)$this->attributes[$name];
+            if ($identical) {
+                if (is_bool($newValue = $this->attributes[$name])) {
+                    $newValue = (int)$this->attributes[$name];
+                }
+                if (is_bool($oldValue = $this->oldAttributes[$name])) {
+                    $oldValue = (int)$this->oldAttributes[$name];
+                }
+
+                if (is_array($newValue)) {
+                    $newValue = serialize($newValue);
+                }
+                if (is_array($oldValue)) {
+                    $oldValue = serialize($oldValue);
+                }
+
+                return (string)$newValue !== (string)$oldValue;
+            } else {
+                return $this->attributes[$name] != $this->oldAttributes[$name];
             }
-            if (is_bool($oldValue = $this->oldAttributes[$name])) {
-                $oldValue = (int)$this->oldAttributes[$name];
-            }
-            if (is_array($newValue)) {
-                $newValue = serialize($newValue);
-            }
-            if (is_array($oldValue)) {
-                $oldValue = serialize($oldValue);
-            }
-            return (string)$newValue !== (string)$oldValue;
         } else {
             return isset($this->attributes[$name]) || isset($this->oldAttributes[$name]);
         }
