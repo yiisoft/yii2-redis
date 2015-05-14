@@ -369,10 +369,13 @@ class Connection extends Component
             $command .= '$' . mb_strlen($arg, '8bit') . "\r\n" . $arg . "\r\n";
         }
 
-        \Yii::trace("Executing Redis Command: {$name}", __METHOD__);
+        $token = implode("\n", $params);
+        \Yii::beginProfile($token, 'yii\db\Command::query');
         fwrite($this->_socket, $command);
 
-        return $this->parseResponse(implode(' ', $params));
+        $response = $this->parseResponse(implode(' ', $params));
+        \Yii::endProfile($token, 'yii\db\Command::query');
+        return $response;
     }
 
     /**
@@ -380,7 +383,7 @@ class Connection extends Component
      * @return mixed
      * @throws Exception on error
      */
-    private function parseResponse($command)
+    public function parseResponse($command)
     {
         if (($line = fgets($this->_socket)) === false) {
             throw new Exception("Failed to read from socket.\nRedis command was: " . $command);

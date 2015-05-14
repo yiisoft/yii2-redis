@@ -346,6 +346,11 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             $db = $modelClass::getDb();
         }
 
+        // convert inCondition for one key
+        if (is_array($this->where) && isset($this->where[0]) && $this->where[0] == 'in' && count($this->where[1]) == 1) {
+            $this->where = [current($this->where[1]) => $this->where[2]];
+        }
+
         // find by primary key if possible. This is much faster than scanning all records
         if (is_array($this->where) && !isset($this->where[0]) && $modelClass::isPrimaryKey(array_keys($this->where))) {
             return $this->findByPk($db, $type, $columnName);

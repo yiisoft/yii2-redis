@@ -78,7 +78,9 @@ class ActiveRecord extends BaseActiveRecord
      */
     public function attributes()
     {
-        throw new InvalidConfigException('The attributes() method of redis ActiveRecord has to be implemented by child classes.');
+        throw new InvalidConfigException(
+            'The attributes() method of redis ActiveRecord has to be implemented by child classes.'
+        );
     }
 
     /**
@@ -131,7 +133,7 @@ class ActiveRecord extends BaseActiveRecord
             // only insert attributes that are not null
             if ($value !== null) {
                 if (is_bool($value)) {
-                    $value = (int) $value;
+                    $value = (int)$value;
                 }
                 $setArgs[] = $attribute;
                 $setArgs[] = $value;
@@ -182,7 +184,7 @@ class ActiveRecord extends BaseActiveRecord
                 }
                 if ($value !== null) {
                     if (is_bool($value)) {
-                        $value = (int) $value;
+                        $value = (int)$value;
                     }
                     $setArgs[] = $attribute;
                     $setArgs[] = $value;
@@ -333,6 +335,90 @@ class ActiveRecord extends BaseActiveRecord
             }
         }
 
-        return md5(json_encode($key));
+        return md5(json_encode($key, JSON_NUMERIC_CHECK));
+    }
+
+    /**
+     * Returns the attribute values that have been modified since they are loaded or saved most recently.
+     * @param string[]|null $names the names of the attributes whose values may be returned if they are
+     * changed recently. If null, [[attributes()]] will be used.
+     * @return array the changed attribute values (name-value pairs)
+     */
+    public function getDirtyAttributes($names = null)
+    {
+        if ($names === null) {
+            $names = $this->attributes();
+        }
+        $names = array_flip($names);
+        $attributes = [];
+        foreach ($this->attributes as $name => $value) {
+            if (isset($names[$name]) && (!array_key_exists($name, $this->oldAttributes) || $this->isAttributeChanged(
+                        $name
+                    ))
+            ) {
+                $attributes[$name] = $value;
+            }
+        }
+        return $attributes;
+    }
+
+    /**
+     * Returns a value indicating whether the named attribute has been changed.
+     * @param string $name the name of the attribute.
+     * @param bool $identical whether the comparison of new and old value is made for
+     * identical values using `===`, defaults to `true`. Otherwise `==` is used for comparison.
+     * This parameter is available since version 2.0.4.
+     * @return bool whether the attribute has been changed
+     */
+    public function isAttributeChanged($name, $identical = true)
+    {
+        if (isset($this->attributes[$name], $this->oldAttributes[$name])) {
+            if ($identical) {
+                if (is_bool($newValue = $this->attributes[$name])) {
+                    $newValue = (int)$this->attributes[$name];
+                }
+                if (is_bool($oldValue = $this->oldAttributes[$name])) {
+                    $oldValue = (int)$this->oldAttributes[$name];
+                }
+
+                if (is_array($newValue)) {
+                    $newValue = serialize($newValue);
+                }
+                if (is_array($oldValue)) {
+                    $oldValue = serialize($oldValue);
+                }
+
+                return (string)$newValue !== (string)$oldValue;
+            } else {
+                return $this->attributes[$name] != $this->oldAttributes[$name];
+            }
+        } else {
+            return isset($this->attributes[$name]) || isset($this->oldAttributes[$name]);
+        }
+    }
+
+    /**
+     * Populates an active record object using a row of data from the database/storage.
+     *
+     * This is an internal method meant to be called to create active record objects after
+     * fetching data from the database. It is mainly used by [[ActiveQuery]] to populate
+     * the query results into active records.
+     *
+     * When calling this method manually you should call [[afterFind()]] on the created
+     * record to trigger the [[EVENT_AFTER_FIND|afterFind Event]].
+     *
+     * @param BaseActiveRecord $record the record to be populated. In most cases this will be an instance
+     * created by [[instantiate()]] beforehand.
+     * @param array $row attribute values (name => value)
+     */
+    public static function populateRecord($record, $row)
+    {
+        foreach ($record->attributes() as $name) {
+            $record->setAttribute($name, isset($row[$name]) ? $row[$name] : null);
+            if (isset($row[$name]) && $record->canSetProperty($name)) {
+                $record->$name = $row[$name];
+            }
+        }
+        $record->setOldAttributes($record->attributes);
     }
 }
