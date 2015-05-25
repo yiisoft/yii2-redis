@@ -80,6 +80,7 @@ class Connection extends Component
      * @var array List of available redis commands http://redis.io/commands
      */
     public $redisCommands = [
+        'BLPOP', // key [key ...] timeout Remove and get the first element in a list, or block until one is available
         'BRPOP', // key [key ...] timeout Remove and get the last element in a list, or block until one is available
         'BRPOPLPUSH', // source destination timeout Pop a value from a list, push it to another list and return it; or block until one is available
         'CLIENT KILL', // ip:port Kill the connection of a client
