@@ -15,6 +15,7 @@ Usage
 ----- 
 
 * [Using the ActiveRecord](usage-ar.md)
+* [Using commands directly](usage-commands.md)
 
 Additional topics
 -----------------

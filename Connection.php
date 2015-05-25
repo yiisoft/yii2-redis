@@ -324,9 +324,14 @@ class Connection extends Component
     }
 
     /**
+     * Allows issuing all supported commands via magic methods.
      *
-     * @param string $name
-     * @param array $params
+     * ```php
+     * $redis->hmset(['test_collection', 'key1', 'val1', 'key2', 'val2'])
+     * ```
+     *
+     * @param string $name name of the missing method to execute
+     * @param array $params method call arguments
      * @return mixed
      */
     public function __call($name, $params)
