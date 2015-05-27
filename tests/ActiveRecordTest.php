@@ -10,7 +10,7 @@ use yiiunit\extensions\redis\data\ar\Order;
 use yiiunit\extensions\redis\data\ar\Item;
 use yiiunit\extensions\redis\data\ar\OrderItemWithNullFK;
 use yiiunit\extensions\redis\data\ar\OrderWithNullFK;
-use yiiunit\extensions\redis\data\ar\OrderWithStringAndIntPk;
+use yiiunit\extensions\redis\data\ar\OrderWithStringAndIntegerPK;
 use yiiunit\framework\ar\ActiveRecordTestTrait;
 
 /**
@@ -142,7 +142,7 @@ class ActiveRecordTest extends TestCase
         $orderItem->setAttributes(['order_id' => 3, 'item_id' => 2, 'quantity' => 1, 'subtotal' => 40.0], false);
         $orderItem->save(false);
 
-        $order = new OrderWithStringAndIntPk();
+        $order = new OrderWithStringAndIntegerPK();
         $order->setAttributes(['id' => 1, 'type' => 'cash', 'customer_id' => 1, 'created_at' => 1325282384, 'total' => 110.0], false);
         $order->save(false);
 
@@ -374,7 +374,7 @@ class ActiveRecordTest extends TestCase
     }
 
     public function testStringAndIntPkSaving() {
-        $order = OrderWithStringAndIntPk::findOne([
+        $order = OrderWithStringAndIntegerPK::findOne([
             'id' => 1,
             'type' => 'cash',
         ]);
@@ -384,7 +384,7 @@ class ActiveRecordTest extends TestCase
         $order->total = 200.0;
         $order->save(false);
 
-        $order = OrderWithStringAndIntPk::findOne([
+        $order = OrderWithStringAndIntegerPK::findOne([
             'id' => 1,
             'type' => 'cash',
         ]);

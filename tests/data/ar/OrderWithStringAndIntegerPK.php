@@ -11,7 +11,7 @@ namespace yiiunit\extensions\redis\data\ar;
  * @property integer $created_at
  * @property string $total
  */
-class OrderWithStringAndIntPk extends ActiveRecord
+class OrderWithStringAndIntegerPK extends ActiveRecord
 {
     public static function primaryKey()
     {
