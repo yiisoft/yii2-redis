@@ -10,6 +10,7 @@ use yiiunit\extensions\redis\data\ar\Order;
 use yiiunit\extensions\redis\data\ar\Item;
 use yiiunit\extensions\redis\data\ar\OrderItemWithNullFK;
 use yiiunit\extensions\redis\data\ar\OrderWithNullFK;
+use yiiunit\extensions\redis\data\ar\OrderWithStringAndIntPk;
 use yiiunit\framework\ar\ActiveRecordTestTrait;
 
 /**
@@ -140,6 +141,10 @@ class ActiveRecordTest extends TestCase
         $orderItem = new OrderItemWithNullFK();
         $orderItem->setAttributes(['order_id' => 3, 'item_id' => 2, 'quantity' => 1, 'subtotal' => 40.0], false);
         $orderItem->save(false);
+
+        $order = new OrderWithStringAndIntPk();
+        $order->setAttributes(['id' => 1, 'type' => 'cash', 'customer_id' => 1, 'created_at' => 1325282384, 'total' => 110.0], false);
+        $order->save(false);
 
     }
 
@@ -366,6 +371,25 @@ class ActiveRecordTest extends TestCase
         $query = new ActiveQuery('dummy');
         $query->filterWhere(['and', ['like', 'name', ''], ['like', 'title', ''], ['id' => 1], ['not', ['like', 'name', '']]]);
         $this->assertEquals(['and', ['id' => 1]], $query->where);
+    }
+
+    public function testStringAndIntPkSaving() {
+        $order = OrderWithStringAndIntPk::findOne([
+            'id' => 1,
+            'type' => 'cash',
+        ]);
+
+        $this->assertEquals(110.0, $order->total);
+
+        $order->total = 200.0;
+        $order->save(false);
+
+        $order = OrderWithStringAndIntPk::findOne([
+            'id' => 1,
+            'type' => 'cash',
+        ]);
+
+        $this->assertEquals(200.0, $order->total);
     }
 
     public function testAutoIncrement()
