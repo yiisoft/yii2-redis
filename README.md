@@ -25,11 +25,6 @@ you to store active records in redis.
 
 For license information check the [LICENSE](LICENSE.md)-file.
 
-[![Latest Stable Version](https://poser.pugx.org/yiisoft/yii2-redis/v/stable.png)](https://packagist.org/packages/yiisoft/yii2-redis)
-[![Total Downloads](https://poser.pugx.org/yiisoft/yii2-redis/downloads.png)](https://packagist.org/packages/yiisoft/yii2-redis)
-[![Build Status](https://travis-ci.org/yiisoft/yii2-redis.svg?branch=master)](https://travis-ci.org/yiisoft/yii2-redis)
-
-
 Requirements
 ------------
 
@@ -43,13 +38,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist yiisoft/yii2-redis
+php composer.phar require --prefer-dist e96/yii2-redis
 ```
 
 or add
 
 ```json
-"yiisoft/yii2-redis": "~2.0.0"
+"e96/yii2-redis": "~2.0.0"
 ```
 
 to the require section of your composer.json.
