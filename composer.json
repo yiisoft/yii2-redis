@@ -1,5 +1,5 @@
 {
-    "name": "E96/yii2-redis",
+    "name": "e96/yii2-redis",
     "description": "Redis Cache, Session and ActiveRecord for the Yii framework",
     "keywords": ["yii2", "redis", "active-record", "cache", "session"],
     "type": "yii2-extension",
