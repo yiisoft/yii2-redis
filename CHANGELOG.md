@@ -4,6 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.5 under development
 -----------------------
 
+- Chg #14: Added missing `BLPOP` to `$redisCommands` (samdark)   
 
 
 2.0.4 May 10, 2015
