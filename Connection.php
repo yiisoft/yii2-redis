@@ -391,7 +391,7 @@ class Connection extends Component
      */
     public function parseResponse($command)
     {
-        if (($line = fgets($this->_socket)) === false) {
+        if (($line = $this->read()) === false) {
             throw new Exception("Failed to read from socket.\nRedis command was: " . $command);
         }
         $type = $line[0];
@@ -415,7 +415,7 @@ class Connection extends Component
                 $length = $line + 2;
                 $data = '';
                 while ($length > 0) {
-                    if (($block = fread($this->_socket, $length)) === false) {
+                    if (($block = $this->read($length)) === false) {
                         throw new Exception("Failed to read from socket.\nRedis command was: " . $command);
                     }
                     $data .= $block;
@@ -434,5 +434,13 @@ class Connection extends Component
             default:
                 throw new Exception('Received illegal data from redis: ' . $line . "\nRedis command was: " . $command);
         }
+    }
+
+    private function read($length = null) {
+        if($length) {
+            return fread($this->_socket, $length);
+        }
+
+        return fgets($this->_socket);
     }
 }
