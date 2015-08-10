@@ -9,6 +9,7 @@ namespace yii\redis;
 
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\di\Instance;
 
 /**
  * Redis Cache implements a cache application component based on [redis](http://redis.io/) key-value store.
