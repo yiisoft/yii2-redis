@@ -363,7 +363,7 @@ class Connection extends Component
      *
      * See [redis protocol description](http://redis.io/topics/protocol)
      * for details on the mentioned reply types.
-     * @trows Exception for commands that return [error reply](http://redis.io/topics/protocol#error-reply).
+     * @throws Exception for commands that return [error reply](http://redis.io/topics/protocol#error-reply).
      */
     public function executeCommand($name, $params = [])
     {
