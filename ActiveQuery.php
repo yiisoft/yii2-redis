@@ -116,6 +116,9 @@ class ActiveQuery extends Component implements ActiveQueryInterface
     {
         // TODO add support for orderBy
         $data = $this->executeScript($db, 'All');
+        if (empty($data)) {
+            return [];
+        }
         $rows = [];
         foreach ($data as $dataRow) {
             $row = [];
