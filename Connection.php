@@ -227,6 +227,12 @@ class Connection extends Component
      */
     private $_socket;
 
+    /**
+     * @var integer Bitmask field which may be set to any combination of connection flags. Currently the select of connection flags is limited to STREAM_CLIENT_CONNECT (default), STREAM_CLIENT_ASYNC_CONNECT and STREAM_CLIENT_PERSISTENT.
+     * @var [type]
+     */
+    public $socketClientFlags = STREAM_CLIENT_CONNECT;
+
 
     /**
      * Closes the connection when this component is being serialized.
@@ -264,7 +270,8 @@ class Connection extends Component
             $this->unixSocket ? 'unix://' . $this->unixSocket : 'tcp://' . $this->hostname . ':' . $this->port,
             $errorNumber,
             $errorDescription,
-            $this->connectionTimeout ? $this->connectionTimeout : ini_get("default_socket_timeout")
+            $this->connectionTimeout ? $this->connectionTimeout : ini_get("default_socket_timeout"),
+            $this->socketClientFlags
         );
         if ($this->_socket) {
             if ($this->dataTimeout !== null) {
