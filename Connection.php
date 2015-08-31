@@ -245,7 +245,7 @@ class Connection extends Component
      */
     public function getIsActive()
     {
-        return $this->_socket !== null;
+        return is_resource($this->_socket);
     }
 
     /**
@@ -255,7 +255,7 @@ class Connection extends Component
      */
     public function open()
     {
-        if ($this->_socket !== null) {
+        if ($this->isActive) {
             return;
         }
         $connection = ($this->unixSocket ?: $this->hostname . ':' . $this->port) . ', database=' . $this->database;
@@ -288,7 +288,7 @@ class Connection extends Component
      */
     public function close()
     {
-        if ($this->_socket !== null) {
+        if ($this->isActive) {
             $connection = ($this->unixSocket ?: $this->hostname . ':' . $this->port) . ', database=' . $this->database;
             \Yii::trace('Closing DB connection: ' . $connection, __METHOD__);
             $this->executeCommand('QUIT');
