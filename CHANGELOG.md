@@ -7,6 +7,7 @@ Yii Framework 2 redis extension Change Log
 - Bug #22: Fixed string escaping issue in LuaScriptBuilder (vistart)
 - Bug #37: Fixed detection of open socket (mirocow)
 - Bug #46: Fixed bug to execute session_regenerate_id in PHP 7.0 (githubjeka)
+- Enh #31: Added `Connection::$socketClientFlags` property for connection flags to be passed to `stream_socket_client()` (hugh-lee)
 - Chg #14: Added missing `BLPOP` to `$redisCommands` (samdark)   
 
 2.0.4 May 10, 2015

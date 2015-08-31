@@ -77,6 +77,13 @@ class Connection extends Component
      */
     public $dataTimeout = null;
     /**
+     * @var integer Bitmask field which may be set to any combination of connection flags passed to [stream_socket_client()](http://php.net/manual/en/function.stream-socket-client.php).
+     * Currently the select of connection flags is limited to `STREAM_CLIENT_CONNECT` (default), `STREAM_CLIENT_ASYNC_CONNECT` and `STREAM_CLIENT_PERSISTENT`.
+     * @see http://php.net/manual/en/function.stream-socket-client.php
+     * @since 2.0.5
+     */
+    public $socketClientFlags = STREAM_CLIENT_CONNECT;
+    /**
      * @var array List of available redis commands http://redis.io/commands
      */
     public $redisCommands = [
@@ -263,7 +270,8 @@ class Connection extends Component
             $this->unixSocket ? 'unix://' . $this->unixSocket : 'tcp://' . $this->hostname . ':' . $this->port,
             $errorNumber,
             $errorDescription,
-            $this->connectionTimeout ? $this->connectionTimeout : ini_get("default_socket_timeout")
+            $this->connectionTimeout ? $this->connectionTimeout : ini_get("default_socket_timeout"),
+            $this->socketClientFlags
         );
         if ($this->_socket) {
             if ($this->dataTimeout !== null) {
