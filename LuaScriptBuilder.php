@@ -168,7 +168,7 @@ class LuaScriptBuilder extends \yii\base\Object
         }
 
         return <<<EOF
-local allpks=redis.call('LRANGE',$key,0,-1)
+local allpks=redis.call('HKEYS',$key)
 local pks={}
 local n=0
 local v=nil

@@ -122,7 +122,7 @@ class ActiveRecord extends BaseActiveRecord
             }
         }
         // save pk in a findall pool
-        $db->executeCommand('RPUSH', [static::keyPrefix(), static::buildKey($pk)]);
+        $db->executeCommand('HSET', [static::keyPrefix(), static::buildKey($pk), 0]);
 
         $key = static::keyPrefix() . ':a:' . static::buildKey($pk);
         // save attributes
@@ -201,8 +201,8 @@ class ActiveRecord extends BaseActiveRecord
                 if (count($delArgs) > 1) {
                     $db->executeCommand('HDEL', $delArgs);
                 }
-                $db->executeCommand('LINSERT', [static::keyPrefix(), 'AFTER', $pk, $newPk]);
-                $db->executeCommand('LREM', [static::keyPrefix(), 0, $pk]);
+                $db->executeCommand('HSET', [static::keyPrefix(), $newPk, 0]);
+                $db->executeCommand('HDEL', [static::keyPrefix(), $pk]);
                 $db->executeCommand('RENAME', [$key, $newKey]);
                 $db->executeCommand('EXEC');
             } else {
@@ -277,9 +277,10 @@ class ActiveRecord extends BaseActiveRecord
         $db->executeCommand('MULTI');
         foreach ($pks as $pk) {
             $pk = static::buildKey($pk);
-            $db->executeCommand('LREM', [static::keyPrefix(), 0, $pk]);
+            $db->executeCommand('HDEL', [static::keyPrefix(), $pk]);
             $attributeKeys[] = static::keyPrefix() . ':a:' . $pk;
         }
+
         $db->executeCommand('DEL', $attributeKeys);
         $result = $db->executeCommand('EXEC');
 
