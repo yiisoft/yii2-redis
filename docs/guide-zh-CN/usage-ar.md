@@ -31,7 +31,7 @@ class Customer extends \yii\redis\ActiveRecord
     }
 
     /**
-     * 定义一个修改 `$query` 的范围，当返回有效（status = 1）客户。
+     * 定义一个修改 `$query` 的范围返回有效（status = 1）的客户。
      */
     public static function active($query)
     {
