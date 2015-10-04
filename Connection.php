@@ -245,7 +245,7 @@ class Connection extends Component
      */
     public function getIsActive()
     {
-        return $this->_socket !== null;
+        return $this->_socket != null;
     }
 
     /**
