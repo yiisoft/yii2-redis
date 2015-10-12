@@ -225,7 +225,7 @@ class Connection extends Component
     /**
      * @var resource redis socket connection
      */
-    private $_socket;
+    private $_socket = null;
 
 
     /**
