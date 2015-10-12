@@ -5,7 +5,7 @@ Yii Framework 2 redis extension Change Log
 -----------------------
 
 - Chg #14: Added missing `BLPOP` to `$redisCommands` (samdark)   
-- fixed issue #37 when redis connection is down (mirocow)
+- Bug #37 when redis connection is down (mirocow)
 
 2.0.4 May 10, 2015
 ------------------
