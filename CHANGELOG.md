@@ -6,7 +6,7 @@ Yii Framework 2 redis extension Change Log
 
 - Bug #37: Fixed detection of open socket (mirocow)
 - Chg #14: Added missing `BLPOP` to `$redisCommands` (samdark)   
-
+- Enh #39: Work with redis hashes as php arrays
 2.0.4 May 10, 2015
 ------------------
 

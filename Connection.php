@@ -225,7 +225,7 @@ class Connection extends Component
     /**
      * @var resource redis socket connection
      */
-    private $_socket = false;
+    private $_socket;
 
 
     /**
@@ -245,7 +245,7 @@ class Connection extends Component
      */
     public function getIsActive()
     {
-        return $this->_socket !== false;
+        return $this->_socket !== null;
     }
 
     /**
@@ -255,7 +255,7 @@ class Connection extends Component
      */
     public function open()
     {
-        if ($this->_socket !== false) {
+        if ($this->_socket !== null) {
             return;
         }
         $connection = ($this->unixSocket ?: $this->hostname . ':' . $this->port) . ', database=' . $this->database;
@@ -288,7 +288,7 @@ class Connection extends Component
      */
     public function close()
     {
-        if ($this->_socket !== false) {
+        if ($this->_socket !== null) {
             $connection = ($this->unixSocket ?: $this->hostname . ':' . $this->port) . ', database=' . $this->database;
             \Yii::trace('Closing DB connection: ' . $connection, __METHOD__);
             $this->executeCommand('QUIT');
@@ -431,5 +431,59 @@ class Connection extends Component
             default:
                 throw new Exception('Received illegal data from redis: ' . $line . "\nRedis command was: " . $command);
         }
+    }
+
+    /**
+     * See [http://redis.io/commands/hset](http://redis.io/commands/hset)
+     * @param string $key
+     * @param array $data - ['field' => 'value']
+     */
+    public function hSet($key, array $data)
+    {
+
+        return $this->executeCommand('HSET', [$key, key($data), reset($data)]);
+    }
+
+    /**
+     * See [http://redis.io/commands/hmset](http://redis.io/commands/hmset)
+     * @param string $key
+     * @param array $data - ['field' => 'value', 'field2' => 'value']
+     */
+    public function hmSet($key, array $data)
+    {
+        $command = [$key];
+
+        foreach ($data as $field => $value) {
+            array_push($command, $field);
+            array_push($command, $value);
+        }
+
+        return $this->executeCommand('HMSET', $command);
+    }
+
+    /**
+     * [http://redis.io/commands/hgetall](http://redis.io/commands/hgetall)
+     * @param string $key
+     * @return array
+     */
+    public function hGetAll($key)
+    {
+        $response = $this->executeCommand('HGETALL', [$key]);
+        return $this->modifyHashResponse($response);
+    }
+
+    /**
+     * @param array $response
+     * @return array
+     */
+    private function modifyHashResponse(array $response)
+    {
+        $data = [];
+
+        for ($i = 0; $i < count($response); $i += 2) {
+            $data[$response[$i]] = $response[$i + 1];
+        }
+
+        return $data;
     }
 }
