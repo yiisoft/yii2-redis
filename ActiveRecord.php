@@ -122,9 +122,10 @@ class ActiveRecord extends BaseActiveRecord
             }
         }
         // save pk in a findall pool
-        $db->executeCommand('RPUSH', [static::keyPrefix(), static::buildKey($pk)]);
+        $pk = static::buildKey($pk);
+        $db->executeCommand('RPUSH', [static::keyPrefix(), $pk]);
 
-        $key = static::keyPrefix() . ':a:' . static::buildKey($pk);
+        $key = static::keyPrefix() . ':a:' . $pk;
         // save attributes
         $setArgs = [$key];
         foreach ($values as $attribute => $value) {
@@ -333,6 +334,6 @@ class ActiveRecord extends BaseActiveRecord
             }
         }
 
-        return md5(json_encode($key));
+        return md5(json_encode($key, JSON_NUMERIC_CHECK));
     }
 }
