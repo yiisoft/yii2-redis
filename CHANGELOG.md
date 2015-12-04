@@ -5,6 +5,7 @@ Yii Framework 2 redis extension Change Log
 -----------------------
 
 - Bug #37: Fixed detection of open socket (mirocow)
+- Bug #46: Fixed bug to execute session_regenerate_id in PHP 7.0 (githubjeka)
 - Chg #14: Added missing `BLPOP` to `$redisCommands` (samdark)   
 
 2.0.4 May 10, 2015
