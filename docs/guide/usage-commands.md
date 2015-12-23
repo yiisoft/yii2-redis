@@ -17,7 +17,7 @@ $result = $redis->executeCommand('hmset', ['test_collection', 'key1', 'val1', 'k
 There are shortcuts available for each command supported so insted of the above it can be used as follows:
 
 ```php
-$result = $redis->hmset(['test_collection', 'key1', 'val1', 'key2', 'val2']);
+$result = $redis->hmset('test_collection', 'key1', 'val1', 'key2', 'val2');
 ```
 
 For a list of available commands and their parameters see [http://redis.io/commands](http://redis.io/commands).
