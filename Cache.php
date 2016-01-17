@@ -8,7 +8,7 @@
 namespace yii\redis;
 
 use Yii;
-use yii\base\InvalidConfigException;
+use yii\di\Instance;
 
 /**
  * Redis Cache implements a cache application component based on [redis](http://redis.io/) key-value store.
@@ -76,17 +76,7 @@ class Cache extends \yii\caching\Cache
     public function init()
     {
         parent::init();
-        if (is_string($this->redis)) {
-            $this->redis = Yii::$app->get($this->redis);
-        } elseif (is_array($this->redis)) {
-            if (!isset($this->redis['class'])) {
-                $this->redis['class'] = Connection::className();
-            }
-            $this->redis = Yii::createObject($this->redis);
-        }
-        if (!$this->redis instanceof Connection) {
-            throw new InvalidConfigException("Cache::redis must be either a Redis connection instance or the application component ID of a Redis connection.");
-        }
+        $this->redis = Instance::ensure($this->redis, Connection::className());
     }
 
     /**
