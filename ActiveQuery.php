@@ -368,8 +368,11 @@ class ActiveQuery extends Component implements ActiveQueryInterface
     {
         $needSort = !empty($this->orderBy) && in_array($type, ['All', 'One', 'Column']);
         if ($needSort) {
-            if (count($this->orderBy) > 1)
-                throw new NotSupportedException('orderBy by multi columns is currently not supported by redis ActiveRecord.');
+            if (count($this->orderBy) > 1) {
+                throw new NotSupportedException(
+                    'orderBy by multiple columns is not currently supported by redis ActiveRecord.'
+                );
+            }
 
             $k = key($this->orderBy);
             $v = $this->orderBy[$k];

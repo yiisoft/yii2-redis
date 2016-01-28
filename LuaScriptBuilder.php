@@ -167,8 +167,11 @@ class LuaScriptBuilder extends \yii\base\Object
 local allpks=redis.call('LRANGE',$key,0,-1)
 EOF;
         if (!empty($query->orderBy)) {
-            if (count($query->orderBy) > 1)
-                throw new NotSupportedException('orderBy by multi columns is currently not supported by redis ActiveRecord.');
+            if (count($query->orderBy) > 1) {
+                throw new NotSupportedException(
+                    'orderBy by multiple columns is not currently supported by redis ActiveRecord.'
+                );
+            }
 
             $k = key($query->orderBy);
             $v = $query->orderBy[$k];
