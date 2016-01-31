@@ -111,6 +111,9 @@ class ActiveRecordTest extends TestCase
         $orderItem = new OrderItem();
         $orderItem->setAttributes(['order_id' => 3, 'item_id' => 2, 'quantity' => 1, 'subtotal' => 40.0], false);
         $orderItem->save(false);
+        $orderItem = new OrderItem();
+        $orderItem->setAttributes(['order_id' => 3, 'item_id' => 'nostr', 'quantity' => 1, 'subtotal' => 40.0], false);
+        $orderItem->save(false);
 
         $order = new OrderWithNullFK();
         $order->setAttributes(['customer_id' => 1, 'created_at' => 1325282384, 'total' => 110.0], false);
@@ -200,8 +203,8 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals(1, Customer::find()->min('id'));
         $this->assertEquals(3, Customer::find()->max('id'));
 
-        $this->assertEquals(6, OrderItem::find()->count());
-        $this->assertEquals(7, OrderItem::find()->sum('quantity'));
+        $this->assertEquals(7, OrderItem::find()->count());
+        $this->assertEquals(8, OrderItem::find()->sum('quantity'));
     }
 
     public function testFindIndexBy()
@@ -407,4 +410,17 @@ class ActiveRecordTest extends TestCase
         $this->assertNotNull($customer);
         $this->assertEquals('user6', $customer->name);
     }
+
+    public function testBuildKey()
+    {
+        $pk = ['order_id' => 3, 'item_id' => 'nostr'];
+	$key = OrderItem::buildKey($pk);
+
+        $orderItem = OrderItem::findOne($pk);
+        $this->assertNotNull($orderItem);
+
+        $pk = ['order_id' => $orderItem->order_id, 'item_id' => $orderItem->item_id];
+        $this->assertEquals($key, OrderItem::buildKey($pk));
+    }
+
 }
