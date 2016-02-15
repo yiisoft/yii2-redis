@@ -121,10 +121,15 @@ class ActiveRecord extends BaseActiveRecord
                 }
             }
         }
-        // save pk in a findall pool
-        $db->executeCommand('RPUSH', [static::keyPrefix(), static::buildKey($pk)]);
 
-        $key = static::keyPrefix() . ':a:' . static::buildKey($pk);
+        $keyPrefix = static::keyPrefix();
+        $buildKey = static::buildKey($pk);
+        $key = $keyPrefix . ':a:' . $buildKey;
+        if(!$db->executeCommand('EXISTS', [$key])) {
+            // save pk in a findall pool
+            $db->executeCommand('RPUSH', [$keyPrefix, $buildKey]);
+        }
+
         // save attributes
         $setArgs = [$key];
         foreach ($values as $attribute => $value) {
