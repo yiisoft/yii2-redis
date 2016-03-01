@@ -235,7 +235,6 @@ class Connection extends Component
     public function __sleep()
     {
         $this->close();
-
         return array_keys(get_object_vars($this));
     }
 
@@ -351,7 +350,7 @@ class Connection extends Component
      *
      * @param string $name the name of the command
      * @param array $params list of parameters for the command
-     * @return array|bool|null|string Dependent on the executed command this method
+     * @return array|boolean|null|string Dependent on the executed command this method
      * will return different data types:
      *
      * - `true` for commands that return "status reply" with the message `'OK'` or `'PONG'`.

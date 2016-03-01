@@ -46,7 +46,7 @@ class ActiveRecord extends BaseActiveRecord
      */
     public static function getDb()
     {
-        return \Yii::$app->get('redis');
+        return Yii::$app->get('redis');
     }
 
     /**

@@ -307,7 +307,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * @param string $type the type of the script to generate
      * @param string $columnName
      * @throws NotSupportedException
-     * @return array|bool|null|string
+     * @return array|boolean|null|string
      */
     protected function executeScript($db, $type, $columnName = null)
     {
@@ -363,7 +363,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * If this parameter is not given, the `db` application component will be used.
      * @param string $type the type of the script to generate
      * @param string $columnName
-     * @return array|bool|null|string
+     * @return array|boolean|null|string
      * @throws \yii\base\InvalidParamException
      * @throws \yii\base\NotSupportedException
      */
