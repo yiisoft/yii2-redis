@@ -407,4 +407,14 @@ class ActiveRecordTest extends TestCase
         $this->assertNotNull($customer);
         $this->assertEquals('user6', $customer->name);
     }
+
+    public function testEscapeData()
+    {
+        $customer = new Customer();
+        $customer->email = "the People's Republic of China";
+        $customer->save(false);
+
+        $c = Customer::findOne(['email' => "the People's Republic of China"]);
+        $this->assertSame("the People's Republic of China", $c->email);
+    }
 }
