@@ -20,7 +20,7 @@ class RedisCacheTest extends CacheTestCase
      */
     protected function getCacheInstance()
     {
-        $databases = self::getParam('databases');
+        $databases = TestCase::getParam('databases');
         $params = isset($databases['redis']) ? $databases['redis'] : null;
         if ($params === null) {
             $this->markTestSkipped('No redis server connection configured.');

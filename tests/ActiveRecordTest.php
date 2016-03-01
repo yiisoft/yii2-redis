@@ -417,4 +417,15 @@ class ActiveRecordTest extends TestCase
         $c = Customer::findOne(['email' => "the People's Republic of China"]);
         $this->assertSame("the People's Republic of China", $c->email);
     }
+
+    public function testFindEmptyWith()
+    {
+        Order::getDb()->flushdb();
+        $orders = Order::find()
+            ->where(['total' => 100000])
+            ->orWhere(['total' => 1])
+            ->with('customer')
+            ->all();
+        $this->assertEquals([], $orders);
+    }
 }
