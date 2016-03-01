@@ -5,14 +5,16 @@ REDIS_VERSION=3.0.0
 PHP_VERSION=php-5.6.8
 YII_VERSION=dev-master
 
+# ensure all the configuration variables above are in environment of the shell commands below
+export
 
 help:
 	@echo "make test	- run phpunit tests using a docker environment"
 	@echo "make clean	- stop docker and remove container"
 
 test: docker adjust-config
-	composer require "yiisoft/yii2:${YII_VERSION}" --prefer-dist
-	composer install --prefer-dist
+	#composer require "yiisoft/yii2:${YII_VERSION}" --prefer-dist
+	#composer install --prefer-dist
 	docker run --rm=true -v $(shell pwd):/opt/test --link $(shell cat tests/dockerids/redis):redis yiitest/php:${PHP_VERSION} phpunit --verbose --color
 
 adjust-config:
