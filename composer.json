@@ -1,5 +1,5 @@
 {
-    "name": "leadermt/yii2-redis",
+    "name": "yiisoft/yii2-redis",
     "description": "Redis Cache, Session and ActiveRecord for the Yii framework",
     "keywords": ["yii2", "redis", "active-record", "cache", "session"],
     "type": "yii2-extension",
