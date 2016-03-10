@@ -80,4 +80,50 @@ class ConnectionTest extends TestCase
             $this->assertEquals($expected[$key], $redis->executeCommand('TYPE',[$key]));
         }
     }
+
+    public function hashSetData()
+    {
+        return [
+            ['hash2', ['hello' => 'world']],
+            ['hash3', ['good' => 'day']],
+            ['hash4', [4 => 'world']],
+            ['hash5', ['world' => 15]],
+            ['hash6', ['world' => null]],
+            ['hash7', ['world' => true]]
+        ];
+    }
+
+    public function hashMSetData()
+    {
+        return [
+            ['hashMSet2', ['hello' => 'world', 'test' => 'case']],
+            ['hashMSet3', ['hello' => 13, 'test' => null]],
+        ];
+    }
+
+    /**
+     * @dataProvider hashSetData
+     */
+    public function testHSet($key, $data)
+    {
+        $redis = $this->getConnection();
+
+        $redis->hSet($key, $data);
+
+        $this->assertEquals('hash', $redis->executeCommand('TYPE', [$key]));
+        $this->assertEquals($data, $redis->hGetAll($key));
+    }
+
+    /**
+     * @dataProvider hashMSetData
+     */
+    public function testHMSet($key, $data)
+    {
+        $redis = $this->getConnection();
+
+        $redis->hmSet($key, $data);
+
+        $this->assertEquals('hash', $redis->executeCommand('TYPE', [$key]));
+        $this->assertEquals($data, $redis->hGetAll($key));
+    }
 }

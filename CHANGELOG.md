@@ -9,7 +9,7 @@ Yii Framework 2 redis extension Change Log
 - Bug #46: Fixed bug to execute session_regenerate_id in PHP 7.0 (githubjeka)
 - Enh #31: Added `Connection::$socketClientFlags` property for connection flags to be passed to `stream_socket_client()` (hugh-lee)
 - Chg #14: Added missing `BLPOP` to `$redisCommands` (samdark)   
-
+- Enh #39: Work with redis hashes as php arrays
 2.0.4 May 10, 2015
 ------------------
 
