@@ -4,7 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.6 under development
 -----------------------
 
-- no changes in this release.
+- Enh #53: Added redis based Mutex `\yii\redis\Mutex` (turboezh)
 
 
 2.0.5 March 17, 2016
