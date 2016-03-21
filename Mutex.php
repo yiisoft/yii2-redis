@@ -12,7 +12,6 @@ use yii\base\InvalidConfigException;
 use yii\di\Instance;
 use yii\mutex\Mutex as AbstractMutex;
 
-
 /**
  * Implements mutex based on Redis.
  * Single instance lock algorithm.
@@ -78,7 +77,7 @@ class Mutex extends AbstractMutex
      *            that was set by the client trying to remove it."
      *
      */
-    private $lockMap = [];
+    private $_lockMap = [];
 
     /**
      * Initializes the redis Mutex component.
@@ -177,7 +176,7 @@ class Mutex extends AbstractMutex
      */
     protected function getLock($name)
     {
-        return isset($this->lockMap[$name]) ? [$this->getLockKey($name), $this->lockMap[$name]] : null;
+        return isset($this->_lockMap[$name]) ? [$this->getLockKey($name), $this->_lockMap[$name]] : null;
     }
 
     /**
@@ -189,12 +188,12 @@ class Mutex extends AbstractMutex
      */
     protected function addLock($name)
     {
-        if (isset($this->lockMap[$name])) {
+        if (isset($this->_lockMap[$name])) {
             return null;
         }
 
-        $lockValue            = Yii::$app->security->generateRandomString();
-        $this->lockMap[$name] = $lockValue;
+        $lockValue = Yii::$app->security->generateRandomString();
+        $this->_lockMap[$name] = $lockValue;
 
         return [$this->getLockKey($name), $lockValue];
     }
@@ -208,6 +207,6 @@ class Mutex extends AbstractMutex
      */
     protected function deleteLock($name)
     {
-        unset($this->lockMap[$name]);
+        unset($this->_lockMap[$name]);
     }
 }
