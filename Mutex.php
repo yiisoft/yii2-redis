@@ -91,7 +91,7 @@ class Mutex extends AbstractMutex
         $this->redis = Instance::ensure($this->redis, Connection::className());
 
         if ($this->keyPrefix === null) {
-            $this->keyPrefix = substr(md5(Yii::$app->id), 0, 5);
+            $this->keyPrefix = 'mutex_' . md5(Yii::$app->id) . '_';
         }
     }
 
