@@ -36,7 +36,7 @@ use yii\mutex\Mutex as AbstractMutex;
  *  ]
  * ```
  *
- * @see    Mutex
+ * @see    yii\mutex\Mutex
  *
  * @author Alexander Zhuravlev <axelhex@gmail.com>
  * @since  2.0.6
