@@ -276,7 +276,7 @@ class Connection extends Component
             $this->unixSocket ? 'unix://' . $this->unixSocket : 'tcp://' . $this->hostname . ':' . $this->port,
             $errorNumber,
             $errorDescription,
-            $this->connectionTimeout ? $this->connectionTimeout : ini_get("default_socket_timeout"),
+            $this->connectionTimeout ? $this->connectionTimeout : ini_get('default_socket_timeout'),
             $this->socketClientFlags
         );
         if ($this->_socket) {
