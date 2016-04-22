@@ -350,7 +350,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
         }
 
         // find by primary key if possible. This is much faster than scanning all records
-        if (is_array($this->where) && !isset($this->where[0]) && $modelClass::isPrimaryKey(array_keys($this->where))) {
+        if (is_array($this->where) && (
+                !isset($this->where[0]) && $modelClass::isPrimaryKey(array_keys($this->where)) ||
+                isset($this->where[0]) && $this->where[0] === 'in' && $modelClass::isPrimaryKey($this->where[1])
+            )) {
             return $this->findByPk($db, $type, $columnName);
         }
 
@@ -372,7 +375,9 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     private function findByPk($db, $type, $columnName = null)
     {
-        if (count($this->where) == 1) {
+        if (isset($this->where[0]) && $this->where[0] === 'in') {
+            $pks = (array) $this->where[2];
+        } elseif (count($this->where) == 1) {
             $pks = (array) reset($this->where);
         } else {
             foreach ($this->where as $values) {

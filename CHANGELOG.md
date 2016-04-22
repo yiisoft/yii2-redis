@@ -4,7 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.6 under development
 -----------------------
 
-- no changes in this release.
+- Enh: Optimized find by PK for relational queries and IN condition (cebe, andruha)
 
 
 2.0.5 March 17, 2016
