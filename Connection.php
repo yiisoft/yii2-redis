@@ -276,7 +276,7 @@ class Connection extends Component
             $this->unixSocket ? 'unix://' . $this->unixSocket : 'tcp://' . $this->hostname . ':' . $this->port,
             $errorNumber,
             $errorDescription,
-            $this->connectionTimeout ? $this->connectionTimeout : ini_get("default_socket_timeout"),
+            $this->connectionTimeout ? $this->connectionTimeout : ini_get('default_socket_timeout'),
             $this->socketClientFlags
         );
         if ($this->_socket) {
@@ -291,7 +291,7 @@ class Connection extends Component
         } else {
             \Yii::error("Failed to open redis DB connection ($connection): $errorNumber - $errorDescription", __CLASS__);
             $message = YII_DEBUG ? "Failed to open redis DB connection ($connection): $errorNumber - $errorDescription" : 'Failed to open DB connection.';
-            throw new Exception($message, $errorDescription, (int) $errorNumber);
+            throw new Exception($message, $errorDescription, $errorNumber);
         }
     }
 

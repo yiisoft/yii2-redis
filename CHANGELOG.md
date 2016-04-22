@@ -4,6 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.6 under development
 -----------------------
 
+- Enh: Optimized find by PK for relational queries and IN condition (cebe, andruha)
 - Enh #53: Added redis based Mutex `\yii\redis\Mutex` (turboezh)
 
 
