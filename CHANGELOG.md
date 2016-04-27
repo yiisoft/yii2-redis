@@ -4,6 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.6 under development
 -----------------------
 
+- Bug #67: Fixed regression from 2.0.5, reconnecting a closed connection fails (cebe)
 - Enh: Optimized find by PK for relational queries and IN condition (cebe, andruha)
 
 
