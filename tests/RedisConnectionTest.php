@@ -32,6 +32,22 @@ class ConnectionTest extends TestCase
         $db->close();
     }
 
+    /**
+     * tests whether close cleans up correctly so that a new connect works
+     */
+    public function testReConnect()
+    {
+        $db = $this->getConnection(false);
+        $db->open();
+        $this->assertTrue($db->ping());
+        $db->close();
+
+        $db->open();
+        $this->assertTrue($db->ping());
+        $db->close();
+    }
+
+
     public function keyValueData()
     {
         return [
