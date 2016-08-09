@@ -10,7 +10,7 @@ Yii Framework 2 redis extension Change Log
 - Bug #82: Fixed session object destruction failure when key expires (juffin-halli, samdark)
 - Enh #89: Added support for `\yii\db\QueryInterface::emulateExecution()` (samdark)
 - Bug #93: Fixed `yii\redis\ActiveRecord::deleteAll()` with condition (samdark)
-- Enh #53: Added Redis based Mutex `\yii\redis\Mutex` (turboezh)
+- Enh #53: Added `Mutex` that implements a Redis based mutex (turboezh, sergeymakinen)
 
 
 2.0.5 March 17, 2016
