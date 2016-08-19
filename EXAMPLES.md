@@ -75,7 +75,7 @@ $user->save();
 ```
 Поиск таких записей так же отличается от обычного find()
 ```php
-$records = rdUser::find()->georadius(['lat'=>50,'lon'=>40, 'len'=>'100 m'])->all();
+$records = rdUser::find()->georadius(['lat'=>50,'lon'=>40, 'radius'=>'100 m'])->all();
 ```
 
 georecords можно комбинировать с expire
