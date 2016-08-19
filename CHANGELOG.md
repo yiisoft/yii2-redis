@@ -1,7 +1,7 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
-2.0.6.1 development fork
+2.0.6-dev development fork
 -----------------------
 ATTENTION!!! 
 This fork use incompatible storage for key pool (SADD, SCARD, SMEMBERS)
