@@ -90,12 +90,12 @@ $user->save();
 
 в поиске нужно указать и georadius и expire
 ```php
-$records = rdUser::find()->georadius(['lat'=>50,'lon'=>40, 'len'=>'100 m'])->expire(true)->all();
+$records = rdUser::find()->georadius(['lat'=>50,'lon'=>40, 'radius'=>'100 m'])->expire(true)->all();
 ```
 
 разумеется можно использовать withExpiring для поиска истекающих georecords и обычных
 ```php
-$records = rdUser::find()->georadius(['lat'=>50,'lon'=>40, 'len'=>'100 m'])->withExpiring(true)->all();
+$records = rdUser::find()->georadius(['lat'=>50,'lon'=>40, 'radius'=>'100 m'])->withExpiring(true)->all();
 ```
 
 Для истекающих записей можно получить оставшееся время жизни
