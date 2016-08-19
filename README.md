@@ -27,7 +27,7 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist yiisoft/yii2-redis
+php composer.phar require --prefer-dist nailfor/redis
 ```
 
 or add
