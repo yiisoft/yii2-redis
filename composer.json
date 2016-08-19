@@ -1,15 +1,15 @@
 {
-    "name": "yiisoft/yii2-redis",
+    "name": "nailfor/redis",
     "description": "Redis Cache, Session and ActiveRecord for the Yii framework",
-    "keywords": ["yii2", "redis", "active-record", "cache", "session"],
+    "keywords": ["yii2", "redis", "active-record", "cache", "session", "expire", "geodata"],
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
     "support": {
-        "issues": "https://github.com/yiisoft/yii2-redis/issues",
+        "issues": "https://github.com/nailfor/redis/issues",
         "forum": "http://www.yiiframework.com/forum/",
         "wiki": "http://www.yiiframework.com/wiki/",
         "irc": "irc://irc.freenode.net/yii",
-        "source": "https://github.com/yiisoft/yii2-redis"
+        "source": "https://github.com/nailfor/redis"
     },
     "authors": [
         {

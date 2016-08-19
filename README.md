@@ -17,7 +17,7 @@ Documentation is at [docs/guide/README.md](docs/guide/README.md).
 Requirements
 ------------
 
-At least redis version 2.6.12 is required for all components to work properly.
+At least redis version 3.2.0 is required for all components to work properly.
 
 Installation
 ------------
@@ -33,7 +33,7 @@ php composer.phar require --prefer-dist yiisoft/yii2-redis
 or add
 
 ```json
-"yiisoft/yii2-redis": "~2.0.0"
+"nailfor/redis": "~2.0.0"
 ```
 
 to the require section of your composer.json.
@@ -53,6 +53,19 @@ return [
             'hostname' => 'localhost',
             'port' => 6379,
             'database' => 0,
+        ],
+    ]
+];
+```
+
+or if you want to use sock
+```php
+return [
+    //....
+    'components' => [
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'unixSocket' => '/var/run/redis/redis.sock',
         ],
     ]
 ];

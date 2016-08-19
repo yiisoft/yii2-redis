@@ -81,7 +81,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * @event Event an event that is triggered when the query is initialized via [[init()]].
      */
     const EVENT_INIT = 'init';
-
+    
+    public $expire;
+    public $radius;
+    public $withExpiring;
 
     /**
      * Constructor.
@@ -107,6 +110,69 @@ class ActiveQuery extends Component implements ActiveQueryInterface
     }
 
     /**
+     * Converts found rows into model instances
+     * @param array $rows
+     * @return array|ActiveRecord[]
+     */
+    protected function createModels($rows)
+    {
+        $models = [];
+        if ($this->asArray) {
+            if ($this->indexBy === null) {
+                return $rows;
+            }
+            foreach ($rows as $row) {
+                if (is_string($this->indexBy)) {
+                    $key = $row[$this->indexBy];
+                } else {
+                    $key = call_user_func($this->indexBy, $row);
+                }
+                $models[$key] = $row;
+            }
+        } else {
+            /* @var $class ActiveRecord */
+            $class = $this->modelClass;
+            
+            foreach ($rows as $row) {
+                $model = $class::instantiate($row);
+                $modelClass = get_class($model);
+                $modelClass::populateRecord($model, $row);
+                if ($this->indexBy === null) {
+                    $models[] = $model;
+                }
+                else {
+                    if (is_string($this->indexBy)) {
+                        $key = $model->{$this->indexBy};
+                    } else {
+                        $key = call_user_func($this->indexBy, $model);
+                    }
+                    $models[$key] = $model;
+                }
+                $model->afterFind();
+            }
+        }
+
+        return $models;
+    }    
+    
+    protected function allOne($type, $db = null) {
+        // TODO add support for orderBy
+        $rows = $this->executeScript($db, $type, null, true);
+        if (empty($rows)) {
+            return [];
+        }
+        
+        $models = $this->createModels($rows);
+        if (!empty($this->with)) {
+            $this->findWith($this->with, $models);
+        }
+
+        return $models;
+        
+    }
+
+
+    /**
      * Executes the query and returns all results as an array.
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
@@ -114,36 +180,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     public function all($db = null)
     {
-        // TODO add support for orderBy
-        $data = $this->executeScript($db, 'All');
-        if (empty($data)) {
-            return [];
-        }
-        $rows = [];
-        foreach ($data as $dataRow) {
-            $row = [];
-            $c = count($dataRow);
-            for ($i = 0; $i < $c;) {
-                $row[$dataRow[$i++]] = $dataRow[$i++];
-            }
-
-            $rows[] = $row;
-        }
-        if (!empty($rows)) {
-            $models = $this->createModels($rows);
-            if (!empty($this->with)) {
-                $this->findWith($this->with, $models);
-            }
-            if (!$this->asArray) {
-                foreach ($models as $model) {
-                    $model->afterFind();
-                }
-            }
-
-            return $models;
-        } else {
-            return [];
-        }
+        return $this->allOne('All', $db);
     }
 
     /**
@@ -156,35 +193,11 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     public function one($db = null)
     {
-        // TODO add support for orderBy
-        $data = $this->executeScript($db, 'One');
-        if (empty($data)) {
+        $models = $this->allOne('One', $db);
+        if (!$models) {
             return null;
         }
-        $row = [];
-        $c = count($data);
-        for ($i = 0; $i < $c;) {
-            $row[$data[$i++]] = $data[$i++];
-        }
-        if ($this->asArray) {
-            $model = $row;
-        } else {
-            /* @var $class ActiveRecord */
-            $class = $this->modelClass;
-            $model = $class::instantiate($row);
-            $class = get_class($model);
-            $class::populateRecord($model, $row);
-        }
-        if (!empty($this->with)) {
-            $models = [$model];
-            $this->findWith($this->with, $models);
-            $model = $models[0];
-        }
-        if (!$this->asArray) {
-            $model->afterFind();
-        }
-
-        return $model;
+        return reset($models);
     }
 
     /**
@@ -196,14 +209,13 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     public function count($q = '*', $db = null)
     {
-        if ($this->where === null) {
+        if ($this->where === null && !$this->expire && !$this->withExpiring && !$this->radius) {
             /* @var $modelClass ActiveRecord */
             $modelClass = $this->modelClass;
             if ($db === null) {
                 $db = $modelClass::getDb();
             }
-
-            return $db->executeCommand('LLEN', [$modelClass::keyPrefix()]);
+            return $db->executeCommand('SCARD', [$modelClass::keyPrefix()]);
         } else {
             return $this->executeScript($db, 'Count');
         }
@@ -304,15 +316,72 @@ class ActiveQuery extends Component implements ActiveQueryInterface
     }
 
     /**
+     * Set only expire mode for query
+     * for example
+     *  User::find()->expire(true)->all() return all users with expire records
+     * @param bool $mode
+     * @return \yii\redis\ActiveQuery
+     */
+    public function expire($mode) 
+    {
+        $this->expire = $mode;
+        return $this;
+    }
+
+    /**
+     * Set expire and not-expire mode for query
+     * for example
+     *  User::find()->withExpiring(true)->all() return all users with expire and normal records
+     * @param bool $mode
+     * @return \yii\redis\ActiveQuery
+     */
+    public function withExpiring($mode) 
+    {
+        $this->withExpiring = $mode;
+        return $this;
+    }
+    
+    /**
+     * Set georadius for query
+     * for example
+     *  User::find()->georadius(['lat'=>10,'lon'=>20,'len'=>'1 km'])->all() return all users form [10,20] and 1km radius
+     * @param array $params
+     * [
+     *   'lon' - float longitude
+     *   'lat' - float latitude
+     *   'len' - string length for example '5 km' or '100 m'
+     * ]
+     * @return \yii\redis\ActiveQuery
+     */
+    public function georadius($params) 
+    {
+        $this->radius = $params;
+        return $this;
+    }
+
+
+    protected function getRow($data)
+    {
+        $row = [];
+        $c = count($data);
+        for ($i = 0; $i < $c;) {
+            $row[$data[$i++]] = $data[$i++];
+        }
+
+        return $row;
+    }
+    
+    /**
      * Executes a script created by [[LuaScriptBuilder]]
      * @param Connection|null $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
      * @param string $type the type of the script to generate
      * @param string $columnName
+     * @param bool $convert convert result to key->value format
      * @throws NotSupportedException
      * @return array|boolean|null|string
      */
-    protected function executeScript($db, $type, $columnName = null)
+    protected function executeScript($db, $type, $columnName = null, $convert = false)
     {
         if ($this->primaryModel !== null) {
             // lazy loading
@@ -354,13 +423,26 @@ class ActiveQuery extends Component implements ActiveQueryInterface
                 !isset($this->where[0]) && $modelClass::isPrimaryKey(array_keys($this->where)) ||
                 isset($this->where[0]) && $this->where[0] === 'in' && $modelClass::isPrimaryKey($this->where[1])
             )) {
-            return $this->findByPk($db, $type, $columnName);
+            return $this->findByPk($db, $type, $columnName, $convert);
         }
 
         $method = 'build' . $type;
         $script = $db->getLuaScriptBuilder()->$method($this, $columnName);
+        $data = $db->executeCommand('EVAL', [$script, 0]);
+        
+        if ($data && $convert) {
+            if ($type == 'One') {
+                $data = [$this->getRow($data)];
+            }
+            else {
+                foreach ($data as $dataRow) {
+                    $rows[] = $this->getRow($dataRow);
+                }
+                $data = $rows;
+            }
+        }
 
-        return $db->executeCommand('EVAL', [$script, 0]);
+        return $data;
     }
 
     /**
@@ -373,7 +455,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * @throws \yii\base\InvalidParamException
      * @throws \yii\base\NotSupportedException
      */
-    private function findByPk($db, $type, $columnName = null)
+    protected function findByPk($db, $type, $columnName = null, $convert = false)
     {
         if (isset($this->where[0]) && $this->where[0] === 'in') {
             $pks = (array) $this->where[2];
@@ -388,10 +470,11 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             }
             $pks = [$this->where];
         }
-
+        
         /* @var $modelClass ActiveRecord */
         $modelClass = $this->modelClass;
-
+        $prefix = $modelClass::keyPrefix();
+        
         if ($type == 'Count') {
             $start = 0;
             $limit = null;
@@ -403,9 +486,19 @@ class ActiveQuery extends Component implements ActiveQueryInterface
         $data = [];
         foreach ($pks as $pk) {
             if (++$i > $start && ($limit === null || $i <= $start + $limit)) {
-                $key = $modelClass::keyPrefix() . ':a:' . $modelClass::buildKey($pk);
+                $key = $pk;
+                if ($this->where) {
+                    $key = $modelClass::buildKey($key);
+                }
+                
+                $key = $modelClass::buildKeyPrefix($key, $prefix, $modelClass::TYPE_KEY);
                 $result = $db->executeCommand('HGETALL', [$key]);
-                if (!empty($result)) {
+                if ($result) {
+                    if ($convert) {
+                        $result = $this->getRow($result);
+                        $result['_PrimaryKey'] = $key;
+                    }
+                    
                     $data[] = $result;
                     if ($type === 'One' && $this->orderBy === null) {
                         break;
@@ -419,7 +512,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             case 'All':
                 return $data;
             case 'One':
-                return reset($data);
+                return $data;
             case 'Count':
                 return count($data);
             case 'Column':
