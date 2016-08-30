@@ -238,7 +238,7 @@ class Connection extends Component
     /**
      * @var resource redis socket connection
      */
-    private $_socket = false;
+    protected $_socket = false;
 
 
     /**
