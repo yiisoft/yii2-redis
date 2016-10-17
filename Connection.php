@@ -66,6 +66,7 @@ class Connection extends Component
     public $password;
     /**
      * @var integer the redis database to use. This is an integer value starting from 0. Defaults to 0.
+     * Since version 2.0.6 you can disable the SELECT command sent after connection by setting this property to `null`.
      */
     public $database = 0;
     /**
@@ -286,7 +287,9 @@ class Connection extends Component
             if ($this->password !== null) {
                 $this->executeCommand('AUTH', [$this->password]);
             }
-            $this->executeCommand('SELECT', [$this->database]);
+            if ($this->database !== null) {
+                $this->executeCommand('SELECT', [$this->database]);
+            }
             $this->initConnection();
         } else {
             \Yii::error("Failed to open redis DB connection ($connection): $errorNumber - $errorDescription", __CLASS__);
