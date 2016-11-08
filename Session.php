@@ -139,7 +139,9 @@ class Session extends \yii\web\Session
      */
     public function destroySession($id)
     {
-        return (bool) $this->redis->executeCommand('DEL', [$this->calculateKey($id)]);
+        $this->redis->executeCommand('DEL', [$this->calculateKey($id)]);
+        // @see https://github.com/yiisoft/yii2-redis/issues/82
+        return true;
     }
 
     /**
