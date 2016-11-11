@@ -59,7 +59,7 @@ use yii\di\Instance;
 class Mutex extends \yii\mutex\Mutex
 {
     /**
-     * @var int the number of seconds in which the lock will be auto released.
+     * @var integer the number of seconds in which the lock will be auto released.
      */
     public $expire = 30;
     /**
@@ -90,7 +90,17 @@ class Mutex extends \yii\mutex\Mutex
     public function init()
     {
         parent::init();
-        $this->redis = Instance::ensure($this->redis, Connection::className());
+        if (is_string($this->redis)) {
+            $this->redis = Yii::$app->get($this->redis);
+        } elseif (is_array($this->redis)) {
+            if (!isset($this->redis['class'])) {
+                $this->redis['class'] = Connection::className();
+            }
+            $this->redis = Yii::createObject($this->redis);
+        }
+        if (!$this->redis instanceof Connection) {
+            throw new InvalidConfigException("Mutex::redis must be either a Redis connection instance or the application component ID of a Redis connection.");
+        }
         if ($this->keyPrefix === null) {
             $this->keyPrefix = substr(md5(Yii::$app->id), 0, 5);
         }
@@ -99,9 +109,9 @@ class Mutex extends \yii\mutex\Mutex
     /**
      * Acquires a lock by name.
      * @param string $name of the lock to be acquired. Must be unique.
-     * @param int $timeout time to wait for lock to be released. Defaults to `0` meaning that method will return
+     * @param integer $timeout time to wait for lock to be released. Defaults to zero meaning that method will return
      * false immediately in case lock was already acquired.
-     * @return bool lock acquiring result.
+     * @return boolean lock acquiring result.
      */
     protected function acquireLock($name, $timeout = 0)
     {
@@ -121,15 +131,15 @@ class Mutex extends \yii\mutex\Mutex
     }
 
     /**
-     * Releases acquired lock. This method will return `false` in case the lock was not found or Redis command failed.
+     * Releases acquired lock. This method will return false in case the lock was not found or Redis command failed.
      * @param string $name of the lock to be released. This lock must already exist.
-     * @return bool lock release result: `false` in case named lock was not found or Redis command failed.
+     * @return boolean lock release result: false in case named lock was not found or Redis command failed.
      */
     protected function releaseLock($name)
     {
         static $releaseLuaScript = <<<LUA
-if redis.call("GET",KEYS[1])==ARGV[1] then
-    return redis.call("DEL",KEYS[1])
+if redis.call("get",KEYS[1]) == ARGV[1] then
+    return redis.call("del",KEYS[1])
 else
     return 0
 end
@@ -149,8 +159,8 @@ LUA;
 
     /**
      * Generates a unique key used for storing the mutex in Redis.
-     * @param string $name mutex name.
-     * @return string a safe cache key associated with the mutex name.
+     * @param string $name mutex name
+     * @return string a safe cache key associated with the mutex name
      */
     protected function calculateKey($name)
     {
