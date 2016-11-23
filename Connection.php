@@ -409,15 +409,18 @@ class Connection extends Component
 
         // Retries
         $rcount = 0;
+        $lex = NULL;
         while ($rcount < $this->retriesmax) {
             try {
                 \Yii::trace("Executing Redis Command: {$name} | Try {$rcount}", __METHOD__);
                 fwrite($this->_socket, $command);
                 return $this->parseResponse(implode(' ', $params));
             } catch (Exception $ex) {
+                $lex = $ex;
                 $rcount++;
             }
         }
+        throw $lex;
     }
 
     /**
