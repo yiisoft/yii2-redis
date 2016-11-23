@@ -283,7 +283,7 @@ class Connection extends Component
             return;
         }
         // twemproxy/nutcrackes doesn't support DB selection
-        if(!$this->twemproxy) {
+        if($this->twemproxy) {
             // in this case database must be always 0.
             $this->database = 0;
         }
