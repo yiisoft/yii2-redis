@@ -8,6 +8,7 @@ Yii Framework 2 redis extension Change Log
 - Enh: Optimized find by PK for relational queries and IN condition (cebe, andruha)
 - Enh #81: Allow setting `Connection::$database` to `null` to avoid sending a `SELECT` command after connection (cebe)
 - Bug #82: Fixed session object destruction failure when key expires (juffin-halli, samdark)  
+- Bug #33: Fixed invalid expire time on 32bit platforms (masterklavi)  
 
 
 2.0.5 March 17, 2016
