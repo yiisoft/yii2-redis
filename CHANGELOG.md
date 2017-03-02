@@ -1,5 +1,7 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
+2.0.7-dev
+ - Bug #42 Fixed "not" condition
 
 2.0.6-dev development fork
 -----------------------
