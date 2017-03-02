@@ -342,7 +342,7 @@ EOF;
             $operand = $this->buildCondition($operand, $params);
         }
 
-        return "!($operand)";
+        return "(not ($operand))";
     }
 
     private function buildAndCondition($operator, $operands, &$columns)
