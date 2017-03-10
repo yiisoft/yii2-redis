@@ -3,12 +3,13 @@
 namespace yiiunit\extensions\redis;
 
 use yii\validators\UniqueValidator;
-use Yii;
 use yiiunit\extensions\redis\data\ar\ActiveRecord;
 use yiiunit\extensions\redis\data\ar\Customer;
 use yiiunit\extensions\redis\data\ar\OrderItem;
 
-
+/**
+ * UniqueValidatorTest tests unique validator with Redis
+ */
 class UniqueValidatorTest extends TestCase
 {
     public function testValidationInsert()

@@ -19,31 +19,49 @@ class ActiveRecordTest extends TestCase
 {
     use ActiveRecordTestTrait;
 
+    /**
+     * @return string
+     */
     public function getCustomerClass()
     {
         return Customer::className();
     }
 
+    /**
+     * @return string
+     */
     public function getItemClass()
     {
         return Item::className();
     }
 
+    /**
+     * @return string
+     */
     public function getOrderClass()
     {
         return Order::className();
     }
 
+    /**
+     * @return string
+     */
     public function getOrderItemClass()
     {
         return OrderItem::className();
     }
 
+    /**
+     * @return string
+     */
     public function getOrderWithNullFKClass()
     {
         return OrderWithNullFK::className();
     }
 
+    /**
+     * @return string
+     */
     public function getOrderItemWithNullFKmClass()
     {
         return OrderItemWithNullFK::className();
@@ -173,7 +191,7 @@ class ActiveRecordTest extends TestCase
 
         // find all asArray
         $customers = $customerClass::find()->asArray()->all();
-        $this->assertEquals(3, count($customers));
+        $this->assertCount(3, $customers);
         $this->assertArrayHasKey('id', $customers[0]);
         $this->assertArrayHasKey('name', $customers[0]);
         $this->assertArrayHasKey('email', $customers[0]);
@@ -210,19 +228,19 @@ class ActiveRecordTest extends TestCase
         /* @var $this TestCase|ActiveRecordTestTrait */
         // indexBy
         $customers = Customer::find()->indexBy('name')/*->orderBy('id')*/->all();
-        $this->assertEquals(3, count($customers));
-        $this->assertTrue($customers['user1'] instanceof $customerClass);
-        $this->assertTrue($customers['user2'] instanceof $customerClass);
-        $this->assertTrue($customers['user3'] instanceof $customerClass);
+        $this->assertCount(3, $customers);
+        $this->assertInstanceOf($customerClass, $customers['user1']);
+        $this->assertInstanceOf($customerClass, $customers['user2']);
+        $this->assertInstanceOf($customerClass, $customers['user3']);
 
         // indexBy callable
         $customers = Customer::find()->indexBy(function ($customer) {
             return $customer->id . '-' . $customer->name;
         })/*->orderBy('id')*/->all(); // TODO this test is duplicated because of missing orderBy support in redis
-        $this->assertEquals(3, count($customers));
-        $this->assertTrue($customers['1-user1'] instanceof $customerClass);
-        $this->assertTrue($customers['2-user2'] instanceof $customerClass);
-        $this->assertTrue($customers['3-user3'] instanceof $customerClass);
+        $this->assertCount(3, $customers);
+        $this->assertInstanceOf($customerClass, $customers['1-user1']);
+        $this->assertInstanceOf($customerClass, $customers['2-user2']);
+        $this->assertInstanceOf($customerClass, $customers['3-user3']);
     }
 
     public function testFindLimit()
@@ -231,29 +249,30 @@ class ActiveRecordTest extends TestCase
         /* @var $this TestCase|ActiveRecordTestTrait */
         // all()
         $customers = Customer::find()->all();
-        $this->assertEquals(3, count($customers));
+        $this->assertCount(3, $customers);
 
         $customers = Customer::find()/*->orderBy('id')*/->limit(1)->all();
-        $this->assertEquals(1, count($customers));
+        $this->assertCount(1, $customers);
         $this->assertEquals('user1', $customers[0]->name);
 
         $customers = Customer::find()/*->orderBy('id')*/->limit(1)->offset(1)->all();
-        $this->assertEquals(1, count($customers));
+        $this->assertCount(1, $customers);
         $this->assertEquals('user2', $customers[0]->name);
 
         $customers = Customer::find()/*->orderBy('id')*/->limit(1)->offset(2)->all();
-        $this->assertEquals(1, count($customers));
+        $this->assertCount(1, $customers);
         $this->assertEquals('user3', $customers[0]->name);
 
         $customers = Customer::find()/*->orderBy('id')*/->limit(2)->offset(1)->all();
-        $this->assertEquals(2, count($customers));
+        $this->assertCount(2, $customers);
         $this->assertEquals('user2', $customers[0]->name);
         $this->assertEquals('user3', $customers[1]->name);
 
         $customers = Customer::find()->limit(2)->offset(3)->all();
-        $this->assertEquals(0, count($customers));
+        $this->assertCount(0, $customers);
 
         // one()
+        /** @var Customer $customer */
         $customer = Customer::find()/*->orderBy('id')*/->one();
         $this->assertEquals('user1', $customer->name);
 
@@ -277,10 +296,10 @@ class ActiveRecordTest extends TestCase
 
         /* @var $this TestCase|ActiveRecordTestTrait */
         $orders = $orderClass::find()->with('items')/*->orderBy('id')*/->all(); // TODO this test is duplicated because of missing orderBy support in redis
-        $this->assertEquals(3, count($orders));
+        $this->assertCount(3, $orders);
         $order = $orders[0];
         $this->assertEquals(1, $order->id);
-        $this->assertEquals(2, count($order->items));
+        $this->assertCount(2, $order->items);
         $this->assertEquals(1, $order->items[0]->id);
         $this->assertEquals(2, $order->items[1]->id);
     }
@@ -298,6 +317,7 @@ class ActiveRecordTest extends TestCase
     {
         // updateCounters
         $pk = ['order_id' => 2, 'item_id' => 4];
+        /** @var OrderItem $orderItem */
         $orderItem = OrderItem::findOne($pk);
         $this->assertEquals(2, $orderItem->order_id);
         $this->assertEquals(4, $orderItem->item_id);
@@ -391,6 +411,7 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals(6, $customer->id);
 
 
+        /** @var Customer $customer */
         $customer = Customer::findOne(4);
         $this->assertNotNull($customer);
         $this->assertEquals('user4', $customer->name);
@@ -414,6 +435,7 @@ class ActiveRecordTest extends TestCase
         $customer->email = "the People's Republic of China";
         $customer->save(false);
 
+        /** @var Customer $c */
         $c = Customer::findOne(['email' => "the People's Republic of China"]);
         $this->assertSame("the People's Republic of China", $c->email);
     }

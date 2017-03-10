@@ -1,7 +1,6 @@
 <?php
 namespace yiiunit\extensions\redis;
 
-use Yii;
 use yii\redis\Cache;
 use yii\redis\Connection;
 use yiiunit\framework\caching\CacheTestCase;
@@ -13,7 +12,7 @@ use yiiunit\framework\caching\CacheTestCase;
  */
 class RedisCacheTest extends CacheTestCase
 {
-    private $_cacheInstance = null;
+    private $_cacheInstance;
 
     /**
      * @return Cache
@@ -74,7 +73,7 @@ class RedisCacheTest extends CacheTestCase
 
         $this->assertFalse($cache->get($key));
         $cache->set($key, $data);
-        $this->assertTrue($cache->get($key) === $data);
+        $this->assertSame($cache->get($key), $data);
 
         // try with multibyte string
         $data = str_repeat('ЖЫ', 8192); // http://www.php.net/manual/en/function.fread.php
@@ -82,7 +81,7 @@ class RedisCacheTest extends CacheTestCase
 
         $this->assertFalse($cache->get($key));
         $cache->set($key, $data);
-        $this->assertTrue($cache->get($key) === $data);
+        $this->assertSame($cache->get($key), $data);
     }
 
     /**
@@ -102,10 +101,10 @@ class RedisCacheTest extends CacheTestCase
 //            $this->assertTrue($cache->get($key) === false); // do not display 100KB in terminal if this fails :)
             $cache->set($key, $data);
         }
-        $values = $cache->mget(array_keys($keys));
+        $values = $cache->multiGet(array_keys($keys));
         foreach($keys as $key => $value) {
             $this->assertArrayHasKey($key, $values);
-            $this->assertTrue($values[$key] === $value);
+            $this->assertSame($values[$key], $value);
         }
     }
 
@@ -118,6 +117,6 @@ class RedisCacheTest extends CacheTestCase
 
         $this->assertFalse($cache->get($key));
         $cache->set($key, $data);
-        $this->assertTrue($cache->get($key) === $data);
+        $this->assertSame($cache->get($key), $data);
     }
 }

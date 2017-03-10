@@ -48,6 +48,9 @@ class ConnectionTest extends TestCase
     }
 
 
+    /**
+     * @return array
+     */
     public function keyValueData()
     {
         return [
@@ -62,6 +65,7 @@ class ConnectionTest extends TestCase
 
     /**
      * @dataProvider keyValueData
+     * @param mixed $data
      */
     public function testStoreGet($data)
     {

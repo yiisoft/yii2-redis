@@ -12,11 +12,17 @@ namespace yiiunit\extensions\redis\data\ar;
  */
 class OrderItemWithNullFK extends ActiveRecord
 {
+    /**
+     * @inheritdoc
+     */
     public static function primaryKey()
     {
         return ['order_id', 'item_id'];
     }
 
+    /**
+     * @inheritdoc
+     */
     public function attributes()
     {
         return ['order_id', 'item_id', 'quantity', 'subtotal'];
