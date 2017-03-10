@@ -43,7 +43,7 @@ class RedisMutexTest extends TestCase
         $this->assertTrue($mutexOne->release(self::$mutexName));
 
         $this->assertTrue($mutexTwo->acquire(self::$mutexName));
-        $this->assertEquals(2200, $mutexTwo->redis->executeCommand('PTTL', [$this->getKey(self::$mutexName)]));
+        $this->assertLessThanOrEqual(2200, $mutexTwo->redis->executeCommand('PTTL', [$this->getKey(self::$mutexName)]));
         $this->assertTrue($mutexOne->acquire(self::$mutexName, 3));
 
         $this->assertTrue($mutexOne->release(self::$mutexName));
@@ -56,7 +56,9 @@ class RedisMutexTest extends TestCase
         $params = isset($databases['redis']) ? $databases['redis'] : null;
         if ($params === null) {
             $this->markTestSkipped('No redis server connection configured.');
+            return;
         }
+        
         $connection = new Connection($params);
         $this->mockApplication(['components' => ['redis' => $connection]]);
     }
