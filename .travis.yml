@@ -17,12 +17,19 @@ sudo: false
 cache:
   directories:
     - $HOME/.composer/cache
+    - $HOME/.bin
+
+before_install:
+ - mkdir -p $HOME/.bin
+ - wget -O $HOME/.bin/phpunit https://phar.phpunit.de/phpunit-4.8.phar
+ - chmod +x $HOME/.bin/phpunit
 
 install:
   - travis_retry composer self-update && composer --version
-  - travis_retry composer global require "fxp/composer-asset-plugin:~1.1.1"
+  - travis_retry composer global require "fxp/composer-asset-plugin:^1.2.0"
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - travis_retry composer install --prefer-dist --no-interaction
+  - composer show -i
 
 before_script:
   - |
@@ -31,7 +38,7 @@ before_script:
     fi
 
 script:
-  - phpunit --verbose $PHPUNIT_FLAGS
+  - $HOME/.bin/phpunit --verbose $PHPUNIT_FLAGS
 
 after_script:
   - |
