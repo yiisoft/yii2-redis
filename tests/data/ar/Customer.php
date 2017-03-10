@@ -77,6 +77,14 @@ class Customer extends ActiveRecord
     }
 
     /**
+     * @return \yii\redis\ActiveQuery
+     */
+    public function getOrderItems()
+    {
+        return $this->hasMany(Item::className(), ['id' => 'item_id'])->via('orders');
+    }
+
+    /**
      * @inheritdoc
      */
     public function afterSave($insert, $changedAttributes)
