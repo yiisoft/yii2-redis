@@ -6,6 +6,7 @@ Yii Framework 2 redis extension Change Log
 
 - Bug #67: Fixed regression from 2.0.5, reconnecting a closed connection fails (cebe)
 - Enh: Optimized find by PK for relational queries and IN condition (cebe, andruha)
+- Enh #53: Added redis based Mutex `\yii\redis\Mutex` (turboezh)
 - Enh #81: Allow setting `Connection::$database` to `null` to avoid sending a `SELECT` command after connection (cebe)
 - Bug #82: Fixed session object destruction failure when key expires (juffin-halli, samdark)  
 
