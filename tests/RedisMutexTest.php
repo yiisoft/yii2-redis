@@ -29,8 +29,8 @@ class RedisMutexTest extends TestCase
     }
 
     /**
-     * @covers yii\redis\Mutex::acquireLock
-     * @covers yii\redis\Mutex::releaseLock
+     * @covers \yii\redis\Mutex::acquireLock
+     * @covers \yii\redis\Mutex::releaseLock
      */
     public function testThatMutexLockIsWorking()
     {
@@ -48,24 +48,6 @@ class RedisMutexTest extends TestCase
 
         $this->assertTrue($mutexOne->release(self::$mutexName));
         $this->assertFalse($mutexTwo->release(self::$mutexName));
-    }
-
-    /**
-     * @covers yii\redis\Mutex::touch
-     */
-    public function testMutexTouch()
-    {
-        $mutex = $this->createMutex();
-
-        $this->assertFalse($mutex->release(self::$mutexName));
-        $this->assertTrue($mutex->acquire(self::$mutexName));
-        $this->assertEquals(2200, $mutex->redis->executeCommand('PTTL', [$this->getKey(self::$mutexName)]));
-
-        $mutex->expire = 1.4;
-        $this->assertTrue($mutex->touch(self::$mutexName));
-        $this->assertEquals(1400, $mutex->redis->executeCommand('PTTL', [$this->getKey(self::$mutexName)]));
-        $this->assertTrue($mutex->release(self::$mutexName));
-
     }
 
     protected function setUp() {
