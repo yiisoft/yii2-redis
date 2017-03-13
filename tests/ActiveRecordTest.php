@@ -451,6 +451,59 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals([], $orders);
     }
 
+    public function testEmulateExecution()
+    {
+        $rows = Order::find()
+            ->emulateExecution()
+            ->all();
+        $this->assertSame([], $rows);
+
+        $row = Order::find()
+            ->emulateExecution()
+            ->one();
+        $this->assertSame(null, $row);
+
+        $exists = Order::find()
+            ->emulateExecution()
+            ->exists();
+        $this->assertSame(false, $exists);
+
+        $count = Order::find()
+            ->emulateExecution()
+            ->count();
+        $this->assertSame(0, $count);
+
+        $sum = Order::find()
+            ->emulateExecution()
+            ->sum('id');
+        $this->assertSame(0, $sum);
+
+        $sum = Order::find()
+            ->emulateExecution()
+            ->average('id');
+        $this->assertSame(0, $sum);
+
+        $max = Order::find()
+            ->emulateExecution()
+            ->max('id');
+        $this->assertSame(null, $max);
+
+        $min = Order::find()
+            ->emulateExecution()
+            ->min('id');
+        $this->assertSame(null, $min);
+
+        $scalar = Order::find()
+            ->emulateExecution()
+            ->scalar('id');
+        $this->assertSame(null, $scalar);
+
+        $column = Order::find()
+            ->emulateExecution()
+            ->column('id');
+        $this->assertSame([], $column);
+    }
+
     /**
      * @see https://github.com/yiisoft/yii2-redis/issues/93
      */

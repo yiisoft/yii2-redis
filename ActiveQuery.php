@@ -114,6 +114,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     public function all($db = null)
     {
+        if ($this->emulateExecution) {
+            return [];
+        }
+
         // TODO add support for orderBy
         $data = $this->executeScript($db, 'All');
         if (empty($data)) {
@@ -156,6 +160,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     public function one($db = null)
     {
+        if ($this->emulateExecution) {
+            return null;
+        }
+
         // TODO add support for orderBy
         $data = $this->executeScript($db, 'One');
         if (empty($data)) {
@@ -196,6 +204,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     public function count($q = '*', $db = null)
     {
+        if ($this->emulateExecution) {
+            return 0;
+        }
+
         if ($this->where === null) {
             /* @var $modelClass ActiveRecord */
             $modelClass = $this->modelClass;
@@ -217,6 +229,9 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     public function exists($db = null)
     {
+        if ($this->emulateExecution) {
+            return false;
+        }
         return $this->one($db) !== null;
     }
 
@@ -229,6 +244,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     public function column($column, $db = null)
     {
+        if ($this->emulateExecution) {
+            return [];
+        }
+
         // TODO add support for orderBy
         return $this->executeScript($db, 'Column', $column);
     }
@@ -242,6 +261,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     public function sum($column, $db = null)
     {
+        if ($this->emulateExecution) {
+            return 0;
+        }
+
         return $this->executeScript($db, 'Sum', $column);
     }
 
@@ -255,6 +278,9 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     public function average($column, $db = null)
     {
+        if ($this->emulateExecution) {
+            return 0;
+        }
         return $this->executeScript($db, 'Average', $column);
     }
 
@@ -268,6 +294,9 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     public function min($column, $db = null)
     {
+        if ($this->emulateExecution) {
+            return null;
+        }
         return $this->executeScript($db, 'Min', $column);
     }
 
@@ -281,6 +310,9 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     public function max($column, $db = null)
     {
+        if ($this->emulateExecution) {
+            return null;
+        }
         return $this->executeScript($db, 'Max', $column);
     }
 
@@ -295,6 +327,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      */
     public function scalar($attribute, $db = null)
     {
+        if ($this->emulateExecution) {
+            return null;
+        }
+
         $record = $this->one($db);
         if ($record !== null) {
             return $record->hasAttribute($attribute) ? $record->$attribute : null;
