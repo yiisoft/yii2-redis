@@ -24,9 +24,153 @@ use yii\helpers\Inflector;
  *
  * The execution of [redis commands](http://redis.io/commands) is possible with via [[executeCommand()]].
  *
+ * @method mixed clientKill() ip:port Kill the connection of a client
+ * @method mixed clientList() Get the list of client connections
+ * @method mixed clientGetname() Get the current connection name
+ * @method mixed clientSetname() connection-name Set the current connection name
+ * @method mixed configGet() parameter Get the value of a configuration parameter
+ * @method mixed configSet parameter value Set a configuration parameter to the given value
+ * @method mixed configResetstat', // Reset the stats returned by INFO
+ * @method mixed debugObject() key Get debugging information about a key
+ * @method mixed debugSegfault() Make the server crash
+ * @method mixed scriptExists() script [script ...] Check existence of scripts in the script cache.
+ * @method mixed scriptFlush() Remove all the scripts from the script cache.
+ * @method mixed scriptKill() Kill the script currently in execution.
+ * @method mixed scriptLoad() script Load the specified Lua script into the script cache.
+ * @method mixed blpop() key [key ...] timeout Remove and get the first element in a list, or block until one is available
+ * @method mixed brpop() key [key ...] timeout Remove and get the last element in a list, or block until one is available
+ * @method mixed brpoplpush() source destination timeout Pop a value from a list, push it to another list and return it; or block until one is available
  * @method mixed set($key, $value) Set the string value of a key
  * @method mixed get($key) Set the string value of a key
- * TODO document methods
+ * @method mixed config resetstat() Reset the stats returned by INFO
+ * @method mixed dbsize() Return the number of keys in the selected database
+ * @method mixed decr() key Decrement the integer value of a key by one
+ * @method mixed decrby() key decrement Decrement the integer value of a key by the given number
+ * @method mixed del() key [key ...] Delete a key
+ * @method mixed discard() Discard all commands issued after MULTI
+ * @method mixed dump() key Return a serialized version of the value stored at the specified key.
+ * @method mixed echo () message Echo the given string
+ * @method mixed eval() script numkeys key [key ...] arg [arg ...] Execute a Lua script server side
+ * @method mixed evalsha() sha1 numkeys key [key ...] arg [arg ...] Execute a Lua script server side
+ * @method mixed exec() Execute all commands issued after MULTI
+ * @method mixed exists() key Determine if a key exists
+ * @method mixed expire() key seconds Set a key's time to live in seconds
+ * @method mixed expireat() key timestamp Set the expiration for a key as a UNIX timestamp
+ * @method mixed flushall() Remove all keys from all databases
+ * @method mixed flushdb() Remove all keys from the current database
+ * @method mixed getbit() key offset Returns the bit value at offset in the string value stored at key
+ * @method mixed getrange() key start end Get a substring of the string stored at a key
+ * @method mixed getset() key value Set the string value of a key and return its old value
+ * @method mixed hdel() key field [field ...] Delete one or more hash fields
+ * @method mixed hexists() key field Determine if a hash field exists
+ * @method mixed hget() key field Get the value of a hash field
+ * @method mixed hgetall() key Get all the fields and values in a hash
+ * @method mixed hincrby() key field increment Increment the integer value of a hash field by the given number
+ * @method mixed hincrbyfloat() key field increment Increment the float value of a hash field by the given amount
+ * @method mixed hkeys() key Get all the fields in a hash
+ * @method mixed hlen() key Get the number of fields in a hash
+ * @method mixed hmget() key field [field ...] Get the values of all the given hash fields
+ * @method mixed hmset() key field value [field value ...] Set multiple hash fields to multiple values
+ * @method mixed hset() key field value Set the string value of a hash field
+ * @method mixed hsetnx() key field value Set the value of a hash field, only if the field does not exist
+ * @method mixed hvals() key Get all the values in a hash
+ * @method mixed incr() key Increment the integer value of a key by one
+ * @method mixed incrby() key increment Increment the integer value of a key by the given amount
+ * @method mixed incrbyfloat() key increment Increment the float value of a key by the given amount
+ * @method mixed info() [section] Get information and statistics about the server
+ * @method mixed keys() pattern Find all keys matching the given pattern
+ * @method mixed lastsave() Get the UNIX time stamp of the last successful save to disk
+ * @method mixed lindex() key index Get an element from a list by its index
+ * @method mixed linsert() key BEFORE|AFTER pivot value Insert an element before or after another element in a list
+ * @method mixed llen() key Get the length of a list
+ * @method mixed lpop() key Remove and get the first element in a list
+ * @method mixed lpush() key value [value ...] Prepend one or multiple values to a list
+ * @method mixed lpushx() key value Prepend a value to a list, only if the list exists
+ * @method mixed lrange() key start stop Get a range of elements from a list
+ * @method mixed lrem() key count value Remove elements from a list
+ * @method mixed lset() key index value Set the value of an element in a list by its index
+ * @method mixed ltrim() key start stop Trim a list to the specified range
+ * @method mixed mget() key [key ...] Get the values of all the given keys
+ * @method mixed migrate() host port key destination-db timeout Atomically transfer a key from a Redis instance to another one.
+ * @method mixed monitor() Listen for all requests received by the server in real time
+ * @method mixed move() key db Move a key to another database
+ * @method mixed mset() key value [key value ...] Set multiple keys to multiple values
+ * @method mixed msetnx() key value [key value ...] Set multiple keys to multiple values, only if none of the keys exist
+ * @method mixed multi() Mark the start of a transaction block
+ * @method mixed object() subcommand [arguments [arguments ...]] Inspect the internals of Redis objects
+ * @method mixed persist() key Remove the expiration from a key
+ * @method mixed pexpire() key milliseconds Set a key's time to live in milliseconds
+ * @method mixed pexpireat() key milliseconds-timestamp Set the expiration for a key as a UNIX timestamp specified in milliseconds
+ * @method mixed ping() Ping the server
+ * @method mixed psetex() key milliseconds value Set the value and expiration in milliseconds of a key
+ * @method mixed psubscribe() pattern [pattern ...] Listen for messages published to channels matching the given patterns
+ * @method mixed pttl() key Get the time to live for a key in milliseconds
+ * @method mixed publish() channel message Post a message to a channel
+ * @method mixed punsubscribe() [pattern [pattern ...]] Stop listening for messages posted to channels matching the given patterns
+ * @method mixed quit() Close the connection
+ * @method mixed randomkey() Return a random key from the keyspace
+ * @method mixed rename() key newkey Rename a key
+ * @method mixed renamenx() key newkey Rename a key, only if the new key does not exist
+ * @method mixed restore() key ttl serialized-value Create a key using the provided serialized value, previously obtained using DUMP.
+ * @method mixed rpop() key Remove and get the last element in a list
+ * @method mixed rpoplpush() source destination Remove the last element in a list, append it to another list and return it
+ * @method mixed rpush() key value [value ...] Append one or multiple values to a list
+ * @method mixed rpushx() key value Append a value to a list, only if the list exists
+ * @method mixed sadd() key member [member ...] Add one or more members to a set
+ * @method mixed save() Synchronously save the dataset to disk
+ * @method mixed scard() key Get the number of members in a set
+ * @method mixed sdiff() key [key ...] Subtract multiple sets
+ * @method mixed sdiffstore() destination key [key ...] Subtract multiple sets and store the resulting set in a key
+ * @method mixed select() index Change the selected database for the current connection
+ * @method mixed setbit() key offset value Sets or clears the bit at offset in the string value stored at key
+ * @method mixed setex() key seconds value Set the value and expiration of a key
+ * @method mixed setnx() key value Set the value of a key, only if the key does not exist
+ * @method mixed setrange() key offset value Overwrite part of a string at key starting at the specified offset
+ * @method mixed shutdown() [NOSAVE] [SAVE] Synchronously save the dataset to disk and then shut down the server
+ * @method mixed sinter() key [key ...] Intersect multiple sets
+ * @method mixed sinterstore() destination key [key ...] Intersect multiple sets and store the resulting set in a key
+ * @method mixed sismember() key member Determine if a given value is a member of a set
+ * @method mixed slaveof() host port Make the server a slave of another instance, or promote it as master
+ * @method mixed slowlog() subcommand [argument] Manages the Redis slow queries log
+ * @method mixed smembers() key Get all the members in a set
+ * @method mixed smove() source destination member Move a member from one set to another
+ * @method mixed sort() key [BY pattern] [LIMIT offset count] [GET pattern [GET pattern ...]] [ASC|DESC] [ALPHA] [STORE destination] Sort the elements in a list, set or sorted set
+ * @method mixed spop() key Remove and return a random member from a set
+ * @method mixed srandmember() key [count] Get one or multiple random members from a set
+ * @method mixed srem() key member [member ...] Remove one or more members from a set
+ * @method mixed strlen() key Get the length of the value stored in a key
+ * @method mixed subscribe() channel [channel ...] Listen for messages published to the given channels
+ * @method mixed sunion() key [key ...] Add multiple sets
+ * @method mixed sunionstore() destination key [key ...] Add multiple sets and store the resulting set in a key
+ * @method mixed sync() Internal command used for replication
+ * @method mixed time() Return the current server time
+ * @method mixed ttl() key Get the time to live for a key
+ * @method mixed type() key Determine the type stored at key
+ * @method mixed unsubscribe() [channel [channel ...]] Stop listening for messages posted to the given channels
+ * @method mixed unwatch() Forget about all watched keys
+ * @method mixed watch() key [key ...] Watch the given keys to determine execution of the MULTI/EXEC block
+ * @method mixed zadd() key score member [score member ...] Add one or more members to a sorted set, or update its score if it already exists
+ * @method mixed zcard() key Get the number of members in a sorted set
+ * @method mixed zcount() key min max Count the members in a sorted set with scores within the given values
+ * @method mixed zincrby() key increment member Increment the score of a member in a sorted set
+ * @method mixed zinterstore() destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX] Intersect multiple sorted sets and store the resulting sorted set in a new key
+ * @method mixed zrange() key start stop [WITHSCORES] Return a range of members in a sorted set, by index
+ * @method mixed zrangebyscore() key min max [WITHSCORES] [LIMIT offset count] Return a range of members in a sorted set, by score
+ * @method mixed zrank() key member Determine the index of a member in a sorted set
+ * @method mixed zrem() key member [member ...] Remove one or more members from a sorted set
+ * @method mixed zremrangebyrank() key start stop Remove all members in a sorted set within the given indexes
+ * @method mixed zremrangebyscore() key min max Remove all members in a sorted set within the given scores
+ * @method mixed zrevrange() key start stop [WITHSCORES] Return a range of members in a sorted set, by index, with scores ordered from high to low
+ * @method mixed zrevrangebyscore() key max min [WITHSCORES] [LIMIT offset count] Return a range of members in a sorted set, by score, with scores ordered from high to low
+ * @method mixed zrevrank() key member Determine the index of a member in a sorted set, with scores ordered from high to low
+ * @method mixed zscore() key member Get the score associated with the given member in a sorted set
+ * @method mixed zunionstore() destination numkeys key [key ...] [WEIGHTS weight [weight ...]] [AGGREGATE SUM|MIN|MAX] Add multiple sorted sets and store the resulting sorted set in a new key
+ * @method mixed geoadd() key longitude latitude member [longitude latitude member ...] Add point
+ * @method mixed geodist() key member1 member2 [unit] Return the distance between two members
+ * @method mixed geohash() key member [member ...] Return valid Geohash strings
+ * @method mixed geopos() key member [member ...] Return the positions (longitude, latitude)
+ * @method mixed georadius() key longitude latitude radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count] Return the members
+ * @method mixed georadiusbymember() key member radius m|km|ft|mi [WITHCOORD] [WITHDIST] [WITHHASH] [COUNT count]
  *
  * @property string $driverName Name of the DB driver. This property is read-only.
  * @property boolean $isActive Whether the DB connection is established. This property is read-only.
