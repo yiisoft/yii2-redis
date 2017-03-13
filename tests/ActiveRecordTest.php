@@ -503,4 +503,13 @@ class ActiveRecordTest extends TestCase
             ->column('id');
         $this->assertSame([], $column);
     }
+
+    /**
+     * @see https://github.com/yiisoft/yii2-redis/issues/93
+     */
+    public function testDeleteAllWithCondition()
+    {
+        $deletedCount = Order::deleteAll(['in', 'id', [1, 2, 3]]);
+        $this->assertEquals(3, $deletedCount);
+    }
 }
