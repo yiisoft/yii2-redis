@@ -22,10 +22,16 @@ class RedisMutexTest extends TestCase
     {
         $mutex = $this->createMutex();
 
-        $this->assertFalse($mutex->release(self::$mutexName));
-        $this->assertTrue($mutex->acquire(self::$mutexName));
-        $this->assertTrue($mutex->release(self::$mutexName));
-        $this->assertFalse($mutex->release(self::$mutexName));
+        $this->assertFalse($mutex->release(static::$mutexName));
+        $this->assertMutexKeyInRedisExistsOrNot(false);
+
+        $this->assertTrue($mutex->acquire(static::$mutexName));
+        $this->assertMutexKeyInRedisExistsOrNot(true);
+        $this->assertTrue($mutex->release(static::$mutexName));
+        $this->assertMutexKeyInRedisExistsOrNot(false);
+
+        $this->assertFalse($mutex->release(static::$mutexName));
+        $this->assertMutexKeyInRedisExistsOrNot(false);
     }
 
     /**
@@ -37,17 +43,42 @@ class RedisMutexTest extends TestCase
         $mutexOne = $this->createMutex();
         $mutexTwo = $this->createMutex();
 
-        $this->assertTrue($mutexOne->acquire(self::$mutexName));
-        $this->assertFalse($mutexTwo->acquire(self::$mutexName));
+        $this->assertMutexKeyInRedisExistsOrNot(false);
+        $this->assertTrue($mutexOne->acquire(static::$mutexName));
+        $this->assertMutexKeyInRedisExistsOrNot(true);
+        $this->assertFalse($mutexTwo->acquire(static::$mutexName));
+        $this->assertMutexKeyInRedisExistsOrNot(true);
 
-        $this->assertTrue($mutexOne->release(self::$mutexName));
+        $this->assertTrue($mutexOne->release(static::$mutexName));
+        $this->assertMutexKeyInRedisExistsOrNot(false);
 
-        $this->assertTrue($mutexTwo->acquire(self::$mutexName));
-        $this->assertLessThanOrEqual(2200, $mutexTwo->redis->executeCommand('PTTL', [$this->getKey(self::$mutexName)]));
-        $this->assertTrue($mutexOne->acquire(self::$mutexName, 3));
+        $this->assertTrue($mutexTwo->acquire(static::$mutexName));
+        $this->assertMutexKeyInRedisExistsOrNot(true);
+        $this->assertLessThanOrEqual(2500, $mutexTwo->redis->executeCommand('PTTL', [$this->getKey(static::$mutexName)]));
 
-        $this->assertTrue($mutexOne->release(self::$mutexName));
-        $this->assertFalse($mutexTwo->release(self::$mutexName));
+        $this->assertFalse($mutexOne->acquire(static::$mutexName, 2));
+
+        $this->assertTrue($mutexOne->acquire(static::$mutexName, 3));
+        $this->assertMutexKeyInRedisExistsOrNot(true);
+
+        $this->assertTrue($mutexOne->release(static::$mutexName));
+        $this->assertMutexKeyInRedisExistsOrNot(false);
+        $this->assertFalse($mutexTwo->release(static::$mutexName));
+        $this->assertMutexKeyInRedisExistsOrNot(false);
+    }
+
+    public function testExpire()
+    {
+        $mutex = $this->createMutex();
+
+        $this->assertTrue($mutex->acquire(static::$mutexName));
+        $this->assertMutexKeyInRedisExistsOrNot(true);
+
+        sleep(3);
+
+        $this->assertMutexKeyInRedisExistsOrNot(false);
+        $this->assertFalse($mutex->release(static::$mutexName));
+        $this->assertMutexKeyInRedisExistsOrNot(false);
     }
 
     protected function setUp() {
@@ -58,7 +89,7 @@ class RedisMutexTest extends TestCase
             $this->markTestSkipped('No redis server connection configured.');
             return;
         }
-        
+
         $connection = new Connection($params);
         $this->mockApplication(['components' => ['redis' => $connection]]);
     }
@@ -71,8 +102,8 @@ class RedisMutexTest extends TestCase
     {
         return Yii::createObject([
             'class' => Mutex::className(),
-            'expire' => 2.2,
-            'keyPrefix' => self::$mutexPrefix
+            'expire' => 2.5,
+            'keyPrefix' => static::$mutexPrefix
         ]);
     }
 
@@ -85,5 +116,15 @@ class RedisMutexTest extends TestCase
             self::$_keys[$name] = $method->invoke($mutex, $name);
         }
         return self::$_keys[$name];
+    }
+
+    protected function assertMutexKeyInRedisExistsOrNot($exists)
+    {
+        $value = Yii::$app->redis->executeCommand('GET', [$this->getKey(static::$mutexName)]);
+        if ($exists) {
+            $this->assertNotNull($value);
+        } else {
+            $this->assertNull($value);
+        }
     }
 }
