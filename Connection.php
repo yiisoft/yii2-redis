@@ -24,7 +24,7 @@ use yii\helpers\Inflector;
  *
  * The execution of [redis commands](http://redis.io/commands) is possible with via [[executeCommand()]].
  *
- * @method mixed set($key, $value) Set the string value of a key
+ * @method mixed set($key, ...$value) Set the string value of a key
  * @method mixed get($key) Set the string value of a key
  * TODO document methods
  *
@@ -344,7 +344,7 @@ class Connection extends Component
      * Allows issuing all supported commands via magic methods.
      *
      * ```php
-     * $redis->hmset(['test_collection', 'key1', 'val1', 'key2', 'val2'])
+     * $redis->hmset('test_collection', 'key1', 'val1', 'key2', 'val2')
      * ```
      *
      * @param string $name name of the missing method to execute
