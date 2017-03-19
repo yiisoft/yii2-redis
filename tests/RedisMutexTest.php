@@ -18,7 +18,7 @@ class RedisMutexTest extends TestCase
 
     private static $_keys = [];
 
-    public function testBasicAcquireAndRelease()
+    public function testAcquireAndRelease()
     {
         $mutex = $this->createMutex();
 
@@ -30,55 +30,70 @@ class RedisMutexTest extends TestCase
         $this->assertTrue($mutex->release(static::$mutexName));
         $this->assertMutexKeyNotInRedis();
 
+        // Double release
         $this->assertFalse($mutex->release(static::$mutexName));
         $this->assertMutexKeyNotInRedis();
     }
 
-    /**
-     * @covers \yii\redis\Mutex::acquireLock
-     * @covers \yii\redis\Mutex::releaseLock
-     */
-    public function testThatMutexLockIsWorking()
-    {
-        $mutexOne = $this->createMutex();
-        $mutexTwo = $this->createMutex();
-
-        $this->assertMutexKeyNotInRedis();
-        $this->assertTrue($mutexOne->acquire(static::$mutexName));
-        $this->assertMutexKeyInRedis();
-        $this->assertFalse($mutexTwo->acquire(static::$mutexName));
-        $this->assertMutexKeyInRedis();
-
-        $this->assertTrue($mutexOne->release(static::$mutexName));
-        $this->assertMutexKeyNotInRedis();
-
-        $this->assertTrue($mutexTwo->acquire(static::$mutexName));
-        $this->assertMutexKeyInRedis();
-        $this->assertLessThanOrEqual(2500, $mutexTwo->redis->executeCommand('PTTL', [$this->getKey(static::$mutexName)]));
-
-        $this->assertFalse($mutexOne->acquire(static::$mutexName, 2));
-
-        $this->assertTrue($mutexOne->acquire(static::$mutexName, 3));
-        $this->assertMutexKeyInRedis();
-
-        $this->assertTrue($mutexOne->release(static::$mutexName));
-        $this->assertMutexKeyNotInRedis();
-        $this->assertFalse($mutexTwo->release(static::$mutexName));
-        $this->assertMutexKeyNotInRedis();
-    }
-
-    public function testExpire()
+    public function testExpiration()
     {
         $mutex = $this->createMutex();
 
         $this->assertTrue($mutex->acquire(static::$mutexName));
         $this->assertMutexKeyInRedis();
+        $this->assertLessThanOrEqual(1500, $mutex->redis->executeCommand('PTTL', [$this->getKey(static::$mutexName)]));
 
-        sleep(3);
+        sleep(2);
 
         $this->assertMutexKeyNotInRedis();
         $this->assertFalse($mutex->release(static::$mutexName));
         $this->assertMutexKeyNotInRedis();
+    }
+
+    public function acquireTimeoutProvider()
+    {
+        return [
+            'no timeout (lock is held)' => [0, false, false],
+            '2s (lock is held)' => [1, false, false],
+            '3s (lock will be auto released in acquire())' => [2, true, false],
+            '3s (lock is auto released)' => [2, true, true],
+        ];
+    }
+
+    /**
+     * @covers \yii\redis\Mutex::acquireLock
+     * @covers \yii\redis\Mutex::releaseLock
+     * @dataProvider acquireTimeoutProvider
+     */
+    public function testConcurentMutexAcquireAndRelease($timeout, $canAcquireAfterTimeout, $lockIsReleased)
+    {
+        $mutexOne = $this->createMutex();
+        $mutexTwo = $this->createMutex();
+
+        $this->assertTrue($mutexOne->acquire(static::$mutexName));
+        $this->assertFalse($mutexTwo->acquire(static::$mutexName));
+        $this->assertTrue($mutexOne->release(static::$mutexName));
+        $this->assertTrue($mutexTwo->acquire(static::$mutexName));
+
+        if ($canAcquireAfterTimeout) {
+            // Mutex 2 auto released the lock or it will be auto released automatically
+            if ($lockIsReleased) {
+                sleep($timeout);
+            }
+            $this->assertSame($lockIsReleased, !$mutexTwo->release(static::$mutexName));
+
+            $this->assertTrue($mutexOne->acquire(static::$mutexName, $timeout));
+            $this->assertTrue($mutexOne->release(static::$mutexName));
+        } else {
+            // Mutex 2 still holds the lock
+            $this->assertMutexKeyInRedis();
+
+            $this->assertFalse($mutexOne->acquire(static::$mutexName, $timeout));
+
+            $this->assertTrue($mutexTwo->release(static::$mutexName));
+            $this->assertTrue($mutexOne->acquire(static::$mutexName));
+            $this->assertTrue($mutexOne->release(static::$mutexName));
+        }
     }
 
     protected function setUp() {
@@ -102,7 +117,7 @@ class RedisMutexTest extends TestCase
     {
         return Yii::createObject([
             'class' => Mutex::className(),
-            'expire' => 2.5,
+            'expire' => 1.5,
             'keyPrefix' => static::$mutexPrefix
         ]);
     }
