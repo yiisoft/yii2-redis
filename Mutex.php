@@ -10,204 +10,149 @@ namespace yii\redis;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\di\Instance;
-use yii\mutex\Mutex as AbstractMutex;
 
 /**
- * Implements mutex based on Redis single instance lock algorithm.
+ * Redis Mutex implements a mutex component using [redis](http://redis.io/) as the storage medium.
  *
- * @see http://redis.io/topics/distlock
+ * Redis Mutex requires redis version 2.6.12 or higher to work properly.
  *
- * Application configuration example:
+ * It needs to be configured with a redis [[Connection]] that is also configured as an application component.
+ * By default it will use the `redis` application component.
  *
- * ```
- *  [
- *      'components' => [
- *          'redis' => [
- *              'class'    => 'yii\redis\Connection',
- *              'hostname' => 'localhost',
- *              'port'     => 6379,
- *              'database' => 0,
- *          ],
- *          'mutex' => [
- *              'class' => 'yii\redis\Mutex',
- *              'redis' => 'redis',
- *          ],
- *      ],
- *  ]
- * ```
+ * To use redis Mutex as the application component, configure the application as follows:
+ *
+ * ~~~
+ * [
+ *     'components' => [
+ *         'mutex' => [
+ *             'class' => 'yii\redis\Mutex',
+ *             'redis' => [
+ *                 'hostname' => 'localhost',
+ *                 'port' => 6379,
+ *                 'database' => 0,
+ *             ]
+ *         ],
+ *     ],
+ * ]
+ * ~~~
+ *
+ * Or if you have configured the redis [[Connection]] as an application component, the following is sufficient:
+ *
+ * ~~~
+ * [
+ *     'components' => [
+ *         'mutex' => [
+ *             'class' => 'yii\redis\Mutex',
+ *             // 'redis' => 'redis' // id of the connection application component
+ *         ],
+ *     ],
+ * ]
+ * ~~~
  *
  * @see \yii\mutex\Mutex
+ * @see http://redis.io/topics/distlock
  *
+ * @author Sergey Makinen <sergey@makinen.ru>
  * @author Alexander Zhuravlev <axelhex@gmail.com>
- * @since  2.0.6
+ * @since 2.0.6
  */
-class Mutex extends AbstractMutex
+class Mutex extends \yii\mutex\Mutex
 {
     /**
-     * @var Connection|string|array the Redis [[Connection]] object or the application component ID of the Redis
-     * [[Connection]]. This can also be an array that is used to create a redis [[Connection]] instance in case
-     * you do not want do configure redis connection as an application component. After the Session object is
-     * created, if you want to change this property, you should only assign it with a Redis [[Connection]] object.
+     * @var int the number of seconds in which the lock will be auto released.
      */
-    public $redis = 'redis';
-
+    public $expire = 30;
     /**
-     * @var string a string prefixed to every cache key so that it is unique. If not set, it will use a prefix
-     * generated from [[Application::id]]. You may set this property to be an empty string if you don't want to
-     * use key prefix. It is recommended that you explicitly set this property to some static value if the cached
-     * data needs to be shared among multiple applications.
+     * @var string a string prefixed to every cache key so that it is unique. If not set,
+     * it will use a prefix generated from [[Application::id]]. You may set this property to be an empty string
+     * if you don't want to use key prefix. It is recommended that you explicitly set this property to some
+     * static value if the cached data needs to be shared among multiple applications.
      */
     public $keyPrefix;
-
     /**
-     * @var int redis key expire, ms
+     * @var Connection|string|array the Redis [[Connection]] object or the application component ID of the Redis [[Connection]].
+     * This can also be an array that is used to create a redis [[Connection]] instance in case you do not want do configure
+     * redis connection as an application component.
+     * After the Mutex object is created, if you want to change this property, you should only assign it
+     * with a Redis [[Connection]] object.
      */
-    public $lockExpire = 3600000;
-
+    public $redis = 'redis';
     /**
-     * @var int sleep ms until next lock try during timeout waiting
+     * @var array Redis lock values. Used to be safe that only a lock owner can release it.
      */
-    public $lockWaitSleep = 200;
-
-    /**
-     * @var array Track redis lock values.
-     * @see http://redis.io/topics/distlock
-     * "This is important in order to avoid removing a lock that was created by another client."
-     * "Every lock is “signed” with a random string, so the lock will be removed only if it is still the one
-     * that was set by the client trying to remove it."
-     */
-    private $_lockMap = [];
+    private $_lockValues = [];
 
     /**
      * Initializes the redis Mutex component.
      * This method will initialize the [[redis]] property to make sure it refers to a valid redis connection.
-     *
      * @throws InvalidConfigException if [[redis]] is invalid.
      */
     public function init()
     {
         parent::init();
         $this->redis = Instance::ensure($this->redis, Connection::className());
-
         if ($this->keyPrefix === null) {
-            $this->keyPrefix = 'mutex_' . md5(Yii::$app->id) . '_';
+            $this->keyPrefix = substr(md5(Yii::$app->id), 0, 5);
         }
-    }
-
-    /** @inheritdoc */
-    protected function acquireLock($name, $timeout = 0)
-    {
-        list($lockKey, $lockValue) = $this->addLock($name);
-
-        if (null === $lockKey) {
-            return false;
-        }
-
-        /**
-         * Set lock command
-         *
-         * @return array|bool|null|string
-         */
-        $setLock = function () use ($name, $lockKey, $lockValue) {
-            return $this->redis->executeCommand('SET', [$lockKey, $lockValue, 'PX', $this->lockExpire, 'NX']);
-        };
-
-        if ($setLock()) {
-            return true;
-        }
-
-        while ($timeout > 0) {
-            usleep($this->lockWaitSleep * 1000);
-            $timeout -= $this->lockWaitSleep;
-
-            if ($setLock()) {
-                return true;
-            }
-        }
-
-        $this->deleteLock($name);
-
-        return false;
     }
 
     /**
-     * @inheritdoc
+     * Acquires a lock by name.
+     * @param string $name of the lock to be acquired. Must be unique.
+     * @param int $timeout time to wait for lock to be released. Defaults to `0` meaning that method will return
+     * false immediately in case lock was already acquired.
+     * @return bool lock acquiring result.
+     */
+    protected function acquireLock($name, $timeout = 0)
+    {
+        $key = $this->calculateKey($name);
+        $value = Yii::$app->security->generateRandomString(20);
+        $waitTime = 0;
+        while (!$this->redis->executeCommand('SET', [$key, $value, 'NX', 'PX', (int) ($this->expire * 1000)])) {
+            $waitTime++;
+            if ($waitTime > $timeout) {
+                return false;
+            }
+            sleep(1);
+        }
+        $this->_lockValues[$name] = $value;
+        return true;
+    }
+
+    /**
+     * Releases acquired lock. This method will return `false` in case the lock was not found or Redis command failed.
+     * @param string $name of the lock to be released. This lock must already exist.
+     * @return bool lock release result: `false` in case named lock was not found or Redis command failed.
      */
     protected function releaseLock($name)
     {
-        list($lockKey, $lockValue) = $this->getLock($name);
-
-        if (null === $lockKey) {
+        static $releaseLuaScript = <<<LUA
+if redis.call("GET",KEYS[1])==ARGV[1] then
+    return redis.call("DEL",KEYS[1])
+else
+    return 0
+end
+LUA;
+        if (!isset($this->_lockValues[$name]) || !$this->redis->executeCommand('EVAL', [
+                $releaseLuaScript,
+                1,
+                $this->calculateKey($name),
+                $this->_lockValues[$name]
+            ])) {
             return false;
-        }
-
-        $luaScript = 'if redis.call("GET", KEYS[1]) == ARGV[1] then
-                        return redis.call("DEL", KEYS[1])
-                    else
-                        return 0
-                    end';
-
-        if ($this->redis->executeCommand('EVAL', [$luaScript, 1, $lockKey, $lockValue])) {
-            $this->deleteLock($name);
-
+        } else {
+            unset($this->_lockValues[$name]);
             return true;
         }
-
-        return false;
     }
 
     /**
-     * Generates redis key for a lock name.
-     *
-     * @param string $lockName
-     *
-     * @return string
+     * Generates a unique key used for storing the mutex in Redis.
+     * @param string $name mutex name.
+     * @return string a safe cache key associated with the mutex name.
      */
-    protected function getLockKey($lockName)
+    protected function calculateKey($name)
     {
-        return $this->keyPrefix . $lockName;
-    }
-
-    /**
-     * Gets lock from the local map
-     *
-     * @param string $name
-     *
-     * @return array|null lock's [keyName, keyValue] pair for redis or null if there is no such lock
-     */
-    protected function getLock($name)
-    {
-        return isset($this->_lockMap[$name]) ? [$this->getLockKey($name), $this->_lockMap[$name]] : null;
-    }
-
-    /**
-     * Adds lock to the local map
-     *
-     * @param string $name
-     *
-     * @return array|null lock's [keyName, keyValue] pair for redis or null if it's already exists in $lockMap
-     */
-    protected function addLock($name)
-    {
-        if (isset($this->_lockMap[$name])) {
-            return null;
-        }
-
-        $lockValue = Yii::$app->security->generateRandomString();
-        $this->_lockMap[$name] = $lockValue;
-
-        return [$this->getLockKey($name), $lockValue];
-    }
-
-    /**
-     * Deletes lock from the local map
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    protected function deleteLock($name)
-    {
-        unset($this->_lockMap[$name]);
+        return $this->keyPrefix . md5(json_encode([__CLASS__, $name]));
     }
 }

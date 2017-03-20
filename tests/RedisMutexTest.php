@@ -2,168 +2,144 @@
 namespace yiiunit\extensions\redis;
 
 use Yii;
-use yii\helpers\ArrayHelper;
 use yii\redis\Connection;
 use yii\redis\Mutex;
 
-
 /**
- * Tests for Redis mutex
- *
+ * Class for testing redis mutex
  * @group redis
  * @group mutex
  */
 class RedisMutexTest extends TestCase
 {
+    protected static $mutexName = 'testmutex';
+
+    protected static $mutexPrefix = 'prefix';
+
+    private static $_keys = [];
+
+    public function testAcquireAndRelease()
+    {
+        $mutex = $this->createMutex();
+
+        $this->assertFalse($mutex->release(static::$mutexName));
+        $this->assertMutexKeyNotInRedis();
+
+        $this->assertTrue($mutex->acquire(static::$mutexName));
+        $this->assertMutexKeyInRedis();
+        $this->assertTrue($mutex->release(static::$mutexName));
+        $this->assertMutexKeyNotInRedis();
+
+        // Double release
+        $this->assertFalse($mutex->release(static::$mutexName));
+        $this->assertMutexKeyNotInRedis();
+    }
+
+    public function testExpiration()
+    {
+        $mutex = $this->createMutex();
+
+        $this->assertTrue($mutex->acquire(static::$mutexName));
+        $this->assertMutexKeyInRedis();
+        $this->assertLessThanOrEqual(1500, $mutex->redis->executeCommand('PTTL', [$this->getKey(static::$mutexName)]));
+
+        sleep(2);
+
+        $this->assertMutexKeyNotInRedis();
+        $this->assertFalse($mutex->release(static::$mutexName));
+        $this->assertMutexKeyNotInRedis();
+    }
+
+    public function acquireTimeoutProvider()
+    {
+        return [
+            'no timeout (lock is held)' => [0, false, false],
+            '2s (lock is held)' => [1, false, false],
+            '3s (lock will be auto released in acquire())' => [2, true, false],
+            '3s (lock is auto released)' => [2, true, true],
+        ];
+    }
+
     /**
-     * @param Connection $connection
-     * @param array $params
-     *
+     * @covers \yii\redis\Mutex::acquireLock
+     * @covers \yii\redis\Mutex::releaseLock
+     * @dataProvider acquireTimeoutProvider
+     */
+    public function testConcurentMutexAcquireAndRelease($timeout, $canAcquireAfterTimeout, $lockIsReleased)
+    {
+        $mutexOne = $this->createMutex();
+        $mutexTwo = $this->createMutex();
+
+        $this->assertTrue($mutexOne->acquire(static::$mutexName));
+        $this->assertFalse($mutexTwo->acquire(static::$mutexName));
+        $this->assertTrue($mutexOne->release(static::$mutexName));
+        $this->assertTrue($mutexTwo->acquire(static::$mutexName));
+
+        if ($canAcquireAfterTimeout) {
+            // Mutex 2 auto released the lock or it will be auto released automatically
+            if ($lockIsReleased) {
+                sleep($timeout);
+            }
+            $this->assertSame($lockIsReleased, !$mutexTwo->release(static::$mutexName));
+
+            $this->assertTrue($mutexOne->acquire(static::$mutexName, $timeout));
+            $this->assertTrue($mutexOne->release(static::$mutexName));
+        } else {
+            // Mutex 2 still holds the lock
+            $this->assertMutexKeyInRedis();
+
+            $this->assertFalse($mutexOne->acquire(static::$mutexName, $timeout));
+
+            $this->assertTrue($mutexTwo->release(static::$mutexName));
+            $this->assertTrue($mutexOne->acquire(static::$mutexName));
+            $this->assertTrue($mutexOne->release(static::$mutexName));
+        }
+    }
+
+    protected function setUp() {
+        parent::setUp();
+        $databases = TestCase::getParam('databases');
+        $params = isset($databases['redis']) ? $databases['redis'] : null;
+        if ($params === null) {
+            $this->markTestSkipped('No redis server connection configured.');
+            return;
+        }
+
+        $connection = new Connection($params);
+        $this->mockApplication(['components' => ['redis' => $connection]]);
+    }
+
+    /**
      * @return Mutex
      * @throws \yii\base\InvalidConfigException
      */
-    protected function getMutexInstance(Connection $connection, array $params = [])
+    protected function createMutex()
     {
-        return Yii::createObject(ArrayHelper::merge($params, [
+        return Yii::createObject([
             'class' => Mutex::className(),
-            'redis' => $connection,
-        ]));
-    }
-
-    public function testAcquireLock()
-    {
-        $lockKeyPrefix = 'foo_';
-        $testLockName = 'the_lock';
-
-        $connection = $this->getConnection(true);
-        $mutex = $this->getMutexInstance($connection, [
-            'keyPrefix' => $lockKeyPrefix,
+            'expire' => 1.5,
+            'keyPrefix' => static::$mutexPrefix
         ]);
-
-        $this->assertTrue($mutex->acquire($testLockName));
-        $this->assertNotNull($connection->get($lockKeyPrefix . $testLockName));
     }
 
-    public function testReleaseLock()
+    protected function getKey($name)
     {
-        $lockKeyPrefix = 'bar_';
-        $testLockName = 'the_lock';
-
-        $connection = $this->getConnection(true);
-        $mutex = $this->getMutexInstance($connection, [
-            'keyPrefix' => $lockKeyPrefix,
-        ]);
-
-        $mutex->acquire($testLockName);
-        $this->assertTrue($mutex->release($testLockName));
-        $this->assertNull($connection->get($lockKeyPrefix . $testLockName));
+        if (!isset(self::$_keys[$name])) {
+            $mutex = $this->createMutex();
+            $method = new \ReflectionMethod($mutex, 'calculateKey');
+            $method->setAccessible(true);
+            self::$_keys[$name] = $method->invoke($mutex, $name);
+        }
+        return self::$_keys[$name];
     }
 
-    public function testConcurrentAcquireLock()
+    protected function assertMutexKeyInRedis()
     {
-        $testLockName = 'the_lock';
-
-        $connection = $this->getConnection(true);
-
-        $mutex1 = $this->getMutexInstance($connection);
-        $mutex2 = $this->getMutexInstance($connection);
-
-        $mutex1->acquire($testLockName);
-        $this->assertFalse($mutex2->acquire($testLockName));
-
-        $mutex1->release($testLockName);
-        $this->assertTrue($mutex2->acquire($testLockName));
+        $this->assertNotNull(Yii::$app->redis->executeCommand('GET', [$this->getKey(static::$mutexName)]));
     }
 
-    public function testConcurrentReleaseLock()
+    protected function assertMutexKeyNotInRedis()
     {
-        $testLockName = 'the_lock';
-
-        $connection = $this->getConnection(true);
-
-        $mutex1 = $this->getMutexInstance($connection);
-        $mutex2 = $this->getMutexInstance($connection);
-
-        $mutex1->acquire($testLockName);
-        $this->assertFalse($mutex2->release($testLockName));
-    }
-
-    public function testLockTimeoutSuccess()
-    {
-        $testLockName = 'the_lock';
-
-        $connection = $this->getConnection(true);
-
-        $mutex1 = $this->getMutexInstance($connection, [
-            'lockExpire' => 100,
-        ]);
-        $mutex2 = $this->getMutexInstance($connection);
-
-        $mutex1->acquire($testLockName);
-        $this->assertTrue($mutex2->acquire($testLockName, 300));
-    }
-
-    public function testLockTimeoutFailure()
-    {
-        $testLockName = 'the_lock';
-
-        $connection = $this->getConnection(true);
-
-        $mutex1 = $this->getMutexInstance($connection, [
-            'lockExpire' => 10000,
-        ]);
-        $mutex2 = $this->getMutexInstance($connection);
-
-        $mutex1->acquire($testLockName);
-        $this->assertFalse($mutex2->acquire($testLockName, 200));
-    }
-
-    public function testLockExpire()
-    {
-        $testLockName = 'the_lock';
-        $lockKeyPrefix = 'foo_';
-
-        $connection = $this->getConnection(true);
-
-        $mutex = $this->getMutexInstance($connection, [
-            'lockExpire' => 100,
-            'keyPrefix' => $lockKeyPrefix,
-        ]);
-
-        $mutex->acquire($testLockName);
-        usleep(300000);
-        $this->assertFalse($mutex->release($testLockName));
-        $this->assertNull($connection->get($lockKeyPrefix . $testLockName));
-    }
-
-    public function testAcquireExistingLock()
-    {
-        $lockKeyPrefix = 'foo_';
-        $testLockName = 'the_lock';
-
-        $connection = $this->getConnection(true);
-        $mutex = $this->getMutexInstance($connection, [
-            'keyPrefix' => $lockKeyPrefix,
-        ]);
-
-        $mutex->acquire($testLockName);
-
-        $this->assertFalse($mutex->acquire($testLockName));
-    }
-
-    public function testReleaseNonExistingLock()
-    {
-        $lockKeyPrefix = 'foo_';
-        $testLockName = 'the_lock';
-
-        $connection = $this->getConnection(true);
-        $mutex = $this->getMutexInstance($connection, [
-            'keyPrefix' => $lockKeyPrefix,
-        ]);
-
-        $mutex->acquire($testLockName);
-        $mutex->release($testLockName);
-
-        $this->assertFalse($mutex->release($testLockName));
+        $this->assertNull(Yii::$app->redis->executeCommand('GET', [$this->getKey(static::$mutexName)]));
     }
 }
