@@ -60,7 +60,7 @@ class Connection extends Component
      */
     public $unixSocket;
     /**
-     * @var string the password for establishing DB connection. Defaults to null meaning no AUTH command is send.
+     * @var string the password for establishing DB connection. Defaults to null meaning no AUTH command is sent.
      * See http://redis.io/commands/auth
      */
     public $password;
