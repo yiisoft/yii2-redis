@@ -100,4 +100,12 @@ class ConnectionTest extends TestCase
             $this->assertEquals($expected[$key], $redis->executeCommand('TYPE',[$key]));
         }
     }
+
+    public function testTwoWordCommands()
+    {
+        $redis = $this->getConnection();
+        $this->assertTrue(is_array($redis->executeCommand('CONFIG GET', ['port'])));
+        $this->assertTrue(is_string($redis->clientList()));
+        $this->assertTrue(is_string($redis->executeCommand('CLIENT LIST')));
+    }
 }

@@ -355,7 +355,7 @@ class Connection extends Component
     {
         $redisCommand = strtoupper(Inflector::camel2words($name, false));
         if (in_array($redisCommand, $this->redisCommands)) {
-            return $this->executeCommand($name, $params);
+            return $this->executeCommand($redisCommand, $params);
         } else {
             return parent::__call($name, $params);
         }
@@ -385,7 +385,7 @@ class Connection extends Component
     {
         $this->open();
 
-        array_unshift($params, $name);
+        $params = array_merge(explode(' ', $name), $params);
         $command = '*' . count($params) . "\r\n";
         foreach ($params as $arg) {
             $command .= '$' . mb_strlen($arg, '8bit') . "\r\n" . $arg . "\r\n";
@@ -425,7 +425,7 @@ class Connection extends Component
                 if ($line == '-1') {
                     return null;
                 }
-                $length = $line + 2;
+                $length = (int)$line + 2;
                 $data = '';
                 while ($length > 0) {
                     if (($block = fread($this->_socket, $length)) === false) {

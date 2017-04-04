@@ -4,6 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.6 under development
 -----------------------
 
+- Bug #104: Fixed execution of two-word commands (cebe)
 - Bug #67: Fixed regression from 2.0.5, reconnecting a closed connection fails (cebe)
 - Enh: Optimized find by PK for relational queries and IN condition (cebe, andruha)
 - Enh #81: Allow setting `Connection::$database` to `null` to avoid sending a `SELECT` command after connection (cebe)
