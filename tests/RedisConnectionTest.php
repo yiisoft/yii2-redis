@@ -75,6 +75,19 @@ class ConnectionTest extends TestCase
         $this->assertEquals($data, $db->get('hi'));
     }
 
+    public function testSerialize()
+    {
+        $db = $this->getConnection(false);
+        $db->open();
+        $this->assertTrue($db->ping());
+        $s = serialize($db);
+        $this->assertTrue($db->ping());
+        $db2 = unserialize($s);
+        $this->assertTrue($db->ping());
+        $this->assertTrue($db2->ping());
+    }
+
+
     /**
      * https://github.com/yiisoft/yii2/issues/4745
      */

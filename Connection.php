@@ -265,7 +265,7 @@ class Connection extends Component
      */
     public $database = 0;
     /**
-     * @var float timeout to use for connection to redis. If not set the timeout set in php.ini will be used: ini_get("default_socket_timeout")
+     * @var float timeout to use for connection to redis. If not set the timeout set in php.ini will be used: `ini_get("default_socket_timeout")`.
      */
     public $connectionTimeout = null;
     /**
