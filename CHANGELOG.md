@@ -12,6 +12,7 @@ Yii Framework 2 redis extension Change Log
 - Enh #89: Added support for `\yii\db\QueryInterface::emulateExecution()` (samdark)
 - Bug #93: Fixed `yii\redis\ActiveRecord::deleteAll()` with condition (samdark)
 - Enh #53: Added `Mutex` that implements a Redis based mutex (turboezh, sergeymakinen)
+- Enh #103: Added missing commands and `@method` documentation for redis commands (cebe)
 
 
 2.0.5 March 17, 2016
