@@ -613,6 +613,13 @@ class Connection extends Component
      * Executes a redis command.
      * For a list of available commands and their parameters see http://redis.io/commands.
      *
+     * The params array should contain the params separated by white space, e.g. to execute
+     * `SET mykey somevalue NX` call the following:
+     *
+     * ```php
+     * $redis->executeCommand('SET', ['mykey', 'somevalue', 'NX']);
+     * ```
+     *
      * @param string $name the name of the command
      * @param array $params list of parameters for the command
      * @return array|boolean|null|string Dependent on the executed command this method
