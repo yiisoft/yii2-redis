@@ -7,6 +7,12 @@ namespace yiiunit\extensions\redis;
  */
 class ConnectionTest extends TestCase
 {
+    protected function tearDown()
+    {
+        $this->getConnection(false)->configSet('timeout', 0);
+        parent::tearDown();
+    }
+
     /**
      * test connection to redis and selection of db
      */
@@ -87,6 +93,31 @@ class ConnectionTest extends TestCase
         $this->assertTrue($db2->ping());
     }
 
+    /**
+     * @expectedException \yii\redis\SocketException
+     */
+    public function testConnectionTimeout()
+    {
+        $db = $this->getConnection(false);
+        $db->configSet('timeout', 1);
+        $this->assertTrue($db->ping());
+        sleep(1);
+        $this->assertTrue($db->ping());
+        sleep(2);
+        $this->assertTrue($db->ping());
+    }
+
+    public function testConnectionTimeoutRetry()
+    {
+        $db = $this->getConnection(false);
+        $db->retries = 1;
+        $db->configSet('timeout', 1);
+        $this->assertTrue($db->ping());
+        sleep(1);
+        $this->assertTrue($db->ping());
+        sleep(2);
+        $this->assertTrue($db->ping());
+    }
 
     /**
      * https://github.com/yiisoft/yii2/issues/4745

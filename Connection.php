@@ -280,6 +280,12 @@ class Connection extends Component
      */
     public $socketClientFlags = STREAM_CLIENT_CONNECT;
     /**
+     * @var integer The number of times a command execution should be retried when a connection failure occurs.
+     * This is used in [[executeCommand()]] when a [[SocketException]] is thrown.
+     * Defaults to 0 meaning no retries on failure.
+     */
+    public $retries = 0;
+    /**
      * @var array List of available redis commands.
      * @see http://redis.io/commands
      */
@@ -647,8 +653,20 @@ class Connection extends Component
         }
 
         \Yii::trace("Executing Redis Command: {$name}", __METHOD__);
+        if ($this->retries > 0) {
+            $retries = $this->retries;
+            while ($retries-- >= 0) {
+                try {
+                    fwrite($this->_socket, $command);
+                    return $this->parseResponse(implode(' ', $params));
+                } catch (SocketException $e) {
+                    $this->close();
+                    $this->open();
+                    \Yii::error($e, __METHOD__);
+                }
+            }
+        }
         fwrite($this->_socket, $command);
-
         return $this->parseResponse(implode(' ', $params));
     }
 
@@ -660,7 +678,7 @@ class Connection extends Component
     private function parseResponse($command)
     {
         if (($line = fgets($this->_socket)) === false) {
-            throw new Exception("Failed to read from socket.\nRedis command was: " . $command);
+            throw new SocketException("Failed to read from socket.\nRedis command was: " . $command);
         }
         $type = $line[0];
         $line = mb_substr($line, 1, -2, '8bit');
@@ -684,7 +702,7 @@ class Connection extends Component
                 $data = '';
                 while ($length > 0) {
                     if (($block = fread($this->_socket, $length)) === false) {
-                        throw new Exception("Failed to read from socket.\nRedis command was: " . $command);
+                        throw new SocketException("Failed to read from socket.\nRedis command was: " . $command);
                     }
                     $data .= $block;
                     $length -= mb_strlen($block, '8bit');
