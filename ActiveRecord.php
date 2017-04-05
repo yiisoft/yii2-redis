@@ -161,7 +161,7 @@ class ActiveRecord extends BaseActiveRecord
      * @param array $attributes attribute values (name-value pairs) to be saved into the table
      * @param array $condition the conditions that will be put in the WHERE part of the UPDATE SQL.
      * Please refer to [[ActiveQuery::where()]] on how to specify this parameter.
-     * @return integer the number of rows updated
+     * @return int the number of rows updated
      */
     public static function updateAll($attributes, $condition = null)
     {
@@ -232,7 +232,7 @@ class ActiveRecord extends BaseActiveRecord
      * Use negative values if you want to decrement the counters.
      * @param array $condition the conditions that will be put in the WHERE part of the UPDATE SQL.
      * Please refer to [[ActiveQuery::where()]] on how to specify this parameter.
-     * @return integer the number of rows updated
+     * @return int the number of rows updated
      */
     public static function updateAllCounters($counters, $condition = null)
     {
@@ -264,7 +264,7 @@ class ActiveRecord extends BaseActiveRecord
      *
      * @param array $condition the conditions that will be put in the WHERE part of the DELETE SQL.
      * Please refer to [[ActiveQuery::where()]] on how to specify this parameter.
-     * @return integer the number of rows deleted
+     * @return int the number of rows deleted
      */
     public static function deleteAll($condition = null)
     {

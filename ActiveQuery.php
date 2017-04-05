@@ -200,7 +200,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * @param string $q the COUNT expression. This parameter is ignored by this implementation.
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
-     * @return integer number of records
+     * @return int number of records
      */
     public function count($q = '*', $db = null)
     {
@@ -225,7 +225,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * Returns a value indicating whether the query result contains any row of data.
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
-     * @return boolean whether the query result contains any row of data.
+     * @return bool whether the query result contains any row of data.
      */
     public function exists($db = null)
     {
@@ -257,7 +257,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * @param string $column the column to sum up
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
-     * @return integer number of records
+     * @return int number of records
      */
     public function sum($column, $db = null)
     {
@@ -274,7 +274,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * Make sure you properly quote column names in the expression.
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
-     * @return integer the average of the specified column values.
+     * @return int the average of the specified column values.
      */
     public function average($column, $db = null)
     {
@@ -290,7 +290,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * Make sure you properly quote column names in the expression.
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
-     * @return integer the minimum of the specified column values.
+     * @return int the minimum of the specified column values.
      */
     public function min($column, $db = null)
     {
@@ -306,7 +306,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * Make sure you properly quote column names in the expression.
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
-     * @return integer the maximum of the specified column values.
+     * @return int the maximum of the specified column values.
      */
     public function max($column, $db = null)
     {
@@ -346,7 +346,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * @param string $type the type of the script to generate
      * @param string $columnName
      * @throws NotSupportedException
-     * @return array|boolean|null|string
+     * @return array|bool|null|string
      */
     protected function executeScript($db, $type, $columnName = null)
     {
@@ -405,7 +405,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * If this parameter is not given, the `db` application component will be used.
      * @param string $type the type of the script to generate
      * @param string $columnName
-     * @return array|boolean|null|string
+     * @return array|bool|null|string
      * @throws \yii\base\InvalidParamException
      * @throws \yii\base\NotSupportedException
      */

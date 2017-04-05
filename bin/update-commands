@@ -1,6 +1,10 @@
 #!/usr/bin/env php
 <?php
 
+/*
+ * This scripts is used to update the PHPdoc annotations for redis commands in the Connection.php class.
+ */
+
 use yii\helpers\Inflector;
 use yii\helpers\Console;
 

@@ -1,19 +1,19 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
-2.0.6 under development
------------------------
+2.0.6 April 05, 2017
+--------------------
 
 - Bug #44: Remove quotes from numeric parts of composite key to avoid problem with different hashes for the same record (uniserpl)
-- Bug #104: Fixed execution of two-word commands (cebe,branimir93)
 - Bug #67: Fixed regression from 2.0.5, reconnecting a closed connection fails (cebe)
-- Enh: Optimized find by PK for relational queries and IN condition (cebe, andruha)
-- Enh #81: Allow setting `Connection::$database` to `null` to avoid sending a `SELECT` command after connection (cebe)
 - Bug #82: Fixed session object destruction failure when key expires (juffin-halli, samdark)
-- Enh #89: Added support for `\yii\db\QueryInterface::emulateExecution()` (samdark)
 - Bug #93: Fixed `yii\redis\ActiveRecord::deleteAll()` with condition (samdark)
+- Bug #104: Fixed execution of two-word commands (cebe,branimir93)
 - Enh #53: Added `Mutex` that implements a Redis based mutex (turboezh, sergeymakinen)
+- Enh #81: Allow setting `Connection::$database` to `null` to avoid sending a `SELECT` command after connection (cebe)
+- Enh #89: Added support for `\yii\db\QueryInterface::emulateExecution()` (samdark)
 - Enh #103: Added missing commands and `@method` documentation for redis commands (cebe)
+- Enh: Optimized find by PK for relational queries and IN condition (cebe, andruha)
 
 
 2.0.5 March 17, 2016

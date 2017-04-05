@@ -224,7 +224,7 @@ use yii\helpers\Inflector;
  * @method mixed zscan($key, $cursor, $MATCH = null, $pattern = null, $COUNT = null, $count = null) Incrementally iterate sorted sets elements and associated scores. <https://redis.io/commands/zscan>
  *
  * @property string $driverName Name of the DB driver. This property is read-only.
- * @property boolean $isActive Whether the DB connection is established. This property is read-only.
+ * @property bool $isActive Whether the DB connection is established. This property is read-only.
  * @property LuaScriptBuilder $luaScriptBuilder This property is read-only.
  *
  * @author Carsten Brandt <mail@cebe.cc>
@@ -502,7 +502,7 @@ class Connection extends Component
 
     /**
      * Returns a value indicating whether the DB connection is established.
-     * @return boolean whether the DB connection is established
+     * @return bool whether the DB connection is established
      */
     public function getIsActive()
     {
@@ -622,7 +622,7 @@ class Connection extends Component
      *
      * @param string $name the name of the command
      * @param array $params list of parameters for the command
-     * @return array|boolean|null|string Dependent on the executed command this method
+     * @return array|bool|null|string Dependent on the executed command this method
      * will return different data types:
      *
      * - `true` for commands that return "status reply" with the message `'OK'` or `'PONG'`.

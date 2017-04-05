@@ -87,7 +87,7 @@ class Cache extends \yii\caching\Cache
      * may return false while exists returns true.
      * @param mixed $key a key identifying the cached value. This can be a simple string or
      * a complex data structure consisting of factors representing the key.
-     * @return boolean true if a value exists in cache, false if the value is not in the cache or expired.
+     * @return bool true if a value exists in cache, false if the value is not in the cache or expired.
      */
     public function exists($key)
     {

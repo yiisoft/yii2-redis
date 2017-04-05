@@ -77,10 +77,12 @@ class Mutex extends \yii\mutex\Mutex
      * with a Redis [[Connection]] object.
      */
     public $redis = 'redis';
+
     /**
      * @var array Redis lock values. Used to be safe that only a lock owner can release it.
      */
     private $_lockValues = [];
+
 
     /**
      * Initializes the redis Mutex component.
