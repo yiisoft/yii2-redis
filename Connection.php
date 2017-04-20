@@ -248,6 +248,17 @@ class Connection extends Component
      */
     public $port = 6379;
     /**
+     * @var boolean flag to indicate this is a connection to a twemproxy/nutcracker server.
+     * If [[twemproxy]] is true there is no database selection (default is 0),
+     * in order to support failed reponses in case of node failures, retries are enabled.
+     */
+    public $twemproxy = FALSE;
+    /**
+     * @var integer the number of retries before giving up in case of a connection to
+     * twemproxy/nutcracker, it is suggested to set as n° nodes + 1.
+     */
+    public $retriesmax = 1;
+    /**
      * @var string the unix socket path (e.g. `/var/run/redis/redis.sock`) to use for connecting to the redis server.
      * This can be used instead of [[hostname]] and [[port]] to connect to the server using a unix socket.
      * If a unix socket path is specified, [[hostname]] and [[port]] will be ignored.
@@ -519,6 +530,11 @@ class Connection extends Component
         if ($this->_socket !== false) {
             return;
         }
+        // twemproxy/nutcrackes doesn't support DB selection
+        if($this->twemproxy) {
+            // in this case database must be always 0.
+            $this->database = 0;
+        }
         $connection = ($this->unixSocket ?: $this->hostname . ':' . $this->port) . ', database=' . $this->database;
         \Yii::trace('Opening redis DB connection: ' . $connection, __METHOD__);
         $this->_socket = @stream_socket_client(
@@ -535,7 +551,7 @@ class Connection extends Component
             if ($this->password !== null) {
                 $this->executeCommand('AUTH', [$this->password]);
             }
-            if ($this->database !== null) {
+            if (!$this->twemproxy && $this->database !== null) {
                 $this->executeCommand('SELECT', [$this->database]);
             }
             $this->initConnection();
@@ -646,10 +662,20 @@ class Connection extends Component
             $command .= '$' . mb_strlen($arg, '8bit') . "\r\n" . $arg . "\r\n";
         }
 
-        \Yii::trace("Executing Redis Command: {$name}", __METHOD__);
-        fwrite($this->_socket, $command);
-
-        return $this->parseResponse(implode(' ', $params));
+        // Retries
+        $rcount = 0;
+        $lex = NULL;
+        while ($rcount < $this->retriesmax) {
+            try {
+                \Yii::trace("Executing Redis Command: {$name} | Try {$rcount}", __METHOD__);
+                fwrite($this->_socket, $command);
+                return $this->parseResponse(implode(' ', $params));
+            } catch (Exception $ex) {
+                $lex = $ex;
+                $rcount++;
+            }
+        }
+        throw $lex;
     }
 
     /**
