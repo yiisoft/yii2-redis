@@ -405,7 +405,7 @@ class ActiveRecord extends BaseActiveRecord
         $db = static::getDb();
         $n = 0;
         foreach (static::fetchPks($condition) as $pk) {
-            $key = static::buildKeyPrefix(static::keyPrefix(), static::buildKey($pk), static::TYPE_KEY);
+            $key = static::buildKeyPrefix(static::buildKey($pk), static::keyPrefix(), static::TYPE_KEY);
 
             foreach ($counters as $attribute => $value) {
                 $db->executeCommand('HINCRBY', [$key, $attribute, $value]);
@@ -444,7 +444,7 @@ class ActiveRecord extends BaseActiveRecord
         foreach ($pks as $pk) {
             $pk = static::buildKey($pk);
             $db->executeCommand('SREM', [$prefix, 0, $pk]);
-            $attributeKeys[] = static::buildKeyPrefix($prefix, $pk, static::TYPE_KEY);
+            $attributeKeys[] = static::buildKeyPrefix($pk, $prefix,  static::TYPE_KEY);
         }
         $db->executeCommand('DEL', $attributeKeys);
         $result = static::commitTransaction();
