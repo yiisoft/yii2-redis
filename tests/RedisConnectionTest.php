@@ -8,31 +8,6 @@ namespace yiiunit\extensions\redis;
 class ConnectionTest extends TestCase
 {
     /**
-     * test connection to redis and selection of db
-     */
-    public function testConnect()
-    {
-        $db = $this->getConnection(false);
-        $database = $db->database;
-        $db->open();
-        $this->assertTrue($db->ping());
-        $db->set('YIITESTKEY', 'YIITESTVALUE');
-        $db->close();
-
-        $db = $this->getConnection(false);
-        $db->database = $database;
-        $db->open();
-        $this->assertEquals('YIITESTVALUE', $db->get('YIITESTKEY'));
-        $db->close();
-
-        $db = $this->getConnection(false);
-        $db->database = 1;
-        $db->open();
-        $this->assertNull($db->get('YIITESTKEY'));
-        $db->close();
-    }
-
-    /**
      * tests whether close cleans up correctly so that a new connect works
      */
     public function testReConnect()
@@ -112,13 +87,5 @@ class ConnectionTest extends TestCase
         foreach($allKeys as $key) {
             $this->assertEquals($expected[$key], $redis->executeCommand('TYPE',[$key]));
         }
-    }
-
-    public function testTwoWordCommands()
-    {
-        $redis = $this->getConnection();
-        $this->assertTrue(is_array($redis->executeCommand('CONFIG GET', ['port'])));
-        $this->assertTrue(is_string($redis->clientList()));
-        $this->assertTrue(is_string($redis->executeCommand('CLIENT LIST')));
     }
 }

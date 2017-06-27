@@ -21,6 +21,9 @@
         "predis/predis": "^1.1",
         "yiisoft/yii2": "~2.0.11"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^5.7"
+    },
     "autoload": {
         "psr-4": { "yii\\redis\\": "" }
     },

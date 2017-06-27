@@ -8,6 +8,7 @@
 namespace yii\redis;
 
 use Predis\Client;
+use Predis\Response\Status;
 
 use yii\base\Component;
 use yii\helpers\Inflector;
@@ -583,6 +584,44 @@ class Connection extends Component
     {
         $this->open();
 
-        return call_user_func_array([$this->_client, $name], $params);
+        $response = call_user_func_array([$this->_client, $name], $params);
+
+        // Predis returns an object representing status, whereas upstream returns true for successful statuses else the
+        // status string itself.
+        if ($response instanceof Status) {
+            $str = (string) $response;
+
+            return $str === 'OK' || $str === 'PONG' ? true : $str;
+        }
+
+        // Predis converts certain Redis responses, such as that from HGETALL, to an associative array rather
+        // returning the native response from Redis as a numerically indexed array.  Undo this for compatability with
+        // upstream.
+        if (is_array($response)) {
+            $flattened = [];
+            $integerKeys = false;
+
+            // Track the key we would expect if this were a numerically indexed array and compare it with the actual
+            // key on each itteration - if it differs then we know this is not a numerically indexed array and can let
+            // it be.
+            $expectedKey = 0;
+            foreach ($response as $key => $value) {
+                if ($key === $expectedKey) {
+                    $integerKeys = true;
+                    break;
+                }
+
+                $flattened[] = $key;
+                $flattened[] = $value;
+
+                $expectedKey++;
+            }
+
+            if (!$integerKeys) {
+                $response = $flattened;
+            }
+        }
+
+        return $response;
     }
 }
