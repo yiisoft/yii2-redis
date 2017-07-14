@@ -20,4 +20,4 @@ There are shortcuts available for each command supported so insted of the above 
 $result = $redis->hmset('test_collection', 'key1', 'val1', 'key2', 'val2');
 ```
 
-For a list of available commands and their parameters see [http://redis.io/commands](http://redis.io/commands).
+For a list of available commands and their parameters see <http://redis.io/commands>.
