@@ -125,7 +125,7 @@ class Cache extends \yii\caching\Cache
         if ($expire == 0) {
             return (bool) $this->redis->executeCommand('SET', [$key, $value]);
         } else {
-            $expire = round($expire * 1000);
+            $expire = sprintf("%d", $expire * 1000);
             return (bool) $this->redis->executeCommand('SET', [$key, $value, 'PX', $expire]);
         }
     }
@@ -145,7 +145,7 @@ class Cache extends \yii\caching\Cache
         if ($expire == 0) {
             $this->redis->executeCommand('MSET', $args);
         } else {
-            $expire = round($expire * 1000);
+            $expire = sprintf("%d", $expire * 1000);
             $this->redis->executeCommand('MULTI');
             $this->redis->executeCommand('MSET', $args);
             $index = [];
@@ -173,7 +173,7 @@ class Cache extends \yii\caching\Cache
         if ($expire == 0) {
             return (bool) $this->redis->executeCommand('SET', [$key, $value, 'NX']);
         } else {
-            $expire = round($expire * 1000);
+            $expire = sprintf("%d", $expire * 1000);
             return (bool) $this->redis->executeCommand('SET', [$key, $value, 'PX', $expire, 'NX']);
         }
     }
