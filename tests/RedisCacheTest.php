@@ -67,7 +67,7 @@ class RedisCacheTest extends CacheTestCase
         $this->assertTrue($cache->set('expire_test_is', 'expire_test_is', 2));
         sleep(1);
         $this->assertEquals('expire_test_is', $cache->get('expire_test_is'));
-        sleep(2);
+        sleep(3);
         $this->assertFalse($cache->get('expire_test_is'));
     }
 
