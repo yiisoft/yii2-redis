@@ -60,6 +60,36 @@ class RedisCacheTest extends CacheTestCase
         $this->assertFalse($cache->get('expire_testa_ms'));
     }
 
+    public function testExpireIntegerSeconds()
+    {
+        $cache = $this->getCacheInstance();
+
+        $this->assertTrue($cache->set('expire_test_is', 'expire_test_is', 2));
+        sleep(1);
+        $this->assertEquals('expire_test_is', $cache->get('expire_test_is'));
+        sleep(3);
+        $this->assertFalse($cache->get('expire_test_is'));
+    }
+
+    public function testExpireLongSeconds()
+    {
+        $cache = $this->getCacheInstance();
+
+        // on 32-bit: PHP_INT_MAX === 2147483647
+        //      max ttl (in SETEX, sec) is PHP_INT_MAX * 1e6
+        //      max ttl (in PSETEX, ms) is PHP_INT_MAX * 1e9
+        //
+        // on 64-bit: PHP_INT_MAX === 9223372036854775807
+        //      max ttl (in SETEX, sec) is PHP_INT_MAX * 1e-4
+        //      max ttl (in PSETEX, ms) is PHP_INT_MAX * 1e-1
+        $ttl = PHP_INT_MAX * 1e-4;
+        $this->assertTrue($cache->set('expire_test_ls', 'expire_test_ls', $ttl));
+        sleep(2);
+        $this->assertEquals('expire_test_ls', $cache->get('expire_test_ls'));
+        $this->assertLessThan($ttl - 1, Yii::$app->redis->ttl('expire_test_ls'));
+        $this->assertGreaterThan($ttl - 5, Yii::$app->redis->ttl('expire_test_ls'));
+    }
+
     /**
      * Store a value that is 2 times buffer size big
      * https://github.com/yiisoft/yii2/issues/743
