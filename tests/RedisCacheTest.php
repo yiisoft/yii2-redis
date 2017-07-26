@@ -83,7 +83,7 @@ class RedisCacheTest extends CacheTestCase
         // on 64-bit: PHP_INT_MAX === 9223372036854775807
         //      max ttl (in SETEX, sec) is about PHP_INT_MAX * 1e-4
         //      max ttl (in PSETEX, ms) is about PHP_INT_MAX * 1e-1
-        $ttl = PHP_INT_MAX * 1e-4;
+        $ttl = PHP_INT_MAX * 1e-5;
         $this->assertTrue($cache->set('expire_test_ls', 'expire_test_ls', $ttl));
         sleep(2);
         $this->assertEquals('expire_test_ls', $cache->get('expire_test_ls'));
