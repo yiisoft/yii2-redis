@@ -528,4 +528,54 @@ class ActiveRecordTest extends TestCase
         $pk = ['order_id' => $orderItem->order_id, 'item_id' => $orderItem->item_id];
         $this->assertEquals($key, OrderItem::buildKey($pk));
     }
+
+    public function testNotCondition()
+    {
+        /* @var $orderClass \yii\db\ActiveRecordInterface */
+        $orderClass = $this->getOrderClass();
+
+        /* @var $this TestCase|ActiveRecordTestTrait */
+        $orders = $orderClass::find()->where(['not', ['customer_id' => 2]])->all();
+        $this->assertCount(1, $orders);
+        $this->assertEquals(1, $orders[0]['customer_id']);
+    }
+
+
+    public function testBetweenCondition()
+    {
+        /* @var $orderClass \yii\db\ActiveRecordInterface */
+        $orderClass = $this->getOrderClass();
+
+        /* @var $this TestCase|ActiveRecordTestTrait */
+        $orders = $orderClass::find()->where(['between', 'total', 30, 50])->all();
+        $this->assertCount(2, $orders);
+        $this->assertEquals(2, $orders[0]['customer_id']);
+        $this->assertEquals(2, $orders[1]['customer_id']);
+
+        $orders = $orderClass::find()->where(['not between', 'total', 30, 50])->all();
+        $this->assertCount(1, $orders);
+        $this->assertEquals(1, $orders[0]['customer_id']);
+    }
+
+    public function testInCondition()
+    {
+        /* @var $orderClass \yii\db\ActiveRecordInterface */
+        $orderClass = $this->getOrderClass();
+
+        /* @var $this TestCase|ActiveRecordTestTrait */
+        $orders = $orderClass::find()->where(['in', 'customer_id', [1,2]])->all();
+        $this->assertCount(3, $orders);
+
+        $orders = $orderClass::find()->where(['not in', 'customer_id', [1,2]])->all();
+        $this->assertCount(0, $orders);
+
+        $orders = $orderClass::find()->where(['in', 'customer_id', [1]])->all();
+        $this->assertCount(1, $orders);
+        $this->assertEquals(1, $orders[0]['customer_id']);
+
+        $orders = $orderClass::find()->where(['in', 'customer_id', [2]])->all();
+        $this->assertCount(2, $orders);
+        $this->assertEquals(2, $orders[0]['customer_id']);
+        $this->assertEquals(2, $orders[1]['customer_id']);
+    }
 }

@@ -299,7 +299,7 @@ EOF;
             $operand = $this->buildCondition($operand, $params);
         }
 
-        return "!($operand)";
+        return "$operator ($operand)";
     }
 
     private function buildAndCondition($operator, $operands, &$columns)
@@ -332,7 +332,8 @@ EOF;
         $value2 = $this->quoteValue($value2);
         $column = $this->addColumn($column, $columns);
 
-        return "$column >= $value1 and $column <= $value2";
+        $condition = "$column >= $value1 and $column <= $value2";
+        return $operator === 'not between' ? "not ($condition)" : $condition;
     }
 
     private function buildInCondition($operator, $operands, &$columns)
