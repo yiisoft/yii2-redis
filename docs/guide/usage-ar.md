@@ -1,7 +1,7 @@
 Using the ActiveRecord
 ======================
 
-For general information on how to use yii's ActiveRecord please refer to the [guide](https://github.com/yiisoft/yii2/blob/master/docs/guide/active-record.md).
+For general information on how to use yii's ActiveRecord please refer to the [guide](https://github.com/yiisoft/yii2/blob/master/docs/guide/db-active-record.md).
 
 For defining a redis ActiveRecord class your record class needs to extend from [[yii\redis\ActiveRecord]] and
 implement at least the `attributes()` method to define the attributes of the record.
@@ -41,7 +41,7 @@ class Customer extends \yii\redis\ActiveRecord
 ```
 
 The general usage of redis ActiveRecord is very similar to the database ActiveRecord as described in the
-[guide](https://github.com/yiisoft/yii2/blob/master/docs/guide/active-record.md).
+[guide](https://github.com/yiisoft/yii2/blob/master/docs/guide/db-active-record.md).
 It supports the same interface and features except the following limitations:
 
 - As redis does not support SQL the query API is limited to the following methods:
