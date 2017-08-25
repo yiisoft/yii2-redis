@@ -241,6 +241,10 @@ EOF;
             'not like' => 'buildLikeCondition',
             'or like' => 'buildLikeCondition',
             'or not like' => 'buildLikeCondition',
+            '>' => 'buildGreatCondition',
+            '>=' => 'buildGreatEqualCondition',
+            '<' => 'buildBelowCondition',
+            '<=' => 'buildBelowEqualCondition',
         ];
 
         if (!is_array($condition)) {
@@ -336,6 +340,62 @@ EOF;
         return $operator === 'not between' ? "not ($condition)" : $condition;
     }
 
+    private function buildBelowCondition($operator, $operands, &$columns)
+    {
+        if (!isset($operands[0], $operands[1])) {
+            throw new Exception("Operator '$operator' requires two operands.");
+        }
+
+        list($column, $value) = $operands;
+
+        $value = $this->quoteValue($value);
+        $column = $this->addColumn($column, $columns);
+
+        return "$column < $value";
+    }    
+    
+    private function buildBelowEqualCondition($operator, $operands, &$columns)
+    {
+        if (!isset($operands[0], $operands[1])) {
+            throw new Exception("Operator '$operator' requires two operands.");
+        }
+
+        list($column, $value) = $operands;
+
+        $value = $this->quoteValue($value);
+        $column = $this->addColumn($column, $columns);
+
+        return "$column <= $value";
+    }    
+
+    private function buildGreatCondition($operator, $operands, &$columns)
+    {
+        if (!isset($operands[0], $operands[1])) {
+            throw new Exception("Operator '$operator' requires two operands.");
+        }
+
+        list($column, $value) = $operands;
+
+        $value = $this->quoteValue($value);
+        $column = $this->addColumn($column, $columns);
+
+        return "$column > $value";
+    }    
+    
+    private function buildGreatEqualCondition($operator, $operands, &$columns)
+    {
+        if (!isset($operands[0], $operands[1])) {
+            throw new Exception("Operator '$operator' requires two operands.");
+        }
+
+        list($column, $value) = $operands;
+
+        $value = $this->quoteValue($value);
+        $column = $this->addColumn($column, $columns);
+
+        return "$column >= $value";
+    }    
+    
     private function buildInCondition($operator, $operands, &$columns)
     {
         if (!isset($operands[0], $operands[1])) {
