@@ -10,7 +10,7 @@ use yii\redis\Connection;
 /**
  * This is the base class for all yii framework unit tests.
  */
-abstract class TestCase extends \PHPUnit_Framework_TestCase
+abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     public static $params;
 
@@ -46,7 +46,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      * @param array $config The application configuration, if needed
      * @param string $appClass name of the application class to create
      */
-    protected function mockApplication($config = [], $appClass = '\yii\console\Application')
+    protected function mockApplication(array $config = [], $appClass = '\yii\console\Application')
     {
         new $appClass(ArrayHelper::merge([
             'id' => 'testapp',
@@ -55,7 +55,13 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
         ], $config));
     }
 
-    protected function mockWebApplication($config = [], $appClass = '\yii\web\Application')
+    /**
+     * Mocks web application
+     *
+     * @param array $config
+     * @param string $appClass
+     */
+    protected function mockWebApplication(array $config = [], $appClass = '\yii\web\Application')
     {
         new $appClass(ArrayHelper::merge([
             'id' => 'testapp',

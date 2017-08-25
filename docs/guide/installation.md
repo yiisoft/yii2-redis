@@ -40,3 +40,12 @@ return [
     ]
 ];
 ```
+
+This provides the basic access to redis storage via the `redis` application component:
+ 
+```php
+Yii::$app->redis->set('mykey', 'some value');
+echo Yii::$app->redis->get('mykey');
+```
+
+See [[yii\redis\Connection]] for a full list of available methods.

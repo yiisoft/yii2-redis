@@ -1,52 +1,24 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
-2.0.7-dev
- - Bug #42 Fixed "not" condition
 
-2.0.6-dev development fork
------------------------
-ATTENTION!!! 
-This fork use incompatible storage for key pool (SADD, SCARD, SMEMBERS)
-
- - Bug #18 Fixed integer-string key bug
- - Bug #20 Fixed findall pool duplicating keys
- - Bug #33 invalid expire time?
- - Enh #74 Added expire time
- - Added expire and geo records
- - optimized code
-
-ActiveRecord:
- - Added consts TYPE_ID, TYPE_KEY, TYPE_GEO and TYPE_EXPIRE for prefixs
- - Method save() get safeAttributes() as $attributeNames parames
- - For best performance added _keyPrefix and _PrimaryKey properties;
- - Overwrite BaseActiveRecord method updateInternal and added static::updatePks. Don't use self::fetchPks() for find key because updateInternal already have [pk]
- - Change RPUSH for SADD for unique findall
- - Added beginTransaction and commitTransaction methods
- - Added ttl method
- - Added expire method
- - Added georadius method
- - Added geoAdd method
- - Added findGeoRadius method
- - Added findKeys method
-
-ActiveQuery
- - Overwrite method createModels for call $model->afterFind() without addition foreach()
- - Union methods all() and one(), clear code
- - Added expire, withExpiring and georadius methods
- - Added getRows for converting redis lists to key->val
- - for best performance added field _PrimaryKey for all records
-
-LuaScriptBuilder
- - optimized code, clear build key for each BuildMethod
- - Added methods geoRadius expire and allpks for build keys and get results
- - Change all keys "key .. ':a:' .. pk" on "pkey"
-Cache
- - remove cast to int
-
-2.0.6 under development
+2.0.7 under development
 -----------------------
 
+- Bug #114: Fixed ActiveQuery `not between` and `not` conditions which where not working correctly (cebe, ak1987)
+
+
+2.0.6 April 05, 2017
+--------------------
+
+- Bug #44: Remove quotes from numeric parts of composite key to avoid problem with different hashes for the same record (uniserpl)
 - Bug #67: Fixed regression from 2.0.5, reconnecting a closed connection fails (cebe)
+- Bug #82: Fixed session object destruction failure when key expires (juffin-halli, samdark)
+- Bug #93: Fixed `yii\redis\ActiveRecord::deleteAll()` with condition (samdark)
+- Bug #104: Fixed execution of two-word commands (cebe,branimir93)
+- Enh #53: Added `Mutex` that implements a Redis based mutex (turboezh, sergeymakinen)
+- Enh #81: Allow setting `Connection::$database` to `null` to avoid sending a `SELECT` command after connection (cebe)
+- Enh #89: Added support for `\yii\db\QueryInterface::emulateExecution()` (samdark)
+- Enh #103: Added missing commands and `@method` documentation for redis commands (cebe)
 - Enh: Optimized find by PK for relational queries and IN condition (cebe, andruha)
 
 

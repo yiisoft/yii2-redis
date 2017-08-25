@@ -11,7 +11,6 @@ use yii\base\InvalidParamException;
 use yii\base\NotSupportedException;
 use yii\db\Exception;
 use yii\db\Expression;
-use yii\helpers\ArrayHelper;
 
 /**
  * LuaScriptBuilder builds lua scripts used for retrieving data from redis.
@@ -29,7 +28,11 @@ class LuaScriptBuilder extends \yii\base\Object
     public function buildAll($query)
     {
         // TODO add support for orderBy
-        return $this->build($query, "n=n+1 local rec=redis.call('HGETALL',pkey) rec[#rec+1]='_PrimaryKey' rec[#rec+1]=pkey pks[n]=rec", 'pks');
+        /* @var $modelClass ActiveRecord */
+        $modelClass = $query->modelClass;
+        $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
+
+        return $this->build($query, "n=n+1 pks[n]=redis.call('HGETALL',$key .. pk)", 'pks');
     }
 
     /**
@@ -40,7 +43,11 @@ class LuaScriptBuilder extends \yii\base\Object
     public function buildOne($query)
     {
         // TODO add support for orderBy
-        return $this->build($query, "do local rec=redis.call('HGETALL',pkey) rec[#rec+1]='_PrimaryKey' rec[#rec+1]=pkey return rec end", 'pks');
+        /* @var $modelClass ActiveRecord */
+        $modelClass = $query->modelClass;
+        $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
+
+        return $this->build($query, "do return redis.call('HGETALL',$key .. pk) end", 'pks');
     }
 
     /**
@@ -52,7 +59,11 @@ class LuaScriptBuilder extends \yii\base\Object
     public function buildColumn($query, $column)
     {
         // TODO add support for orderBy and indexBy
-        return $this->build($query, "n=n+1 pks[n]=redis.call('HGET',pkey," . $this->quoteValue($column) . ")", 'pks');
+        /* @var $modelClass ActiveRecord */
+        $modelClass = $query->modelClass;
+        $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
+
+        return $this->build($query, "n=n+1 pks[n]=redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ")", 'pks');
     }
 
     /**
@@ -73,7 +84,11 @@ class LuaScriptBuilder extends \yii\base\Object
      */
     public function buildSum($query, $column)
     {
-        return $this->build($query, "n=n+redis.call('HGET',pkey," . $this->quoteValue($column) . ")", 'n');
+        /* @var $modelClass ActiveRecord */
+        $modelClass = $query->modelClass;
+        $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
+
+        return $this->build($query, "n=n+redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ")", 'n');
     }
 
     /**
@@ -84,7 +99,11 @@ class LuaScriptBuilder extends \yii\base\Object
      */
     public function buildAverage($query, $column)
     {
-        return $this->build($query, "n=n+1 if v==nil then v=0 end v=v+redis.call('HGET',pkey," . $this->quoteValue($column) . ")", 'v/n');
+        /* @var $modelClass ActiveRecord */
+        $modelClass = $query->modelClass;
+        $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
+
+        return $this->build($query, "n=n+1 if v==nil then v=0 end v=v+redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ")", 'v/n');
     }
 
     /**
@@ -95,7 +114,11 @@ class LuaScriptBuilder extends \yii\base\Object
      */
     public function buildMin($query, $column)
     {
-        return $this->build($query, "n=redis.call('HGET',pkey," . $this->quoteValue($column) . ") if v==nil or n<v then v=n end", 'v');
+        /* @var $modelClass ActiveRecord */
+        $modelClass = $query->modelClass;
+        $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
+
+        return $this->build($query, "n=redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ") if v==nil or n<v then v=n end", 'v');
     }
 
     /**
@@ -106,76 +129,11 @@ class LuaScriptBuilder extends \yii\base\Object
      */
     public function buildMax($query, $column)
     {
-        return $this->build($query, "n=redis.call('HGET',pkey," . $this->quoteValue($column) . ") if v==nil or n>v then v=n end", 'v');
-    }
-    
-    protected function geoRadius($query, $res, &$suffix) {
-        $lat = ArrayHelper::getValue($query->radius, 'lat');
-        $lon = ArrayHelper::getValue($query->radius, 'lon');
-        $rad = explode(' ', ArrayHelper::getValue($query->radius, 'radius'));
-        $radius = ArrayHelper::getValue($rad, 0);
-        $m = ArrayHelper::getValue($rad, 1);
-        if ($lat && $lon && $radius && $m) {
-            $modelClass = $query->modelClass;
-            $suffix   = $modelClass::TYPE_GEO;
-            $lat    = $this->quoteValue($lat);
-            $lon    = $this->quoteValue($lon);
-            $radius = $this->quoteValue($radius);
-            $m      = $this->quoteValue($m);
-            return "redis.call('GEORADIUS',_key,$lon,$lat,$radius,$m)";
-        }
-        return $res;
-    }
-
-    protected function expire($query, $res, &$suffix) {
+        /* @var $modelClass ActiveRecord */
         $modelClass = $query->modelClass;
-        if(!$query->withExpiring && !$query->radius) {
-            $suffix = $modelClass::TYPE_EXPIRE.':';
-        }
-        $expire = "*";
-        if ($query->radius) {
-            $expire = ':*';
-        }
-        $pool = $this->quoteValue($expire);
-        $expression = <<<EOF
-for i,_key in ipairs(keys) do 
-    local members=$res
-    for k,pk in ipairs(members) do
-        allpks[pk]=pk
-    end
-end
-EOF;
-        if ($query->radius && $query->withExpiring) {
-            $expression = "keys[#keys+1]=_key\n".$expression;
-        }
-        elseif ($query->withExpiring) {
-            $expression = "allpks=keys\nkey=''";
-        }
-        
-        return <<<EOF
-{}
-local keys=redis.call('KEYS', key..suffix..$pool)
-$expression
-EOF;
-    }
+        $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
-
-    protected function allpks($query) {
-        $modelClass = $query->modelClass;
-        $suffix = $modelClass::TYPE_KEY.':';
-        $key    = $this->quoteValue($modelClass::keyPrefix());
-        $res    = "redis.call('SMEMBERS', _key)";
-        $_key   = 'local _key=key';
-
-        if ($query->radius && is_array($query->radius)) {
-            $_key   = 'local _key=key..suffix';
-            $res = $this->geoRadius($query, $res, $suffix);
-        }
-        if ($query->expire || $query->withExpiring) {
-            $res = $this->expire($query, $res, $suffix);
-        }
-        $suffix = $this->quoteValue(":$suffix");
-        return "local key=$key\nlocal suffix=$suffix\n$_key\nlocal allpks=$res";
+        return $this->build($query, "n=redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ") if v==nil or n>v then v=n end", 'v');
     }
 
     /**
@@ -203,27 +161,26 @@ EOF;
 
         /* @var $modelClass ActiveRecord */
         $modelClass = $query->modelClass;
-        $tk         = $this->quoteValue(':'.$modelClass::TYPE_KEY.':');
+        $key = $this->quoteValue($modelClass::keyPrefix());
         $loadColumnValues = '';
         foreach ($columns as $column => $alias) {
-            $loadColumnValues .= "local $alias=redis.call('HGET',pkey, '$column')\n";
+            $loadColumnValues .= "local $alias=redis.call('HGET',$key .. ':a:' .. pk, '$column')\n";
         }
-        $allpks = $this->allpks($query);
 
         return <<<EOF
-$allpks
+local allpks=redis.call('LRANGE',$key,0,-1)
 local pks={}
 local n=0
 local v=nil
 local i=0
-for k,pk in pairs(allpks) do
-    local pkey=key..$tk..pk 
+local key=$key
+for k,pk in ipairs(allpks) do
     $loadColumnValues
     if $condition then
-        i=i+1
-        if $limitCondition then
-            $buildResult
-        end
+      i=i+1
+      if $limitCondition then
+        $buildResult
+      end
     end
 end
 return $return
@@ -316,7 +273,7 @@ EOF;
                     $value = (int) $value;
                 }
                 if ($value === null) {
-                    $parts[] = "redis.call('HEXISTS',pkey, ".$this->quoteValue($column).")==0";
+                    $parts[] = "redis.call('HEXISTS',key .. ':a:' .. pk, ".$this->quoteValue($column).")==0";
                 } elseif ($value instanceof Expression) {
                     $column = $this->addColumn($column, $columns);
                     $parts[] = "$column==" . $value->expression;
@@ -342,7 +299,7 @@ EOF;
             $operand = $this->buildCondition($operand, $params);
         }
 
-        return "(not ($operand))";
+        return "$operator ($operand)";
     }
 
     private function buildAndCondition($operator, $operands, &$columns)
@@ -375,7 +332,8 @@ EOF;
         $value2 = $this->quoteValue($value2);
         $column = $this->addColumn($column, $columns);
 
-        return "$column >= $value1 and $column <= $value2";
+        $condition = "$column >= $value1 and $column <= $value2";
+        return $operator === 'not between' ? "not ($condition)" : $condition;
     }
 
     private function buildInCondition($operator, $operands, &$columns)
@@ -404,7 +362,7 @@ EOF;
                 $value = isset($value[$column]) ? $value[$column] : null;
             }
             if ($value === null) {
-                $parts[] = "redis.call('HEXISTS',pkey, ".$this->quoteValue($column).")==0";
+                $parts[] = "redis.call('HEXISTS',key .. ':a:' .. pk, ".$this->quoteValue($column).")==0";
             } elseif ($value instanceof Expression) {
                 $parts[] = "$columnAlias==" . $value->expression;
             } else {
@@ -427,7 +385,7 @@ EOF;
                     $columnAlias = $this->addColumn($column, $columns);
                     $vs[] = "$columnAlias==" . $this->quoteValue($value[$column]);
                 } else {
-                    $vs[] = "redis.call('HEXISTS',pkey, ".$this->quoteValue($column).")==0";
+                    $vs[] = "redis.call('HEXISTS',key .. ':a:' .. pk, ".$this->quoteValue($column).")==0";
                 }
             }
             $vss[] = '(' . implode(' and ', $vs) . ')';

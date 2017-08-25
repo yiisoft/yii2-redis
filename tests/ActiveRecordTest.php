@@ -19,31 +19,49 @@ class ActiveRecordTest extends TestCase
 {
     use ActiveRecordTestTrait;
 
+    /**
+     * @return string
+     */
     public function getCustomerClass()
     {
         return Customer::className();
     }
 
+    /**
+     * @return string
+     */
     public function getItemClass()
     {
         return Item::className();
     }
 
+    /**
+     * @return string
+     */
     public function getOrderClass()
     {
         return Order::className();
     }
 
+    /**
+     * @return string
+     */
     public function getOrderItemClass()
     {
         return OrderItem::className();
     }
 
+    /**
+     * @return string
+     */
     public function getOrderWithNullFKClass()
     {
         return OrderWithNullFK::className();
     }
 
+    /**
+     * @return string
+     */
     public function getOrderItemWithNullFKmClass()
     {
         return OrderItemWithNullFK::className();
@@ -111,6 +129,10 @@ class ActiveRecordTest extends TestCase
         $orderItem = new OrderItem();
         $orderItem->setAttributes(['order_id' => 3, 'item_id' => 2, 'quantity' => 1, 'subtotal' => 40.0], false);
         $orderItem->save(false);
+        // insert a record with non-integer PK
+        $orderItem = new OrderItem();
+        $orderItem->setAttributes(['order_id' => 3, 'item_id' => 'nostr', 'quantity' => 1, 'subtotal' => 40.0], false);
+        $orderItem->save(false);
 
         $order = new OrderWithNullFK();
         $order->setAttributes(['customer_id' => 1, 'created_at' => 1325282384, 'total' => 110.0], false);
@@ -173,7 +195,7 @@ class ActiveRecordTest extends TestCase
 
         // find all asArray
         $customers = $customerClass::find()->asArray()->all();
-        $this->assertEquals(3, count($customers));
+        $this->assertCount(3, $customers);
         $this->assertArrayHasKey('id', $customers[0]);
         $this->assertArrayHasKey('name', $customers[0]);
         $this->assertArrayHasKey('email', $customers[0]);
@@ -200,8 +222,8 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals(1, Customer::find()->min('id'));
         $this->assertEquals(3, Customer::find()->max('id'));
 
-        $this->assertEquals(6, OrderItem::find()->count());
-        $this->assertEquals(7, OrderItem::find()->sum('quantity'));
+        $this->assertEquals(7, OrderItem::find()->count());
+        $this->assertEquals(8, OrderItem::find()->sum('quantity'));
     }
 
     public function testFindIndexBy()
@@ -210,19 +232,19 @@ class ActiveRecordTest extends TestCase
         /* @var $this TestCase|ActiveRecordTestTrait */
         // indexBy
         $customers = Customer::find()->indexBy('name')/*->orderBy('id')*/->all();
-        $this->assertEquals(3, count($customers));
-        $this->assertTrue($customers['user1'] instanceof $customerClass);
-        $this->assertTrue($customers['user2'] instanceof $customerClass);
-        $this->assertTrue($customers['user3'] instanceof $customerClass);
+        $this->assertCount(3, $customers);
+        $this->assertInstanceOf($customerClass, $customers['user1']);
+        $this->assertInstanceOf($customerClass, $customers['user2']);
+        $this->assertInstanceOf($customerClass, $customers['user3']);
 
         // indexBy callable
         $customers = Customer::find()->indexBy(function ($customer) {
             return $customer->id . '-' . $customer->name;
         })/*->orderBy('id')*/->all(); // TODO this test is duplicated because of missing orderBy support in redis
-        $this->assertEquals(3, count($customers));
-        $this->assertTrue($customers['1-user1'] instanceof $customerClass);
-        $this->assertTrue($customers['2-user2'] instanceof $customerClass);
-        $this->assertTrue($customers['3-user3'] instanceof $customerClass);
+        $this->assertCount(3, $customers);
+        $this->assertInstanceOf($customerClass, $customers['1-user1']);
+        $this->assertInstanceOf($customerClass, $customers['2-user2']);
+        $this->assertInstanceOf($customerClass, $customers['3-user3']);
     }
 
     public function testFindLimit()
@@ -231,29 +253,30 @@ class ActiveRecordTest extends TestCase
         /* @var $this TestCase|ActiveRecordTestTrait */
         // all()
         $customers = Customer::find()->all();
-        $this->assertEquals(3, count($customers));
+        $this->assertCount(3, $customers);
 
         $customers = Customer::find()/*->orderBy('id')*/->limit(1)->all();
-        $this->assertEquals(1, count($customers));
+        $this->assertCount(1, $customers);
         $this->assertEquals('user1', $customers[0]->name);
 
         $customers = Customer::find()/*->orderBy('id')*/->limit(1)->offset(1)->all();
-        $this->assertEquals(1, count($customers));
+        $this->assertCount(1, $customers);
         $this->assertEquals('user2', $customers[0]->name);
 
         $customers = Customer::find()/*->orderBy('id')*/->limit(1)->offset(2)->all();
-        $this->assertEquals(1, count($customers));
+        $this->assertCount(1, $customers);
         $this->assertEquals('user3', $customers[0]->name);
 
         $customers = Customer::find()/*->orderBy('id')*/->limit(2)->offset(1)->all();
-        $this->assertEquals(2, count($customers));
+        $this->assertCount(2, $customers);
         $this->assertEquals('user2', $customers[0]->name);
         $this->assertEquals('user3', $customers[1]->name);
 
         $customers = Customer::find()->limit(2)->offset(3)->all();
-        $this->assertEquals(0, count($customers));
+        $this->assertCount(0, $customers);
 
         // one()
+        /** @var Customer $customer */
         $customer = Customer::find()/*->orderBy('id')*/->one();
         $this->assertEquals('user1', $customer->name);
 
@@ -277,10 +300,10 @@ class ActiveRecordTest extends TestCase
 
         /* @var $this TestCase|ActiveRecordTestTrait */
         $orders = $orderClass::find()->with('items')/*->orderBy('id')*/->all(); // TODO this test is duplicated because of missing orderBy support in redis
-        $this->assertEquals(3, count($orders));
+        $this->assertCount(3, $orders);
         $order = $orders[0];
         $this->assertEquals(1, $order->id);
-        $this->assertEquals(2, count($order->items));
+        $this->assertCount(2, $order->items);
         $this->assertEquals(1, $order->items[0]->id);
         $this->assertEquals(2, $order->items[1]->id);
     }
@@ -298,6 +321,7 @@ class ActiveRecordTest extends TestCase
     {
         // updateCounters
         $pk = ['order_id' => 2, 'item_id' => 4];
+        /** @var OrderItem $orderItem */
         $orderItem = OrderItem::findOne($pk);
         $this->assertEquals(2, $orderItem->order_id);
         $this->assertEquals(4, $orderItem->item_id);
@@ -391,6 +415,7 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals(6, $customer->id);
 
 
+        /** @var Customer $customer */
         $customer = Customer::findOne(4);
         $this->assertNotNull($customer);
         $this->assertEquals('user4', $customer->name);
@@ -414,6 +439,7 @@ class ActiveRecordTest extends TestCase
         $customer->email = "the People's Republic of China";
         $customer->save(false);
 
+        /** @var Customer $c */
         $c = Customer::findOne(['email' => "the People's Republic of China"]);
         $this->assertSame("the People's Republic of China", $c->email);
     }
@@ -427,5 +453,129 @@ class ActiveRecordTest extends TestCase
             ->with('customer')
             ->all();
         $this->assertEquals([], $orders);
+    }
+
+    public function testEmulateExecution()
+    {
+        $rows = Order::find()
+            ->emulateExecution()
+            ->all();
+        $this->assertSame([], $rows);
+
+        $row = Order::find()
+            ->emulateExecution()
+            ->one();
+        $this->assertSame(null, $row);
+
+        $exists = Order::find()
+            ->emulateExecution()
+            ->exists();
+        $this->assertSame(false, $exists);
+
+        $count = Order::find()
+            ->emulateExecution()
+            ->count();
+        $this->assertSame(0, $count);
+
+        $sum = Order::find()
+            ->emulateExecution()
+            ->sum('id');
+        $this->assertSame(0, $sum);
+
+        $sum = Order::find()
+            ->emulateExecution()
+            ->average('id');
+        $this->assertSame(0, $sum);
+
+        $max = Order::find()
+            ->emulateExecution()
+            ->max('id');
+        $this->assertSame(null, $max);
+
+        $min = Order::find()
+            ->emulateExecution()
+            ->min('id');
+        $this->assertSame(null, $min);
+
+        $scalar = Order::find()
+            ->emulateExecution()
+            ->scalar('id');
+        $this->assertSame(null, $scalar);
+
+        $column = Order::find()
+            ->emulateExecution()
+            ->column('id');
+        $this->assertSame([], $column);
+    }
+
+    /**
+     * @see https://github.com/yiisoft/yii2-redis/issues/93
+     */
+    public function testDeleteAllWithCondition()
+    {
+        $deletedCount = Order::deleteAll(['in', 'id', [1, 2, 3]]);
+        $this->assertEquals(3, $deletedCount);
+    }
+
+    public function testBuildKey()
+    {
+        $pk = ['order_id' => 3, 'item_id' => 'nostr'];
+        $key = OrderItem::buildKey($pk);
+
+        $orderItem = OrderItem::findOne($pk);
+        $this->assertNotNull($orderItem);
+
+        $pk = ['order_id' => $orderItem->order_id, 'item_id' => $orderItem->item_id];
+        $this->assertEquals($key, OrderItem::buildKey($pk));
+    }
+
+    public function testNotCondition()
+    {
+        /* @var $orderClass \yii\db\ActiveRecordInterface */
+        $orderClass = $this->getOrderClass();
+
+        /* @var $this TestCase|ActiveRecordTestTrait */
+        $orders = $orderClass::find()->where(['not', ['customer_id' => 2]])->all();
+        $this->assertCount(1, $orders);
+        $this->assertEquals(1, $orders[0]['customer_id']);
+    }
+
+
+    public function testBetweenCondition()
+    {
+        /* @var $orderClass \yii\db\ActiveRecordInterface */
+        $orderClass = $this->getOrderClass();
+
+        /* @var $this TestCase|ActiveRecordTestTrait */
+        $orders = $orderClass::find()->where(['between', 'total', 30, 50])->all();
+        $this->assertCount(2, $orders);
+        $this->assertEquals(2, $orders[0]['customer_id']);
+        $this->assertEquals(2, $orders[1]['customer_id']);
+
+        $orders = $orderClass::find()->where(['not between', 'total', 30, 50])->all();
+        $this->assertCount(1, $orders);
+        $this->assertEquals(1, $orders[0]['customer_id']);
+    }
+
+    public function testInCondition()
+    {
+        /* @var $orderClass \yii\db\ActiveRecordInterface */
+        $orderClass = $this->getOrderClass();
+
+        /* @var $this TestCase|ActiveRecordTestTrait */
+        $orders = $orderClass::find()->where(['in', 'customer_id', [1,2]])->all();
+        $this->assertCount(3, $orders);
+
+        $orders = $orderClass::find()->where(['not in', 'customer_id', [1,2]])->all();
+        $this->assertCount(0, $orders);
+
+        $orders = $orderClass::find()->where(['in', 'customer_id', [1]])->all();
+        $this->assertCount(1, $orders);
+        $this->assertEquals(1, $orders[0]['customer_id']);
+
+        $orders = $orderClass::find()->where(['in', 'customer_id', [2]])->all();
+        $this->assertCount(2, $orders);
+        $this->assertEquals(2, $orders[0]['customer_id']);
+        $this->assertEquals(2, $orders[1]['customer_id']);
     }
 }

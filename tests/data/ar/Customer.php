@@ -4,6 +4,23 @@ namespace yiiunit\extensions\redis\data\ar;
 
 use yiiunit\extensions\redis\ActiveRecordTest;
 
+/**
+ * Customer
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $address
+ * @property int $status
+ *
+ * @method CustomerQuery findBySql($sql, $params = []) static
+ *
+ * @property Order[] $orders
+ * @property Order[] $expensiveOrders
+ * @property Order[] $expensiveOrdersWithNullFK
+ * @property Order[] $ordersWithNullFK
+ * @property Order[] $ordersWithItems
+ */
 class Customer extends ActiveRecord
 {
     const STATUS_ACTIVE = 1;
@@ -49,6 +66,22 @@ class Customer extends ActiveRecord
     public function getOrdersWithNullFK()
     {
         return $this->hasMany(OrderWithNullFK::className(), ['customer_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\redis\ActiveQuery
+     */
+    public function getOrdersWithItems()
+    {
+        return $this->hasMany(Order::className(), ['customer_id' => 'id'])->with('orderItems');
+    }
+
+    /**
+     * @return \yii\redis\ActiveQuery
+     */
+    public function getOrderItems()
+    {
+        return $this->hasMany(Item::className(), ['id' => 'item_id'])->via('orders');
     }
 
     /**

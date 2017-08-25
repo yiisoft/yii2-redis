@@ -9,6 +9,9 @@ use yii\redis\ActiveQuery;
  */
 class CustomerQuery extends ActiveQuery
 {
+    /**
+     * @return $this
+     */
     public function active()
     {
         $this->andWhere(['status' => 1]);

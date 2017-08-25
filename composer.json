@@ -1,15 +1,15 @@
 {
-    "name": "nailfor/redis",
+    "name": "yiisoft/yii2-redis",
     "description": "Redis Cache, Session and ActiveRecord for the Yii framework",
-    "keywords": ["yii2", "redis", "active-record", "cache", "session", "expire", "geodata"],
+    "keywords": ["yii2", "redis", "active-record", "cache", "session"],
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
     "support": {
-        "issues": "https://github.com/nailfor/redis/issues",
+        "issues": "https://github.com/yiisoft/yii2-redis/issues",
         "forum": "http://www.yiiframework.com/forum/",
         "wiki": "http://www.yiiframework.com/wiki/",
         "irc": "irc://irc.freenode.net/yii",
-        "source": "https://github.com/nailfor/redis"
+        "source": "https://github.com/yiisoft/yii2-redis"
     },
     "authors": [
         {
@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": ">=2.0.4"
+        "yiisoft/yii2": "~2.0.11"
     },
     "autoload": {
         "psr-4": { "yii\\redis\\": "" }
@@ -27,5 +27,11 @@
         "branch-alias": {
             "dev-master": "2.0.x-dev"
         }
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ]
 }

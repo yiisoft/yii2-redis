@@ -1,0 +1,120 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * This scripts is used to update the PHPdoc annotations for redis commands in the Connection.php class.
+ */
+
+use yii\helpers\Inflector;
+use yii\helpers\Console;
+
+foreach([
+    __DIR__ . '/../vendor/yiisoft/yii2/Yii.php',
+    __DIR__ . '/../../../framework/Yii.php',
+] as $yii) {
+    if (is_file($yii)) {
+        include($yii);
+        break;
+    }
+}
+
+$commandsHtml = file_get_contents('https://redis.io/commands');
+//echo $commandsHtml;
+
+preg_match_all('~<li.+? data-name=\'([\w ]+)\'>\s*<a href=\'([\w /-]+)\'>.*?<span class=\'args\'>(.*?)</span>.*?<span class=\'summary\'>(.*?)</span>~si', $commandsHtml, $matches);
+//print_r($matches);
+
+$commands = [];
+$n = count($matches[0]);
+for($i = 0; $i < $n; $i++) {
+    $name = trim($matches[1][$i]);
+    $url = 'https://redis.io' . $matches[2][$i];
+    $args = array_map('trim', explode("\n", trim($matches[3][$i])));
+    $descr = trim($matches[4][$i]);
+    $commands[$name] = [
+        'url' => $url,
+        'args' => $args,
+        'descr' => $descr,
+    ];
+}
+// print_r($commands);
+
+$commandArray = [];
+foreach($commands as $name => $info) {
+    $name = strtoupper($name);
+    $commandArray[] = "        '$name', // " . $info['descr'];
+}
+print_r($commandArray);
+
+// command args that are hard to transform into php automatically
+$specialArgs = [
+    'bitfield' => '$key, ...$operations',
+    'clientKill' => '...$filters',
+    'clientReply' => '$option',
+    'clusterFailover' => '$option = null',
+    'clusterReset' => '$resetType = "SOFT"',
+    'clusterSetslot' => '$slot, $type, $nodeid = null',
+    'geoadd' => '$key, $longitude, $latitude, $member, ...$more',
+    'georadius' => '$key, $longitude, $latitude, $radius, $metric, ...$options',
+    'georadiusbymember' => '$key, $member, $radius, $metric, ...$options',
+    'hmset' => '$key, $field, $value, ...$more',
+    'linsert' => '$key, $where, $pivot, $value',
+    'migrate' => '$host, $port, $key, $destinationDb, $timeout, ...$options',
+    'mset' => '...$keyValuePairs',
+    'msetnx' => '...$keyValuePairs',
+    'scriptDebug' => '$option',
+    'set' => '$key, $value, ...$options',
+    'shutdown' => '$saveOption = null',
+    'sort' => '$key, ...$options',
+    'zadd' => '$key, ...$options',
+    'zinterstore' => '$destination, $numkeys, $key, ...$options',
+    'zunionstore' => '$destination, $numkeys, $key, ...$options',
+];
+
+$methods = [];
+foreach($commands as $name => $info) {
+    $name = lcfirst(Inflector::camelize($name));
+    if (isset($specialArgs[$name])) {
+        $arglist = $specialArgs[$name];
+    } else {
+        $arglist = implode(', ', array_map(function($arg) {
+            if (empty($arg)) {
+                return '';
+            }
+            if (strpos($arg, '[') === 0 && strpos($arg, '...') === false) {
+                // optional arguments
+                $arg = substr($arg, 1, -1);
+                return implode(', ', array_map(function($a) {return '$'.$a.' = null'; }, explode(' ', $arg)));
+            } elseif (preg_match('~^(\[?)([\w-]+) \[\2 ...\](\]?)~', $arg, $m)) {
+                return '...$'. lcfirst(Inflector::camelize($m[2])) . 's';
+            }
+            return '$' . lcfirst(Inflector::camelize($arg));
+        }, $info['args']));
+    }
+    $methods[] = " * @method mixed $name($arglist) " . $info['descr'] . '. <' . $info['url'] . '>';
+}
+print_r($methods);
+
+if (!Console::confirm('Update redis\Connection class now?')) {
+    Console::stderr("aborting...\n");
+    exit(1);
+}
+Console::stderr('Updating class docs...');
+
+$file = __DIR__ . '/../Connection.php';
+$content = file_get_contents($file);
+if ($content === false) {
+    Console::stderr("failed to read file $file !\n");
+    exit(1);
+}
+$newContent = $content;
+
+$newContent =  preg_replace('~( \* @method.*?\n)+~si', implode("\n", $methods) . "\n", $newContent);
+$newContent =  preg_replace('~\$redisCommands = \[.+?\];~si', "\$redisCommands = [\n" . implode("\n", $commandArray) . "\n    ];", $newContent);
+
+if ($content === $newContent) {
+    Console::stderr("no changes!\n");
+} else {
+    file_put_contents($file, $newContent);
+    Console::stderr("done.\n");
+}

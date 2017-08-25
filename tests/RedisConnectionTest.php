@@ -48,6 +48,9 @@ class ConnectionTest extends TestCase
     }
 
 
+    /**
+     * @return array
+     */
     public function keyValueData()
     {
         return [
@@ -62,6 +65,7 @@ class ConnectionTest extends TestCase
 
     /**
      * @dataProvider keyValueData
+     * @param mixed $data
      */
     public function testStoreGet($data)
     {
@@ -70,6 +74,19 @@ class ConnectionTest extends TestCase
         $db->set('hi', $data);
         $this->assertEquals($data, $db->get('hi'));
     }
+
+    public function testSerialize()
+    {
+        $db = $this->getConnection(false);
+        $db->open();
+        $this->assertTrue($db->ping());
+        $s = serialize($db);
+        $this->assertTrue($db->ping());
+        $db2 = unserialize($s);
+        $this->assertTrue($db->ping());
+        $this->assertTrue($db2->ping());
+    }
+
 
     /**
      * https://github.com/yiisoft/yii2/issues/4745
@@ -95,5 +112,13 @@ class ConnectionTest extends TestCase
         foreach($allKeys as $key) {
             $this->assertEquals($expected[$key], $redis->executeCommand('TYPE',[$key]));
         }
+    }
+
+    public function testTwoWordCommands()
+    {
+        $redis = $this->getConnection();
+        $this->assertTrue(is_array($redis->executeCommand('CONFIG GET', ['port'])));
+        $this->assertTrue(is_string($redis->clientList()));
+        $this->assertTrue(is_string($redis->executeCommand('CLIENT LIST')));
     }
 }
