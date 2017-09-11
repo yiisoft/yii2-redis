@@ -10,6 +10,7 @@
  */
 
 namespace PHPUnit\Framework\Constraint {
+
     if (!class_exists('PHPUnit\Framework\Constraint\Constraint') && class_exists('PHPUnit_Framework_Constraint')) {
         abstract class Constraint extends \PHPUnit_Framework_Constraint
         {
@@ -18,6 +19,7 @@ namespace PHPUnit\Framework\Constraint {
 }
 
 namespace PHPUnit\Framework {
+
     if (!class_exists('PHPUnit\Framework\TestCase') && class_exists('PHPUnit_Framework_TestCase')) {
 
         echo "Applying compatibility patch for PHPUnit 6...\n";
@@ -40,6 +42,7 @@ namespace PHPUnit\Framework {
                 $parentClassMethods = get_class_methods('PHPUnit_Framework_TestCase');
                 if (in_array('expectExceptionMessage', $parentClassMethods)) {
                     parent::expectExceptionMessage($message);
+
                     return;
                 }
                 $this->setExpectedException($this->getExpectedException(), $message);
@@ -53,6 +56,7 @@ namespace PHPUnit\Framework {
                 $parentClassMethods = get_class_methods('PHPUnit_Framework_TestCase');
                 if (in_array('expectExceptionMessageRegExp', $parentClassMethods)) {
                     parent::expectExceptionMessageRegExp($messageRegExp);
+
                     return;
                 }
                 $this->setExpectedExceptionRegExp($this->getExpectedException(), $messageRegExp);

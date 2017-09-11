@@ -1,4 +1,5 @@
 <?php
+
 namespace yiiunit\extensions\redis;
 
 use yii\redis\Cache;
@@ -93,7 +94,7 @@ class RedisCacheTest extends CacheTestCase
         $cache = $this->getCacheInstance();
 
         $keys = [];
-        for($i = 1; $i < 16; $i++) {
+        for ($i = 1; $i < 16; $i++) {
             $key = 'realbigdata' . $i;
             $data = str_repeat('X', 100 * 1024); // 100 KB
             $keys[$key] = $data;
@@ -102,7 +103,7 @@ class RedisCacheTest extends CacheTestCase
             $cache->set($key, $data);
         }
         $values = $cache->multiGet(array_keys($keys));
-        foreach($keys as $key => $value) {
+        foreach ($keys as $key => $value) {
             $this->assertArrayHasKey($key, $values);
             $this->assertSame($values[$key], $value);
         }

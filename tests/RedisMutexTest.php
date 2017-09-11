@@ -1,4 +1,5 @@
 <?php
+
 namespace yiiunit\extensions\redis;
 
 use Yii;
@@ -96,12 +97,14 @@ class RedisMutexTest extends TestCase
         }
     }
 
-    protected function setUp() {
+    protected function setUp()
+    {
         parent::setUp();
         $databases = TestCase::getParam('databases');
         $params = isset($databases['redis']) ? $databases['redis'] : null;
         if ($params === null) {
             $this->markTestSkipped('No redis server connection configured.');
+
             return;
         }
 
@@ -130,6 +133,7 @@ class RedisMutexTest extends TestCase
             $method->setAccessible(true);
             self::$_keys[$name] = $method->invoke($mutex, $name);
         }
+
         return self::$_keys[$name];
     }
 
