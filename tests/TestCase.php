@@ -70,7 +70,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             'components' => [
                 'request' => [
                     'cookieValidationKey' => 'wefJDF8sfdsfSDefwqdxj9oq',
-                    'scriptFile' => __DIR__ .'/index.php',
+                    'scriptFile' => __DIR__ . '/index.php',
                     'scriptUrl' => '/index.php',
                 ],
             ]
@@ -104,7 +104,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @param  boolean    $reset whether to clean up the test database
+     * @param  boolean $reset whether to clean up the test database
      * @return Connection
      */
     public function getConnection($reset = true)
