@@ -17,8 +17,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     /**
      * Returns a test configuration param from /data/config.php
-     * @param  string $name params name
-     * @param  mixed $default default value to use when param is not set.
+     * @param string $name params name
+     * @param mixed $default default value to use when param is not set.
      * @return mixed  the value of the configuration param
      */
     public static function getParam($name, $default = null)
@@ -104,7 +104,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @param  boolean $reset whether to clean up the test database
+     * @param boolean $reset whether to clean up the test database
      * @return Connection
      */
     public function getConnection($reset = true)

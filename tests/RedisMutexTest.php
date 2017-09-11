@@ -62,8 +62,8 @@ class RedisMutexTest extends TestCase
     }
 
     /**
-     * @covers       \yii\redis\Mutex::acquireLock
-     * @covers       \yii\redis\Mutex::releaseLock
+     * @covers \yii\redis\Mutex::acquireLock
+     * @covers \yii\redis\Mutex::releaseLock
      * @dataProvider acquireTimeoutProvider
      */
     public function testConcurentMutexAcquireAndRelease($timeout, $canAcquireAfterTimeout, $lockIsReleased)
