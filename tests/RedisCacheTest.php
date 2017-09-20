@@ -2,6 +2,7 @@
 
 namespace yiiunit\extensions\redis;
 
+use Yii;
 use yii\redis\Cache;
 use yii\redis\Connection;
 use yiiunit\framework\caching\CacheTestCase;
@@ -59,6 +60,36 @@ class RedisCacheTest extends CacheTestCase
         $this->assertEquals('expire_testa_ms', $cache->get('expire_testa_ms'));
         usleep(300000);
         $this->assertFalse($cache->get('expire_testa_ms'));
+    }
+
+    public function testExpireIntegerSeconds()
+    {
+        $cache = $this->getCacheInstance();
+
+        $this->assertTrue($cache->set('expire_test_is', 'expire_test_is', 2));
+        sleep(1);
+        $this->assertEquals('expire_test_is', $cache->get('expire_test_is'));
+        sleep(3);
+        $this->assertFalse($cache->get('expire_test_is'));
+    }
+
+    public function testExpireLongSeconds()
+    {
+        $cache = $this->getCacheInstance();
+
+        // on 32-bit: PHP_INT_MAX === 2147483647
+        //      max ttl (in SETEX, sec) is about PHP_INT_MAX * 1e6
+        //      max ttl (in PSETEX, ms) is about PHP_INT_MAX * 1e9
+        //
+        // on 64-bit: PHP_INT_MAX === 9223372036854775807
+        //      max ttl (in SETEX, sec) is about PHP_INT_MAX * 1e-4
+        //      max ttl (in PSETEX, ms) is about PHP_INT_MAX * 1e-1
+        $ttl = 2147483647;
+        $this->assertTrue($cache->set('expire_test_ls', 'expire_test_ls', $ttl));
+        sleep(2);
+        $this->assertEquals('expire_test_ls', $cache->get('expire_test_ls'));
+        $this->assertLessThan($ttl - 1, Yii::$app->redis->ttl('expire_test_ls'));
+        $this->assertGreaterThan($ttl - 5, Yii::$app->redis->ttl('expire_test_ls'));
     }
 
     /**
