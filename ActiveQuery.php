@@ -432,8 +432,8 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             $start = 0;
             $limit = null;
         } else {
-            $start = $this->offset === null ? 0 : $this->offset;
-            $limit = $this->limit;
+            $start = ($this->offset === null || $this->offset < 0) ? 0 : $this->offset;
+            $limit = ($this->limit < 0) ? null : $this->limit;
         }
         $i = 0;
         $data = [];

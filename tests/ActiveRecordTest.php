@@ -578,4 +578,20 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals(2, $orders[0]['customer_id']);
         $this->assertEquals(2, $orders[1]['customer_id']);
     }
+
+    public function testCountQuery()
+    {
+        /* @var $itemClass \yii\db\ActiveRecordInterface */
+        $itemClass = $this->getItemClass();
+
+        $query = $itemClass::find();
+        $this->assertEquals(5, $query->count());
+
+        $query = $itemClass::find()->where(['category_id' => 1]);
+        $this->assertEquals(2, $query->count());
+
+        // negative values deactivate limit and offset (in case they were set before)
+        $query = $itemClass::find()->where(['category_id' => 1])->limit(-1)->offset(-1);
+        $this->assertEquals(2, $query->count());
+    }
 }

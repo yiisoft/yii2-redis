@@ -156,8 +156,8 @@ class LuaScriptBuilder extends \yii\base\Object
             $condition = 'true';
         }
 
-        $start = $query->offset === null ? 0 : $query->offset;
-        $limitCondition = 'i>' . $start . ($query->limit === null ? '' : ' and i<=' . ($start + $query->limit));
+        $start = ($query->offset === null || $query->offset < 0) ? 0 : $query->offset;
+        $limitCondition = 'i>' . $start . (($query->limit === null || $query->limit < 0) ? '' : ' and i<=' . ($start + $query->limit));
 
         /* @var $modelClass ActiveRecord */
         $modelClass = $query->modelClass;

@@ -5,6 +5,7 @@ Yii Framework 2 redis extension Change Log
 -----------------------
 
 - Bug #114: Fixed ActiveQuery `not between` and `not` conditions which where not working correctly (cebe, ak1987)
+- Bug #123: Fixed ActiveQuery to work with negative limit values, which are used in ActiveDataProvider for the count query (cebe)
 
 
 2.0.6 April 05, 2017
