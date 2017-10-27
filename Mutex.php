@@ -21,7 +21,7 @@ use yii\di\Instance;
  *
  * To use redis Mutex as the application component, configure the application as follows:
  *
- * ~~~
+ * ```php
  * [
  *     'components' => [
  *         'mutex' => [
@@ -34,11 +34,11 @@ use yii\di\Instance;
  *         ],
  *     ],
  * ]
- * ~~~
+ * ```
  *
  * Or if you have configured the redis [[Connection]] as an application component, the following is sufficient:
  *
- * ~~~
+ * ```php
  * [
  *     'components' => [
  *         'mutex' => [
@@ -47,7 +47,7 @@ use yii\di\Instance;
  *         ],
  *     ],
  * ]
- * ~~~
+ * ```
  *
  * @see \yii\mutex\Mutex
  * @see http://redis.io/topics/distlock
@@ -101,7 +101,7 @@ class Mutex extends \yii\mutex\Mutex
     /**
      * Acquires a lock by name.
      * @param string $name of the lock to be acquired. Must be unique.
-     * @param int $timeout time to wait for lock to be released. Defaults to `0` meaning that method will return
+     * @param int $timeout time (in seconds) to wait for lock to be released. Defaults to `0` meaning that method will return
      * false immediately in case lock was already acquired.
      * @return bool lock acquiring result.
      */
