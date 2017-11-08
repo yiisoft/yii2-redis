@@ -350,7 +350,7 @@ EOF;
             return $operator === 'in' ? 'false' : 'true';
         }
 
-        if (count($column) > 1) {
+        if (is_array($column) && count($column) > 1) {
             return $this->buildCompositeInCondition($operator, $column, $values, $columns);
         } elseif (is_array($column)) {
             $column = reset($column);
