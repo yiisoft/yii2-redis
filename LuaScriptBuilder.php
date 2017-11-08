@@ -18,7 +18,7 @@ use yii\db\Expression;
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
  */
-class LuaScriptBuilder extends \yii\base\Object
+class LuaScriptBuilder extends \yii\base\BaseObject
 {
     /**
      * Builds a Lua script for finding a list of records
