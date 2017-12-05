@@ -93,9 +93,6 @@ class ConnectionTest extends TestCase
         $this->assertTrue($db2->ping());
     }
 
-    /**
-     * @expectedException \yii\redis\SocketException
-     */
     public function testConnectionTimeout()
     {
         $db = $this->getConnection(false);
@@ -104,6 +101,7 @@ class ConnectionTest extends TestCase
         sleep(1);
         $this->assertTrue($db->ping());
         sleep(2);
+        $this->expectException('\yii\redis\SocketException');
         $this->assertTrue($db->ping());
     }
 

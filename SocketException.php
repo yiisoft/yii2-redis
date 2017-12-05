@@ -11,6 +11,7 @@ use yii\db\Exception;
 
 /**
  * SocketException indicates a socket connection failure in [[Connection]].
+ * @since 2.0.7
  */
 class SocketException extends Exception
 {
