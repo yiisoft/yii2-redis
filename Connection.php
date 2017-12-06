@@ -660,17 +660,17 @@ class Connection extends Component
         \Yii::trace("Executing Redis Command: {$name}", __METHOD__);
         if ($this->retries > 0) {
             $tries = $this->retries;
-            while ($tries-- >= 0) {
+            while ($tries-- > 0) {
                 try {
                     return $this->sendCommandInternal($command, $params);
                 } catch (SocketException $e) {
+                    \Yii::error($e, __METHOD__);
                     // backup retries, fail on commands that fail inside here
                     $retries = $this->retries;
                     $this->retries = 0;
                     $this->close();
                     $this->open();
                     $this->retries = $retries;
-                    \Yii::error($e, __METHOD__);
                 }
             }
         }

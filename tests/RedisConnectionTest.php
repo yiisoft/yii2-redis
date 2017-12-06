@@ -1,6 +1,11 @@
 <?php
 
 namespace yiiunit\extensions\redis;
+use Yii;
+use yii\helpers\ArrayHelper;
+use yii\log\Logger;
+use yii\redis\Connection;
+use yii\redis\SocketException;
 
 /**
  * @group redis
@@ -101,20 +106,68 @@ class ConnectionTest extends TestCase
         sleep(1);
         $this->assertTrue($db->ping());
         sleep(2);
-        $this->expectException('\yii\redis\SocketException');
+        if (method_exists($this, 'setExpectedException')) {
+            $this->setExpectedException('\yii\redis\SocketException');
+        } else {
+            $this->expectException('\yii\redis\SocketException');
+        }
         $this->assertTrue($db->ping());
     }
 
     public function testConnectionTimeoutRetry()
     {
+        $logger = new Logger();
+        Yii::setLogger($logger);
+
         $db = $this->getConnection(false);
         $db->retries = 1;
         $db->configSet('timeout', 1);
+        $this->assertCount(3, $logger->messages, 'log of connection and init commands.');
+
         $this->assertTrue($db->ping());
-        sleep(1);
+        $this->assertCount(4, $logger->messages, 'log +1 ping command.');
+        usleep(500000); // 500ms
+
         $this->assertTrue($db->ping());
+        $this->assertCount(5, $logger->messages, 'log +1 ping command.');
         sleep(2);
+
+        // reconnect should happen here
+
         $this->assertTrue($db->ping());
+        $this->assertCount(11, $logger->messages, 'log +1 ping command, and reconnection.'
+            . print_r(array_map(function($s) { return (string) $s; }, ArrayHelper::getColumn($logger->messages, 0)), true));
+    }
+
+    /**
+     * Retry connecting 2 times
+     */
+    public function testConnectionTimeoutRetryCount()
+    {
+        $logger = new Logger();
+        Yii::setLogger($logger);
+
+        $db = $this->getConnection(false);
+        $db->retries = 2;
+        $db->configSet('timeout', 1);
+        $db->on(Connection::EVENT_AFTER_OPEN, function() {
+            // sleep 2 seconds after connect to make every command time out
+            sleep(2);
+        });
+        $this->assertCount(3, $logger->messages, 'log of connection and init commands.');
+
+        $exception = false;
+        try {
+            // should try to reconnect 2 times, before finally failing
+            // results in 3 times sending the PING command to redis
+            sleep(2);
+            $db->ping();
+        } catch (SocketException $e) {
+            $exception = true;
+        }
+        $this->assertTrue($exception, 'SocketException should have been thrown.');
+        $this->assertCount(14, $logger->messages, 'log +1 ping command, and reconnection.'
+            . print_r(array_map(function($s) { return (string) $s; }, ArrayHelper::getColumn($logger->messages, 0)), true));
     }
 
     /**
