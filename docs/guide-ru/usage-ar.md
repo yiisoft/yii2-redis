@@ -40,7 +40,7 @@ class Customer extends \yii\redis\ActiveRecord
 Общее использование redis ActiveRecord очень похоже на БД ActiveRecord как описано в [руководстве](https://github.com/yiisoft/yii2/blob/master/docs/guide/db-active-record.md).
 Он поддерживает тот же интерфейс и функции, за исключением следующих ограничений:
 
-- Поскольку redis не поддерживает SQL, API запросов оограничен следующими методами:
+- Поскольку redis не поддерживает SQL, API запросов ограничен следующими методами:
   `where()`, `limit()`, `offset()`, `orderBy()` и `indexBy()`.
   (orderBy() еще не реализовано: [#1305](https://github.com/yiisoft/yii2/issues/1305))
 - `via`-отношения не могут быть определены через таблицу, поскольку в redis нет таблиц. Вы можете определять отношения только через другие записи.
