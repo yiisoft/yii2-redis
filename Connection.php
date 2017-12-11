@@ -279,6 +279,14 @@ class Connection extends Component
      * > Warning: `STREAM_CLIENT_PERSISTENT` will make PHP reuse connections to the same server. If you are using multiple
      * > connection objects to refer to different redis [[$database|databases]] on the same [[port]], redis commands may
      * > get executed on the wrong database. `STREAM_CLIENT_PERSISTENT` is only safe to use if you use only one database.
+     * >
+     * > You may still use persistent connections in this case when disambiguating ports as described
+     * > in [a comment on the PHP manual](http://php.net/manual/en/function.stream-socket-client.php#105393)
+     * > e.g. on the connection used for session storage, specify the port as:
+     * >
+     * > ```php
+     * > 'port' => '6379/session'
+     * > ```
      *
      * @see http://php.net/manual/en/function.stream-socket-client.php
      * @since 2.0.5
