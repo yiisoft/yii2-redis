@@ -457,11 +457,11 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             if (++$i > $start && ($limit === null || $i <= $start + $limit)) {
                 $key = $modelClass::keyPrefix() . ':a:' . $modelClass::buildKey($pk);
                 $result = $db->executeCommand('HGETALL', [$key]);
-                if ($needSort) {
-                    $orderArray[] = $db->executeCommand('HGET', [$key, $orderColumn]);
-                }
                 if (!empty($result)) {
                     $data[] = $result;
+                    if ($needSort) {
+                        $orderArray[] = $db->executeCommand('HGET', [$key, $orderColumn]);
+                    }
                     if ($type === 'One' && $this->orderBy === null) {
                         break;
                     }
