@@ -275,6 +275,11 @@ class Connection extends Component
     /**
      * @var integer Bitmask field which may be set to any combination of connection flags passed to [stream_socket_client()](http://php.net/manual/en/function.stream-socket-client.php).
      * Currently the select of connection flags is limited to `STREAM_CLIENT_CONNECT` (default), `STREAM_CLIENT_ASYNC_CONNECT` and `STREAM_CLIENT_PERSISTENT`.
+     *
+     * > Warning: `STREAM_CLIENT_PERSISTENT` will make PHP reuse connections to the same server. If you are using multiple
+     * > connection objects to refer to different redis [[$database|databases]] on the same [[port]], redis commands may
+     * > get executed on the wrong database. `STREAM_CLIENT_PERSISTENT` is only safe to use if you use only one database.
+     *
      * @see http://php.net/manual/en/function.stream-socket-client.php
      * @since 2.0.5
      */
