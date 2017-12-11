@@ -580,7 +580,7 @@ class Connection extends Component
             } catch (SocketException $e) {
                 // ignore errors when quitting a closed connection
             }
-            stream_socket_shutdown($this->_socket, STREAM_SHUT_RDWR);
+            fclose($this->_socket);
             $this->_socket = false;
         }
     }
