@@ -1,7 +1,7 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
-2.0.7 under development
+2.0.7 December 11, 2017
 -----------------------
 
 - Bug #114: Fixed ActiveQuery `not between` and `not` conditions which where not working correctly (cebe, ak1987)
