@@ -53,6 +53,27 @@ use yii\di\Instance;
  * ]
  * ~~~
  *
+ * If you ever need to make the cache read from Replica.
+ * e.g. AWS ElasticCache Redis, default all read go to master node
+ *
+ * ~~~
+ * [
+ *     'components' => [
+ *         'cache' => [
+ *             'class' => 'yii\redis\Cache',
+ *             'enableReplicas' => true,
+ *             'replicas' => [
+ *                 //replica redis connection, (default class will be yii\redis\Connection if not provided)
+ *                 //you can optionally put in master as hostname as well, as all GET operation will use replicas
+ *                 ['hostname' => 'redis-master.xyz.ng.0001.apse1.cache.amazonaws.com'],
+ *                 ['hostname' => 'redis-slave-002.xyz.0001.apse1.cache.amazonaws.com'],
+ *                 ['hostname' => 'redis-slave-003.xyz.0001.apse1.cache.amazonaws.com'],
+ *             ],
+ *         ],
+ *     ],
+ * ]
+ * ~~~
+ *
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
  */
@@ -66,6 +87,21 @@ class Cache extends \yii\caching\Cache
      * with a Redis [[Connection]] object.
      */
     public $redis = 'redis';
+
+    /**
+     * @var bool
+     */
+    public $enableReplicas = false;
+
+    /**
+     * @var array
+     */
+    public $replicas = [];
+
+    /**
+     * @var Connection
+     */
+    private $_replica;
 
 
     /**
@@ -99,7 +135,7 @@ class Cache extends \yii\caching\Cache
      */
     protected function getValue($key)
     {
-        return $this->redis->executeCommand('GET', [$key]);
+        return $this->getReplica()->executeCommand('GET', [$key]);
     }
 
     /**
@@ -107,7 +143,7 @@ class Cache extends \yii\caching\Cache
      */
     protected function getValues($keys)
     {
-        $response = $this->redis->executeCommand('MGET', $keys);
+        $response = $this->getReplica()->executeCommand('MGET', $keys);
         $result = [];
         $i = 0;
         foreach ($keys as $key) {
@@ -194,5 +230,49 @@ class Cache extends \yii\caching\Cache
     protected function flushValues()
     {
         return $this->redis->executeCommand('FLUSHDB');
+    }
+
+    /**
+     * @inheritdoc
+     * @return Connection
+     */
+    protected function getReplica()
+    {
+        if ($this->enableReplicas === false) {
+            return $this->redis;
+        }
+
+        if (isset($this->_replica)) {
+            return $this->_replica;
+        }
+
+        if (empty($this->replicas)) {
+            return $this->_replica = $this->redis;
+        }
+
+        if (count($this->replicas) >= 2) {
+            shuffle($this->replicas);
+        }
+        $config = array_shift($this->replicas);
+        if (is_array($config) && isset($config['hostname'])) {
+            Yii::trace('Redis replica host: ' . $config['hostname']);
+            if (!isset($config['class'])) {
+                $config['class'] = 'yii\redis\Connection';
+            }
+
+            //--- if hostname same, no need re-open connection
+            if ($config['hostname'] === $this->redis->hostname) {
+                return $this->_replica = $this->redis;
+            }
+
+            /** @var Connection $redis */
+            $redis = Yii::createObject($config);
+            if ($redis instanceof Connection) {
+                return $this->_replica = $redis;
+            }
+        }
+
+        Yii::trace('Fall back to redis master');
+        return $this->_replica = $this->redis;
     }
 }
