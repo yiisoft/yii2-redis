@@ -254,14 +254,13 @@ class Cache extends \yii\caching\Cache
             shuffle($this->replicas);
         }
         $config = array_shift($this->replicas);
-        if (is_array($config) && isset($config['hostname'])) {
-            Yii::trace('Redis replica host: ' . $config['hostname']);
+        if (is_array($config)) {
             if (!isset($config['class'])) {
                 $config['class'] = 'yii\redis\Connection';
             }
 
             //--- if hostname same, no need re-open connection
-            if ($config['hostname'] === $this->redis->hostname) {
+            if (isset($config['hostname']) && $config['hostname'] === $this->redis->hostname) {
                 return $this->_replica = $this->redis;
             }
 
