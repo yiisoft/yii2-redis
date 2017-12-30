@@ -89,12 +89,15 @@ class Cache extends \yii\caching\Cache
     public $redis = 'redis';
 
     /**
-     * @var bool
+     * @var bool whether to enable read / get from redis replicas.
+     * @since 2.0.8
      */
     public $enableReplicas = false;
 
     /**
-     * @var array
+     * @var array the Redis [[Connection]] configuration
+     * You should at least provide a hostname
+     * @since 2.0.8
      */
     public $replicas = [];
 
@@ -233,8 +236,11 @@ class Cache extends \yii\caching\Cache
     }
 
     /**
-     * @inheritdoc
-     * @return Connection
+     * It will return the current Replica Redis [[Connection]], and fall back to default 'redis' [[Connection]]
+     * defined in this instance. Only used in getValue() and getValues().
+     * @since 2.0.8
+     * @return array|string|Connection
+     * @throws \yii\base\InvalidConfigException
      */
     protected function getReplica()
     {
@@ -259,7 +265,7 @@ class Cache extends \yii\caching\Cache
                 $config['class'] = 'yii\redis\Connection';
             }
 
-            //--- if hostname same, no need re-open connection
+            //--- If hostname is the same, there is no need re-open connection
             if (isset($config['hostname']) && $config['hostname'] === $this->redis->hostname) {
                 return $this->_replica = $this->redis;
             }
