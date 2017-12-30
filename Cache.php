@@ -102,7 +102,7 @@ class Cache extends \yii\caching\Cache
     public $replicas = [];
 
     /**
-     * @var Connection
+     * @var Connection currently active connection.
      */
     private $_replica;
 
@@ -265,7 +265,7 @@ class Cache extends \yii\caching\Cache
                 $config['class'] = 'yii\redis\Connection';
             }
 
-            //--- If hostname is the same, there is no need re-open connection
+            // If hostname is the same, there is no need re-open connection
             if (isset($config['hostname']) && $config['hostname'] === $this->redis->hostname) {
                 return $this->_replica = $this->redis;
             }
