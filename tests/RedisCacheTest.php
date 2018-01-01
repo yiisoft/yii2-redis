@@ -2,6 +2,7 @@
 
 namespace yiiunit\extensions\redis;
 
+use yii\base\InvalidConfigException;
 use yii\redis\Cache;
 use yii\redis\Connection;
 use yiiunit\framework\caching\CacheTestCase;
@@ -176,23 +177,31 @@ class RedisCacheTest extends CacheTestCase
         $cache = $this->getCacheInstance();
         $cache->enableReplicas = true;
 
-        $cache->replicas = [
-            ['class' => 'yii\db\Connection'],
-        ];
-        $this->assertFalse($cache->get($key));
-        $cache->set($key, $value);
-        $this->assertSame($cache->get($key), $value);
-
-        //invalid config
-        $this->resetCacheInstance();
-        $cache = $this->getCacheInstance();
-        $cache->enableReplicas = true;
-
         $cache->replicas = ['redis'];
         $this->assertFalse($cache->get($key));
         $cache->set($key, $value);
         $this->assertSame($cache->get($key), $value);
 
         $this->resetCacheInstance();
+    }
+
+    public function testReplicaException()
+    {
+        //invalid config
+        $this->resetCacheInstance();
+        $cache = $this->getCacheInstance();
+        $cache->enableReplicas = true;
+
+        $cache->replicas = [
+            ['class' => 'yii\db\Connection'],
+        ];
+
+        $this->expectException(InvalidConfigException::class);
+        try {
+            $cache->get('something');
+        } catch (InvalidConfigException $e) {
+            $this->resetCacheInstance();//reset to prevent other test fail
+            throw new InvalidConfigException($e->getMessage());
+        }
     }
 }
