@@ -165,8 +165,8 @@ class RedisCacheTest extends CacheTestCase
         $cache->enableReplicas = true;
 
         $cache->replicas = [
-            ['hostname' => '127.0.0.1'],
-            ['hostname' => '127.0.0.1'],
+            ['hostname' => 'localhost'],
+            ['hostname' => 'localhost'],
         ];
         $this->assertFalse($cache->get($key));
         $cache->set($key, $value);
@@ -183,25 +183,5 @@ class RedisCacheTest extends CacheTestCase
         $this->assertSame($cache->get($key), $value);
 
         $this->resetCacheInstance();
-    }
-
-    public function testReplicaException()
-    {
-        //invalid config
-        $this->resetCacheInstance();
-        $cache = $this->getCacheInstance();
-        $cache->enableReplicas = true;
-
-        $cache->replicas = [
-            ['class' => 'yii\db\Connection'],
-        ];
-
-        $this->expectException(InvalidConfigException::class);
-        try {
-            $cache->get('something');
-        } catch (InvalidConfigException $e) {
-            $this->resetCacheInstance();//reset to prevent other test fail
-            throw new InvalidConfigException($e->getMessage());
-        }
     }
 }
