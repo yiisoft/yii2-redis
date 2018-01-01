@@ -66,7 +66,7 @@ use yii\di\Instance;
  *             'replicas' => [
  *                 // config for replica redis connections, (default class will be yii\redis\Connection if not provided)
  *                 // you can optionally put in master as hostname as well, as all GET operation will use replicas
- *                 ['hostname' => 'redis-master.xyz.ng.0001.apse1.cache.amazonaws.com'],
+ *                 'redis',//id of Redis [[Connection]] Component
  *                 ['hostname' => 'redis-slave-002.xyz.0001.apse1.cache.amazonaws.com'],
  *                 ['hostname' => 'redis-slave-003.xyz.0001.apse1.cache.amazonaws.com'],
  *             ],
@@ -103,7 +103,7 @@ class Cache extends \yii\caching\Cache
      *
      * ```php
      * 'replicas' => [
-     *     ['hostname' => 'redis-master.xyz.ng.0001.apse1.cache.amazonaws.com'],
+     *     'redis',
      *     ['hostname' => 'redis-slave-002.xyz.0001.apse1.cache.amazonaws.com'],
      *     ['hostname' => 'redis-slave-003.xyz.0001.apse1.cache.amazonaws.com'],
      * ],
