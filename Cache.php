@@ -53,6 +53,28 @@ use yii\di\Instance;
  * ]
  * ~~~
  *
+ * If you have multiple redis replicas (e.g. AWS ElasticCache Redis) you can configure the cache to
+ * send read operations to the replicas. If no replicas are configured, all operations will be performed on the
+ * master connection configured via the [[redis]] property.
+ *
+ * ~~~
+ * [
+ *     'components' => [
+ *         'cache' => [
+ *             'class' => 'yii\redis\Cache',
+ *             'enableReplicas' => true,
+ *             'replicas' => [
+ *                 // config for replica redis connections, (default class will be yii\redis\Connection if not provided)
+ *                 // you can optionally put in master as hostname as well, as all GET operation will use replicas
+ *                 'redis',//id of Redis [[Connection]] Component
+ *                 ['hostname' => 'redis-slave-002.xyz.0001.apse1.cache.amazonaws.com'],
+ *                 ['hostname' => 'redis-slave-003.xyz.0001.apse1.cache.amazonaws.com'],
+ *             ],
+ *         ],
+ *     ],
+ * ]
+ * ~~~
+ *
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
  */
@@ -66,6 +88,36 @@ class Cache extends \yii\caching\Cache
      * with a Redis [[Connection]] object.
      */
     public $redis = 'redis';
+    /**
+     * @var bool whether to enable read / get from redis replicas.
+     * @since 2.0.8
+     * @see $replicas
+     */
+    public $enableReplicas = false;
+    /**
+     * @var array the Redis [[Connection]] configurations for redis replicas.
+     * Each entry is a class configuration, which will be used to instantiate a replica connection.
+     * The default class is [[Connection|yii\redis\Connection]]. You should at least provide a hostname.
+     * 
+     * Configuration example:
+     *
+     * ```php
+     * 'replicas' => [
+     *     'redis',
+     *     ['hostname' => 'redis-slave-002.xyz.0001.apse1.cache.amazonaws.com'],
+     *     ['hostname' => 'redis-slave-003.xyz.0001.apse1.cache.amazonaws.com'],
+     * ],
+     * ```
+     *
+     * @since 2.0.8
+     * @see $enableReplicas
+     */
+    public $replicas = [];
+
+    /**
+     * @var Connection currently active connection.
+     */
+    private $_replica;
 
 
     /**
@@ -99,7 +151,7 @@ class Cache extends \yii\caching\Cache
      */
     protected function getValue($key)
     {
-        return $this->redis->executeCommand('GET', [$key]);
+        return $this->getReplica()->executeCommand('GET', [$key]);
     }
 
     /**
@@ -107,7 +159,7 @@ class Cache extends \yii\caching\Cache
      */
     protected function getValues($keys)
     {
-        $response = $this->redis->executeCommand('MGET', $keys);
+        $response = $this->getReplica()->executeCommand('MGET', $keys);
         $result = [];
         $i = 0;
         foreach ($keys as $key) {
@@ -194,5 +246,33 @@ class Cache extends \yii\caching\Cache
     protected function flushValues()
     {
         return $this->redis->executeCommand('FLUSHDB');
+    }
+
+    /**
+     * It will return the current Replica Redis [[Connection]], and fall back to default [[redis]] [[Connection]]
+     * defined in this instance. Only used in getValue() and getValues().
+     * @since 2.0.8
+     * @return array|string|Connection
+     * @throws \yii\base\InvalidConfigException
+     */
+    protected function getReplica()
+    {
+        if ($this->enableReplicas === false) {
+            return $this->redis;
+        }
+
+        if ($this->_replica !== null) {
+            return $this->_replica;
+        }
+
+        if (empty($this->replicas)) {
+            return $this->_replica = $this->redis;
+        }
+
+        $replicas = $this->replicas;
+        shuffle($replicas);
+        $config = array_shift($replicas);
+        $this->_replica = Instance::ensure($config, Connection::className());
+        return $this->_replica;
     }
 }
