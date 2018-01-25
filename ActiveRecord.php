@@ -324,9 +324,11 @@ class ActiveRecord extends BaseActiveRecord
             }
             ksort($key); // ensure order is always the same
             $isNumeric = true;
-            foreach ($key as $value) {
+            foreach ($key as &$value) {
                 if (!is_numeric($value)) {
                     $isNumeric = false;
+                } else {
+                    $value = (string) $value;
                 }
             }
             if ($isNumeric) {
