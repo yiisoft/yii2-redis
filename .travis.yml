@@ -1,12 +1,13 @@
 language: php
 
 php:
-- 5.4
-- 5.5
-- 5.6
-- 7.0
-- 7.1
-- 7.2
+  - 5.4
+  - 5.5
+  - 5.6
+  - 7.0
+  - 7.1
+  - 7.2
+
 matrix:
   include:
   - php: hhvm
@@ -21,6 +22,7 @@ matrix:
     - wget https://phar.phpunit.de/phpunit-4.5.1.phar
     script:
     - php phpunit-4.5.1.phar --verbose $PHPUNIT_FLAGS
+
 sudo: false
 
 services:
@@ -40,7 +42,7 @@ install:
 before_script:
   - |
     if [ $TRAVIS_PHP_VERSION = '5.6' ]; then
-      PHPUNIT_FLAGS="--coverage-clover=coverage.clover"
+      PHPUNIT_FLAGS="--coverage-clover=clover.xml"
     else
       phpenv config-rm xdebug.ini || return 0
     fi
@@ -48,9 +50,3 @@ before_script:
 script:
   - phpunit --verbose $PHPUNIT_FLAGS
 
-after_script:
-  - |
-    if [ $TRAVIS_PHP_VERSION = '5.6' ]; then
-      travis_retry wget https://scrutinizer-ci.com/ocular.phar
-      php ocular.phar code-coverage:upload --format=php-clover coverage.clover
-    fi
