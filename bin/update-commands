@@ -101,7 +101,7 @@ if (!Console::confirm('Update redis\Connection class now?')) {
 }
 Console::stderr('Updating class docs...');
 
-$file = __DIR__ . '/../Connection.php';
+$file = __DIR__.'/../src/Connection.php';
 $content = file_get_contents($file);
 if ($content === false) {
     Console::stderr("failed to read file $file !\n");
