@@ -23,6 +23,9 @@
     "autoload": {
         "psr-4": { "yii\\redis\\": "" }
     },
+    "autoload-dev": {
+        "psr-4": { "yiiunit\\extensions\\redis\\": "tests/"}
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "2.0.x-dev"
@@ -33,5 +36,8 @@
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
-    ]
+    ],
+    "require-dev": {
+        "yiisoft/yii2-dev": "~2.0.13"
+    }
 }
