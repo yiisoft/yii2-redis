@@ -13,4 +13,3 @@ require_once __DIR__ . '/compatibility.php';
 require_once(__DIR__ . '/../vendor/yiisoft/yii2/Yii.php');
 
 Yii::setAlias('@yiiunit', '@yii/../tests');
-Yii::setAlias('@yiiunit/extensions/redis', __DIR__);
