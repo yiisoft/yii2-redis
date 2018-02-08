@@ -21,7 +21,7 @@
         "yiisoft/yii2": "~2.0.13"
     },
     "autoload": {
-        "psr-4": { "yii\\redis\\": "" }
+        "psr-4": { "yii\\redis\\": "src" }
     },
     "autoload-dev": {
         "psr-4": { "yiiunit\\extensions\\redis\\": "tests/"}
