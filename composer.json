@@ -33,5 +33,8 @@
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
-    ]
+    ],
+    "require-dev": {
+        "yiisoft/yii2-dev": "~2.0.13"
+    }
 }
