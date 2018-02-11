@@ -46,7 +46,6 @@ It supports the same interface and features except the following limitations:
 
 - As redis does not support SQL the query API is limited to the following methods:
   `where()`, `limit()`, `offset()`, `orderBy()` and `indexBy()`.
-  (orderBy() is not yet implemented: [#1305](https://github.com/yiisoft/yii2/issues/1305))
 - `via`-relations can not be defined via a table as there are not tables in redis. You can only define relations via other records.
 
 It is also possible to define relations from redis ActiveRecords to normal ActiveRecord classes and vice versa.
