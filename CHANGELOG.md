@@ -4,6 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.8 under development
 -----------------------
 
+- Bug: (CVE-2018-8073): Fix possible remote code execution when improperly filtered user input is passed to `ActiveRecord::findOne()` and `::findAll()` (cebe)
 - Bug #141: Calling ActiveQuery::indexBy() had no effect since Yii 2.0.14 (cebe)
 - Enh #66: Cache component can be configured to read / get from replicas (ryusoft)
 

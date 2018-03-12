@@ -158,7 +158,7 @@ class LuaScriptBuilder extends \yii\base\BaseObject
         $key = $this->quoteValue($modelClass::keyPrefix());
         $loadColumnValues = '';
         foreach ($columns as $column => $alias) {
-            $loadColumnValues .= "local $alias=redis.call('HGET',$key .. ':a:' .. pk, '$column')\n";
+            $loadColumnValues .= "local $alias=redis.call('HGET',$key .. ':a:' .. pk, " . $this->quoteValue($column) . ")\n";
         }
 
         $getAllPks = <<<EOF
@@ -220,7 +220,7 @@ EOF;
         if (isset($columns[$column])) {
             return $columns[$column];
         }
-        $name = 'c' . preg_replace("/[^A-z]+/", "", $column) . count($columns);
+        $name = 'c' . preg_replace("/[^a-z]+/i", "", $column) . count($columns);
 
         return $columns[$column] = $name;
     }
