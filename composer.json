@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "~2.0.13"
+        "yiisoft/yii2": "~2.0.14"
     },
     "autoload": {
         "psr-4": { "yii\\redis\\": "src" }
@@ -38,6 +38,6 @@
         }
     ],
     "require-dev": {
-        "yiisoft/yii2-dev": "~2.0.13"
+        "yiisoft/yii2-dev": "~2.0.14"
     }
 }

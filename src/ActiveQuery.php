@@ -133,21 +133,36 @@ class ActiveQuery extends Component implements ActiveQueryInterface
 
             $rows[] = $row;
         }
-        if (!empty($rows)) {
-            $models = $this->createModels($rows);
-            if (!empty($this->with)) {
-                $this->findWith($this->with, $models);
-            }
-            if (!$this->asArray) {
-                foreach ($models as $model) {
-                    $model->afterFind();
-                }
-            }
-
-            return $models;
-        } else {
+        if (empty($rows)) {
             return [];
         }
+
+        $models = $this->createModels($rows);
+        if (!empty($this->with)) {
+            $this->findWith($this->with, $models);
+        }
+        if ($this->indexBy !== null) {
+            $indexedModels = [];
+            if (is_string($this->indexBy)) {
+                foreach ($models as $model) {
+                    $key = $model[$this->indexBy];
+                    $indexedModels[$key] = $model;
+                }
+            } else {
+                foreach ($models as $model) {
+                    $key = call_user_func($this->indexBy, $model);
+                    $indexedModels[$key] = $model;
+                }
+            }
+            $models = $indexedModels;
+        }
+        if (!$this->asArray) {
+            foreach ($models as $model) {
+                $model->afterFind();
+            }
+        }
+
+        return $models;
     }
 
     /**

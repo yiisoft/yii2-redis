@@ -464,10 +464,10 @@ class ActiveRecordTest extends TestCase
         $orderClass = $this->getOrderClass();
 
         /* @var $this TestCase|ActiveRecordTestTrait */
-        $orders = $orderClass::find()->where(['in', 'customer_id', [1,2]])->all();
+        $orders = $orderClass::find()->where(['in', 'customer_id', [1, 2]])->all();
         $this->assertCount(3, $orders);
 
-        $orders = $orderClass::find()->where(['not in', 'customer_id', [1,2]])->all();
+        $orders = $orderClass::find()->where(['not in', 'customer_id', [1, 2]])->all();
         $this->assertCount(0, $orders);
 
         $orders = $orderClass::find()->where(['in', 'customer_id', [1]])->all();
