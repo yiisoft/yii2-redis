@@ -98,7 +98,7 @@ class Cache extends \yii\caching\Cache
      * @var array the Redis [[Connection]] configurations for redis replicas.
      * Each entry is a class configuration, which will be used to instantiate a replica connection.
      * The default class is [[Connection|yii\redis\Connection]]. You should at least provide a hostname.
-     * 
+     *
      * Configuration example:
      *
      * ```php
