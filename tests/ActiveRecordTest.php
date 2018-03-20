@@ -3,6 +3,7 @@
 namespace yiiunit\extensions\redis;
 
 use yii\redis\ActiveQuery;
+use yii\redis\LuaScriptBuilder;
 use yiiunit\extensions\redis\data\ar\ActiveRecord;
 use yiiunit\extensions\redis\data\ar\Customer;
 use yiiunit\extensions\redis\data\ar\OrderItem;
@@ -494,5 +495,100 @@ class ActiveRecordTest extends TestCase
         // negative values deactivate limit and offset (in case they were set before)
         $query = $itemClass::find()->where(['category_id' => 1])->limit(-1)->offset(-1);
         $this->assertEquals(2, $query->count());
+    }
+
+    public function illegalValuesForWhere()
+    {
+        return [
+            [['id' => ["' .. redis.call('FLUSHALL') .. '" => 1]], ["'\\' .. redis.call(\\'FLUSHALL\\') .. \\'", 'rediscallFLUSHALL']],
+            [['id' => ['`id`=`id` and 1' => 1]], ["'`id`=`id` and 1'", 'ididand']],
+            [['id' => [
+                'legal' => 1,
+                '`id`=`id` and 1' => 1,
+            ]], ["'`id`=`id` and 1'", 'ididand']],
+            [['id' => [
+                'nested_illegal' => [
+                    'false or 1=' => 1
+                ]
+            ]], [], ['false or 1=']],
+        ];
+    }
+
+    /**
+     * @dataProvider illegalValuesForWhere
+     */
+    public function testValueEscapingInWhere($filterWithInjection, $expectedStrings, $unexpectedStrings = [])
+    {
+        /* @var $itemClass \yii\db\ActiveRecordInterface */
+        $itemClass = $this->getItemClass();
+
+        $query = $itemClass::find()->where($filterWithInjection['id']);
+        $lua = new LuaScriptBuilder();
+        $script = $lua->buildOne($query);
+
+        foreach($expectedStrings as $string) {
+            $this->assertContains($string, $script);
+        }
+        foreach($unexpectedStrings as $string) {
+            $this->assertNotContains($string, $script);
+        }
+    }
+
+    public function illegalValuesForFindByCondition()
+    {
+        return [
+            // code injection
+            [['id' => ["' .. redis.call('FLUSHALL') .. '" => 1]], ["'\\' .. redis.call(\\'FLUSHALL\\') .. \\'", 'rediscallFLUSHALL'], ["' .. redis.call('FLUSHALL') .. '"]],
+            [['id' => ['`id`=`id` and 1' => 1]], ["'`id`=`id` and 1'", 'ididand']],
+            [['id' => [
+                'legal' => 1,
+                '`id`=`id` and 1' => 1,
+            ]], ["'`id`=`id` and 1'", 'ididand']],
+            [['id' => [
+                'nested_illegal' => [
+                    'false or 1=' => 1
+                ]
+            ]], [], ['false or 1=']],
+
+            // custom condition injection
+            [['id' => [
+                'or',
+                '1=1',
+                'id' => 'id',
+            ]], ["cid0=='or' or cid0=='1=1' or cid0=='id'"], []],
+            [['id' => [
+                0 => 'or',
+                'first' => '1=1',
+                'second' => 1,
+            ]], ["cid0=='or' or cid0=='1=1' or cid0=='1'"], []],
+            [['id' => [
+                'name' => 'test',
+                'email' => 'test@example.com',
+                "' .. redis.call('FLUSHALL') .. '" => "' .. redis.call('FLUSHALL') .. '"
+            ]], ["'\\' .. redis.call(\\'FLUSHALL\\') .. \\'", 'rediscallFLUSHALL'], ["' .. redis.call('FLUSHALL') .. '"]],
+        ];
+    }
+
+    /**
+     * @dataProvider illegalValuesForFindByCondition
+     */
+    public function testValueEscapingInFindByCondition($filterWithInjection, $expectedStrings, $unexpectedStrings = [])
+    {
+        /* @var $itemClass \yii\db\ActiveRecordInterface */
+        $itemClass = $this->getItemClass();
+
+        $query = $this->invokeMethod(new $itemClass, 'findByCondition', [$filterWithInjection['id']]);
+        $lua = new LuaScriptBuilder();
+        $script = $lua->buildOne($query);
+
+        foreach($expectedStrings as $string) {
+            $this->assertContains($string, $script);
+        }
+        foreach($unexpectedStrings as $string) {
+            $this->assertNotContains($string, $script);
+        }
+        // ensure injected FLUSHALL call did not succeed
+        $query->one();
+        $this->assertGreaterThan(3, $itemClass::find()->count());
     }
 }
