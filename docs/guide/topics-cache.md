@@ -2,7 +2,7 @@ Using the Cache component
 =========================
 
 To use the `Cache` component, in addition to configuring the connection as described in the [Installation](installation.md) section,
-you also have to configure the `cache` component to be `yii\redis\Cache`:
+you also have to configure the `cache` component to be [[yii\redis\Cache]]:
 
 ```php
 return [
@@ -44,4 +44,5 @@ Yii::$app->cache->redis->hset('mykey', 'somefield', 'somevalue');
 Yii::$app->cache->redis->hget('mykey', 'somefield');
 ...
 ```
+
 See [[yii\redis\Connection]] for a full list of available methods.

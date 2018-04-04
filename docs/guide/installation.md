@@ -25,7 +25,7 @@ to the require section of your composer.json.
 
 ## Configuring application
 
-To use this extension, you have to configure the Connection class in your application configuration:
+To use this extension, you have to configure the [[yii\redis\Connection|Connection]] class in your application configuration:
 
 ```php
 return [

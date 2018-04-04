@@ -23,7 +23,7 @@ php composer.phar require --prefer-dist yiisoft/yii2-redis
 
 ## アプリケーションを構成する
 
-このエクステンションを使用するためには、アプリケーション構成情報で Connection クラスを構成する必要があります。
+このエクステンションを使用するためには、アプリケーション構成情報で [[yii\redis\Connection|Connection]] クラスを構成する必要があります。
 
 
 ```php

@@ -2,7 +2,7 @@
 =========================
 
 为了使用 `Cache` 组件，如 [安装](installation.md) 章节中所描述的，除了配置连接，
-你也需要配置 `yii\redis\Cache` 中的 `cache` 组件：
+你也需要配置 [[yii\redis\Cache]] 中的 `cache` 组件：
 
 ```php
 return [
