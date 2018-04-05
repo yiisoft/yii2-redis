@@ -1,11 +1,11 @@
 アクティブレコードを使用する
 ============================
 
-Yii のアクティブレコードの使用方法に関する一般的な情報については、[ガイド](https://github.com/yiisoft/yii2/blob/master/docs/guide-ja/db-active-record.md) を参照してください。
+Yii のアクティブレコードの使用方法に関する一般的な情報については、[ガイド](https://www.yiiframework.com/doc/guide/2.0/ja/db-active-record) を参照してください。
 
-redis の アクティブレコードクラスを定義するためには、[[yii\redis\ActiveRecord]] から拡張して、最低限、レコードの属性を定義する `attributes()` メソッドを実装する必要があります。
-プライマリキーは [[yii\redis\ActiveRecord::primaryKey()]] によって定義することが出来ますが、指定されない場合のデフォルト値は `id` となります。
-この primaryKey は属性の中に含まれていなければなりませんので、独自のプライマリキーを指定しない場合は、`id` という属性を定義することを忘れないようにしなければなりません。
+redis の アクティブレコード・クラスを定義するためには、[[yii\redis\ActiveRecord]] から拡張して、最低限、レコードの属性を定義する `attributes()` メソッドを実装する必要があります。
+プライマリ・キーは [[yii\redis\ActiveRecord::primaryKey()]] によって定義することが出来ますが、指定されない場合のデフォルト値は `id` となります。
+この primaryKey は属性の中に含まれていなければなりませんので、独自のプライマリ・キーを指定しない場合は、`id` という属性を定義することを忘れないようにしなければなりません。
 
 下記は `Customer` と呼ばれるモデルの例です。
 
@@ -39,12 +39,11 @@ class Customer extends \yii\redis\ActiveRecord
 }
 ```
 
-redis のアクティブレコードの一般的な使用方法は、[ガイド](https://github.com/yiisoft/yii2/blob/master/docs/guide-ja/active-record.md) で説明されているデータベースのアクティブレコードの場合と非常によく似ています。
+redis のアクティブレコードの一般的な使用方法は、[ガイド](https://www.yiiframework.com/doc/guide/2.0/ja/db-active-record) で説明されているデータベースのアクティブレコードの場合と非常によく似ています。
 次の制限を除けば、同じインタフェイスと機能をサポートしています。
 
 - redis は SQL をサポートしていないので、クエリの API は次のメソッドに限定されます。
-  すなわち、`where()`、`limit()`、`offset()`、`orderBy()` および `indexBy()`
-  (ただし、orderBy() は未実装です。[#1305](https://github.com/yiisoft/yii2/issues/1305))。
+  すなわち、`where()`、`limit()`、`offset()`、`orderBy()` および `indexBy()`。
 - redis にはテーブルがないため、`via` リレーションはテーブルによって定義することはできません。
   他のレコードを通じてリレーションを定義することだけが出来ます。
 
