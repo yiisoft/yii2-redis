@@ -159,6 +159,10 @@ class Cache extends \yii\caching\Cache
      */
     protected function getValues($keys)
     {
+        if ($this->enableReplicas) {
+            return parent::getValues($keys);
+        }
+
         $response = $this->getReplica()->executeCommand('MGET', $keys);
         $result = [];
         $i = 0;
