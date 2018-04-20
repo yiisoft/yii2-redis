@@ -113,6 +113,12 @@ class Cache extends \yii\caching\Cache
      * @see $enableReplicas
      */
     public $replicas = [];
+    /**
+     * @var bool in a cluster environment you need to build the cache keys a certain way to be able to
+     *           retrieve them using [[multiGet]] (`MGET`). until this is implemented there has to be a
+     *           way to disable it
+     */
+    public $enableMultiGet = true;
 
     /**
      * @var Connection currently active connection.
@@ -159,7 +165,7 @@ class Cache extends \yii\caching\Cache
      */
     protected function getValues($keys)
     {
-        if ($this->enableReplicas) {
+        if (!$this->enableMultiGet) {
             return parent::getValues($keys);
         }
 

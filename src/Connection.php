@@ -243,6 +243,10 @@ class Connection extends Component
      */
     public $hostname = 'localhost';
     /**
+     * @var string if the query gets redirected, use this as the temporary new hostname
+     */
+    public $redirectHostname;
+    /**
      * @var integer the port to use for connecting to the redis server. Default port is 6379.
      * If [[unixSocket]] is specified, [[hostname]] and port will be ignored.
      */
@@ -539,10 +543,12 @@ class Connection extends Component
         if ($this->_socket !== false) {
             return;
         }
-        $connection = ($this->unixSocket ?: $this->hostname . ':' . $this->port) . ', database=' . $this->database;
+
+        $hostname = $this->redirectHostname ?: $this->hostname;
+        $connection = ($this->unixSocket ?: $hostname . ':' . $this->port) . ', database=' . $this->database;
         \Yii::trace('Opening redis DB connection: ' . $connection, __METHOD__);
         $this->_socket = @stream_socket_client(
-            $this->unixSocket ? 'unix://' . $this->unixSocket : 'tcp://' . $this->hostname . ':' . $this->port,
+            $this->unixSocket ? 'unix://' . $this->unixSocket : 'tcp://' . $hostname . ':' . $this->port,
             $errorNumber,
             $errorDescription,
             $this->connectionTimeout ? $this->connectionTimeout : ini_get('default_socket_timeout'),
@@ -703,7 +709,14 @@ class Connection extends Component
         if ($written !== ($len = mb_strlen($command, '8bit'))) {
             throw new SocketException("Failed to write to socket. $written of $len bytes written.\nRedis command was: " . $command);
         }
-        return $this->parseResponse(implode(' ', $params));
+
+        $response = $this->parseResponse(implode(' ', $params));
+
+        if ($this->isRedirect($response)) {
+            return $this->redirect($response, $command, $params);
+        }
+
+        return $response;
     }
 
     /**
@@ -726,6 +739,11 @@ class Connection extends Component
                     return $line;
                 }
             case '-': // Error reply
+
+                if ($this->isRedirect($line)) {
+                    return $line;
+                }
+
                 throw new Exception("Redis error: " . $line . "\nRedis command was: " . $command);
             case ':': // Integer reply
                 // no cast to int as it is in the range of a signed 64 bit integer
@@ -755,6 +773,40 @@ class Connection extends Component
                 return $data;
             default:
                 throw new Exception('Received illegal data from redis: ' . $line . "\nRedis command was: " . $command);
+        }
+    }
+
+    /**
+     * @param string $line
+     * @return bool
+     */
+    private function isRedirect($line)
+    {
+        return is_string($line) && mb_substr($line, 0, 5) === 'MOVED';
+    }
+
+    /**
+     * @param string $redirect
+     * @param string $command
+     * @param array  $params
+     * @return mixed
+     * @throws Exception
+     * @throws SocketException
+     */
+    private function redirect($redirect, $command, $params)
+    {
+        $responseParts = preg_split('/\s+/', $redirect);
+
+        if (isset($responseParts[2])) {
+            $this->close();
+            $this->redirectHostname = $responseParts[2];
+            $this->open();
+
+            $response = $this->sendCommandInternal($command, $params);
+            $this->close();
+            $this->redirectHostname = null;
+
+            return $response;
         }
     }
 }
