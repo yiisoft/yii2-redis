@@ -119,6 +119,11 @@ class Cache extends \yii\caching\Cache
      *           way to disable it
      */
     public $enableMultiGet = true;
+    /**
+     * @var bool enable [[multiSet]] (`MSET`)
+     * @see $enableMultiGet
+     */
+    public $enableMultiSet = true;
 
     /**
      * @var Connection currently active connection.
@@ -198,13 +203,24 @@ class Cache extends \yii\caching\Cache
      */
     protected function setValues($data, $expire)
     {
+        $failedKeys = [];
+
+        if (!$this->enableMultiSet) {
+            foreach ($data as $key => $value) {
+                if (!$this->setValue($key, $value, $expire)) {
+                    $failedKeys[] = $key;
+                }
+            }
+
+            return $failedKeys;
+        }
+
         $args = [];
         foreach ($data as $key => $value) {
             $args[] = $key;
             $args[] = $value;
         }
 
-        $failedKeys = [];
         if ($expire == 0) {
             $this->redis->executeCommand('MSET', $args);
         } else {
