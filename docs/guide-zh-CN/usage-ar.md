@@ -44,12 +44,12 @@ redis 活动记录的一般用法和数据库活动记录非常相似，正如
 [指南](https://github.com/yiisoft/yii2/blob/master/docs/guide/active-record.md) 中所描述的。
 它支持相同的界面和功能，除了以下限制：
 
-- redis 不支持 SQL 查询的 API 仅限于以下方法：
+- 由于 redis 不支持 SQL 查询，因此查询 API 仅限于以下方法：
   `where()`，`limit()`，`offset()`，`orderBy()` 和 `indexBy()`。
   (orderBy() 尚未实现：[#1305](https://github.com/yiisoft/yii2/issues/1305))
-- `via`-关系不能通过在 redis 中没有的表定义。你只能通过其他记录来定义关系。
+- 由于 redis 中没有表，因此无法通过 `via` 表来定义关系。你只能通过其他记录来定义关系。
 
-另外，也可以定义从 redis 的活动记录关系到正常的活动记录类，反之亦然。
+另外，也可以定义从 redis 的活动记录到普通的活动记录的关系，反之亦然。
 
 使用实例：
 
