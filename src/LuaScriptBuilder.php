@@ -263,6 +263,10 @@ EOF;
             'not like' => 'buildLikeCondition',
             'or like' => 'buildLikeCondition',
             'or not like' => 'buildLikeCondition',
+            '>' => 'buildCompareCondition',
+            '>=' => 'buildCompareCondition',
+            '<' => 'buildCompareCondition',
+            '<=' => 'buildCompareCondition',            
         ];
 
         if (!is_array($condition)) {
@@ -417,6 +421,20 @@ EOF;
         return "$operator(" . implode(' or ', $vss) . ')';
     }
 
+    protected function buildCompareCondition($operator, $operands, &$columns)
+    {
+        if (!isset($operands[0], $operands[1])) {
+            throw new Exception("Operator '$operator' requires two operands.");
+        }
+
+        list($column, $value) = $operands;
+
+        $value = $this->quoteValue($value);
+        $column = $this->addColumn($column, $columns);
+
+        return "$column $operator $value";
+    }
+    
     private function buildLikeCondition($operator, $operands, &$columns)
     {
         throw new NotSupportedException('LIKE conditions are not suppoerted by redis ActiveRecord.');
