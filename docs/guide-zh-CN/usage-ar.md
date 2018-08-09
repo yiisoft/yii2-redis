@@ -30,12 +30,20 @@ class Customer extends \yii\redis\ActiveRecord
         return $this->hasMany(Order::className(), ['customer_id' => 'id']);
     }
 
+    public static function find()
+    {
+        return new CustomerQuery(get_called_class());
+    }
+}
+
+class CustomerQuery extends \yii\redis\ActiveQuery
+{
     /**
      * 定义一个修改 `$query` 的范围返回有效（status = 1）的客户。
      */
-    public static function active($query)
+    public function active()
     {
-        $query->andWhere(['status' => 1]);
+        return $this->andWhere(['status' => 1]);
     }
 }
 ```

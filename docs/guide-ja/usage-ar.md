@@ -30,17 +30,25 @@ class Customer extends \yii\redis\ActiveRecord
         return $this->hasMany(Order::className(), ['customer_id' => 'id']);
     }
 
+    public static function find()
+    {
+        return new CustomerQuery(get_called_class());
+    }
+}
+
+class CustomerQuery extends \yii\redis\ActiveQuery
+{
     /**
      * アクティブ (status = 1) である顧客だけを返すように `$query` を修正するスコープを定義
      */
-    public static function active($query)
+    public function active()
     {
-        $query->andWhere(['status' => 1]);
+        return $this->andWhere(['status' => 1]);
     }
 }
 ```
 
-redis のアクティブレコードの一般的な使用方法は、[ガイド](https://www.yiiframework.com/doc/guide/2.0/ja/db-active-record) 
+redis のアクティブレコードの一般的な使用方法は、[ガイド](https://www.yiiframework.com/doc/guide/2.0/ja/db-active-record)
 で説明されているデータベースのアクティブレコードの場合と非常によく似ています。
 次の制限を除けば、同じインタフェイスと機能をサポートしています。
 
