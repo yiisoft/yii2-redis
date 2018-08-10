@@ -429,10 +429,10 @@ EOF;
 
         list($column, $value) = $operands;
 
-        $value = $this->quoteValue($value);
+        $value = floatval($value);
         $column = $this->addColumn($column, $columns);
 
-        return "tonumber($column) $operator tonumber($value)";
+        return "tonumber($column) $operator $value";
     }
 
     private function buildLikeCondition($operator, $operands, &$columns)
