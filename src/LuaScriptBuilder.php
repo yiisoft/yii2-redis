@@ -266,7 +266,7 @@ EOF;
             '>' => 'buildCompareCondition',
             '>=' => 'buildCompareCondition',
             '<' => 'buildCompareCondition',
-            '<=' => 'buildCompareCondition',            
+            '<=' => 'buildCompareCondition',
         ];
 
         if (!is_array($condition)) {
@@ -432,9 +432,9 @@ EOF;
         $value = $this->quoteValue($value);
         $column = $this->addColumn($column, $columns);
 
-        return "$column $operator $value";
+        return "tonumber($column) $operator tonumber($value)";
     }
-    
+
     private function buildLikeCondition($operator, $operands, &$columns)
     {
         throw new NotSupportedException('LIKE conditions are not suppoerted by redis ActiveRecord.');

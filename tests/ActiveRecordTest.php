@@ -623,7 +623,7 @@ class ActiveRecordTest extends TestCase
 
         $orders = $orderClass::find()->where(['<', 'total', 41])->all();
         $this->assertCount(2, $orders);
-        $this->assertEquals(1, $orders[0]['customer_id']);
+        $this->assertEquals(2, $orders[0]['customer_id']);
         $this->assertEquals(2, $orders[1]['customer_id']);
 
         $orders = $orderClass::find()->where(['<=', 'total', 40])->all();
