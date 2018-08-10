@@ -263,6 +263,10 @@ EOF;
             'not like' => 'buildLikeCondition',
             'or like' => 'buildLikeCondition',
             'or not like' => 'buildLikeCondition',
+            '>' => 'buildCompareCondition',
+            '>=' => 'buildCompareCondition',
+            '<' => 'buildCompareCondition',
+            '<=' => 'buildCompareCondition',
         ];
 
         if (!is_array($condition)) {
@@ -415,6 +419,20 @@ EOF;
         $operator = $operator === 'in' ? '' : 'not ';
 
         return "$operator(" . implode(' or ', $vss) . ')';
+    }
+
+    protected function buildCompareCondition($operator, $operands, &$columns)
+    {
+        if (!isset($operands[0], $operands[1])) {
+            throw new Exception("Operator '$operator' requires two operands.");
+        }
+
+        list($column, $value) = $operands;
+
+        $value = $this->quoteValue($value);
+        $column = $this->addColumn($column, $columns);
+
+        return "tonumber($column) $operator tonumber($value)";
     }
 
     private function buildLikeCondition($operator, $operands, &$columns)

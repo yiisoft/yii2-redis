@@ -285,6 +285,18 @@ class ActiveRecordTest extends TestCase
 
         $query->andFilterWhere(['or not like', 'id', null]);
         $this->assertEquals($condition, $query->where);
+
+        $query->andFilterWhere(['>', 'id', null]);
+        $this->assertEquals($condition, $query->where);
+
+        $query->andFilterWhere(['>=', 'id', null]);
+        $this->assertEquals($condition, $query->where);
+
+        $query->andFilterWhere(['<', 'id', null]);
+        $this->assertEquals($condition, $query->where);
+
+        $query->andFilterWhere(['<=', 'id', null]);
+        $this->assertEquals($condition, $query->where);
     }
 
     public function testFilterWhereRecursively()
@@ -590,5 +602,33 @@ class ActiveRecordTest extends TestCase
         // ensure injected FLUSHALL call did not succeed
         $query->one();
         $this->assertGreaterThan(3, $itemClass::find()->count());
+    }
+
+    public function testCompareCondition()
+    {
+        /* @var $orderClass \yii\db\ActiveRecordInterface */
+        $orderClass = $this->getOrderClass();
+
+        /* @var $this TestCase|ActiveRecordTestTrait */
+        $orders = $orderClass::find()->where(['>', 'total', 30])->all();
+        $this->assertCount(3, $orders);
+        $this->assertEquals(1, $orders[0]['customer_id']);
+        $this->assertEquals(2, $orders[1]['customer_id']);
+        $this->assertEquals(2, $orders[2]['customer_id']);
+
+        $orders = $orderClass::find()->where(['>=', 'total', 40])->all();
+        $this->assertCount(2, $orders);
+        $this->assertEquals(1, $orders[0]['customer_id']);
+        $this->assertEquals(2, $orders[1]['customer_id']);
+
+        $orders = $orderClass::find()->where(['<', 'total', 41])->all();
+        $this->assertCount(2, $orders);
+        $this->assertEquals(2, $orders[0]['customer_id']);
+        $this->assertEquals(2, $orders[1]['customer_id']);
+
+        $orders = $orderClass::find()->where(['<=', 'total', 40])->all();
+        $this->assertCount(2, $orders);
+        $this->assertEquals(2, $orders[0]['customer_id']);
+        $this->assertEquals(2, $orders[1]['customer_id']);
     }
 }
