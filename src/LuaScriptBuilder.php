@@ -430,7 +430,7 @@ EOF;
         list($column, $value) = $operands;
 
         $column = $this->addColumn($column, $columns);
-        if(is_numeric($value)){
+        if (is_numeric($value)){
             return "tonumber($column) $operator $value";
         }
         $value = $this->quoteValue($value);
