@@ -285,6 +285,18 @@ class ActiveRecordTest extends TestCase
 
         $query->andFilterWhere(['or not like', 'id', null]);
         $this->assertEquals($condition, $query->where);
+
+        $query->andFilterWhere(['>', 'id', null]);
+        $this->assertEquals($condition, $query->where);
+
+        $query->andFilterWhere(['>=', 'id', null]);
+        $this->assertEquals($condition, $query->where);
+
+        $query->andFilterWhere(['<', 'id', null]);
+        $this->assertEquals($condition, $query->where);
+
+        $query->andFilterWhere(['<=', 'id', null]);
+        $this->assertEquals($condition, $query->where);
     }
 
     public function testFilterWhereRecursively()
@@ -590,5 +602,56 @@ class ActiveRecordTest extends TestCase
         // ensure injected FLUSHALL call did not succeed
         $query->one();
         $this->assertGreaterThan(3, $itemClass::find()->count());
+    }
+
+    public function testCompareCondition()
+    {
+        /* @var $orderClass \yii\db\ActiveRecordInterface */
+        $orderClass = $this->getOrderClass();
+
+        /* @var $this TestCase|ActiveRecordTestTrait */
+        $orders = $orderClass::find()->where(['>', 'total', 30])->all();
+        $this->assertCount(3, $orders);
+        $this->assertEquals(1, $orders[0]['customer_id']);
+        $this->assertEquals(2, $orders[1]['customer_id']);
+        $this->assertEquals(2, $orders[2]['customer_id']);
+
+        $orders = $orderClass::find()->where(['>=', 'total', 40])->all();
+        $this->assertCount(2, $orders);
+        $this->assertEquals(1, $orders[0]['customer_id']);
+        $this->assertEquals(2, $orders[1]['customer_id']);
+
+        $orders = $orderClass::find()->where(['<', 'total', 41])->all();
+        $this->assertCount(2, $orders);
+        $this->assertEquals(2, $orders[0]['customer_id']);
+        $this->assertEquals(2, $orders[1]['customer_id']);
+
+        $orders = $orderClass::find()->where(['<=', 'total', 40])->all();
+        $this->assertCount(2, $orders);
+        $this->assertEquals(2, $orders[0]['customer_id']);
+        $this->assertEquals(2, $orders[1]['customer_id']);
+    }
+
+    public function testStringCompareCondition()
+    {
+        /* @var $itemClass \yii\db\ActiveRecordInterface */
+        $itemClass = $this->getItemClass();
+
+        /* @var $this TestCase|ActiveRecordTestTrait */
+        $items = $itemClass::find()->where(['>', 'name', 'A'])->all();
+        $this->assertCount(5, $items);
+        $this->assertSame('Agile Web Application Development with Yii1.1 and PHP5', $items[0]['name']);
+
+        $items = $itemClass::find()->where(['>=', 'name', 'Ice Age'])->all();
+        $this->assertCount(3, $items);
+        $this->assertSame('Yii 1.1 Application Development Cookbook', $items[0]['name']);
+        $this->assertSame('Toy Story', $items[2]['name']);
+
+        $items = $itemClass::find()->where(['<', 'name', 'Cars'])->all();
+        $this->assertCount(1, $items);
+        $this->assertSame('Agile Web Application Development with Yii1.1 and PHP5', $items[0]['name']);
+
+        $items = $itemClass::find()->where(['<=', 'name', 'Carts'])->all();
+        $this->assertCount(2, $items);
     }
 }
