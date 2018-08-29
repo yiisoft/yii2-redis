@@ -203,4 +203,69 @@ class ConnectionTest extends TestCase
         $this->assertTrue(is_string($redis->clientList()));
         $this->assertTrue(is_string($redis->executeCommand('CLIENT LIST')));
     }
+
+    /**
+     * @return array
+     */
+    public function zRangeByScoreData()
+    {
+        return [
+            [
+                'members' => [
+                    ['foo', 1],
+                    ['bar', 2],
+                ],
+                'cases' => [
+                    // without both scores and limit
+                    ['0', '(1', null, null, null, null, []],
+                    ['1', '(2', null, null, null, null, ['foo']],
+                    ['2', '(3', null, null, null, null, ['bar']],
+                    ['(0', '2', null, null, null, null, ['foo', 'bar']],
+
+                    // with scores, but no limit
+                    ['0', '(1', 'WITHSCORES', null, null, null, []],
+                    ['1', '(2', 'WITHSCORES', null, null, null, ['foo', 1]],
+                    ['2', '(3', 'WITHSCORES', null, null, null, ['bar', 2]],
+                    ['(0', '2', 'WITHSCORES', null, null, null, ['foo', 1, 'bar', 2]],
+
+                    // with limit, but no scores
+                    ['0', '(1', null, 'LIMIT', 0, 1, []],
+                    ['1', '(2', null, 'LIMIT', 0, 1, ['foo']],
+                    ['2', '(3', null, 'LIMIT', 0, 1, ['bar']],
+                    ['(0', '2', null, 'LIMIT', 0, 1, ['foo']],
+
+                    // with both scores and limit
+                    ['0', '(1', 'WITHSCORES', 'LIMIT', 0, 1, []],
+                    ['1', '(2', 'WITHSCORES', 'LIMIT', 0, 1, ['foo', 1]],
+                    ['2', '(3', 'WITHSCORES', 'LIMIT', 0, 1, ['bar', 2]],
+                    ['(0', '2', 'WITHSCORES', 'LIMIT', 0, 1, ['foo', 1]],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider zRangeByScoreData
+     * @param $members
+     * @param $cases
+     */
+    public function testZRangeByScore($members, $cases)
+    {
+        $redis = $this->getConnection();
+        $set = 'zrangebyscore';
+        foreach ($members as $member) {
+            list($name, $score) = $member;
+            $this->assertEquals(1, $redis->zadd($set, $score, $name));
+        }
+
+        foreach ($cases as $case) {
+            list($min, $max, $withScores, $limit, $offset, $count, $expectedRows) = $case;
+            $rows = $redis->zrangebyscore($set, $min, $max, $withScores, $limit, $offset, $count);
+            $this->assertTrue(is_array($rows));
+            $this->assertEquals(count($expectedRows), count($rows));
+            for ($i = 0; $i < count($expectedRows); $i++) {
+                $this->assertEquals($expectedRows[$i], $rows[$i]);
+            }
+        }
+    }
 }

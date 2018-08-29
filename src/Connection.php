@@ -665,10 +665,17 @@ class Connection extends Component
         $this->open();
 
         $params = array_merge(explode(' ', $name), $params);
-        $command = '*' . count($params) . "\r\n";
+        $command = '';
+        $paramsCount = 0;
         foreach ($params as $arg) {
+            if ($arg === null) {
+                continue;
+            }
+
+            $paramsCount++;
             $command .= '$' . mb_strlen($arg, '8bit') . "\r\n" . $arg . "\r\n";
         }
+        $command = '*' . $paramsCount . "\r\n" . $command;
 
         \Yii::trace("Executing Redis Command: {$name}", __METHOD__);
         if ($this->retries > 0) {
