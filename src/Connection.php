@@ -561,7 +561,7 @@ class Connection extends Component
             $this->initConnection();
         } else {
             \Yii::error("Failed to open redis DB connection ($connection): $errorNumber - $errorDescription", __CLASS__);
-            $message = YII_DEBUG ? "Failed to open redis DB connection ($connection): $errorNumber - $errorDescription" : 'Failed to open DB connection.';
+            $message = YII_DEBUG ? "Failed to open redis DB connection ($connection): $errorNumber - $errorDescription" : 'Failed to open redis DB connection.';
             throw new Exception($message, $errorDescription, $errorNumber);
         }
     }
