@@ -116,7 +116,7 @@ class Session extends \yii\web\Session
     {
         $data = $this->redis->executeCommand('GET', [$this->calculateKey($id)]);
 
-        return $data === false || $data === null ? '' : $data;
+        return $data === false || $data === null ? '' : strval($data);
     }
 
     /**
