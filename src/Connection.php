@@ -626,10 +626,22 @@ class Connection extends Component
     public function __call($name, $params)
     {
         $redisCommand = strtoupper(Inflector::camel2words($name, false));
-        if (in_array($redisCommand, $this->redisCommands)) {
-            return $this->executeCommand($redisCommand, $params);
-        } else {
+        if (!in_array($redisCommand, $this->redisCommands)) {
             return parent::__call($name, $params);
+        }
+        for ($tries = 1; $tries < $this->retries; ++$tries) {
+            try {
+                return $this->executeCommand($redisCommand, $params);
+            } catch (SocketException $e) {
+                \Yii::error($e, __METHOD__);
+                $this->close();
+            }
+        }
+        try {
+            return $this->executeCommand($redisCommand, $params);
+        } catch (SocketException $e) {
+            $this->close();
+            throw $e;
         }
     }
 
@@ -676,24 +688,8 @@ class Connection extends Component
             $command .= '$' . mb_strlen($arg, '8bit') . "\r\n" . $arg . "\r\n";
         }
         $command = '*' . $paramsCount . "\r\n" . $command;
-
         \Yii::trace("Executing Redis Command: {$name}", __METHOD__);
-        if ($this->retries > 0) {
-            $tries = $this->retries;
-            while ($tries-- > 0) {
-                try {
-                    return $this->sendCommandInternal($command, $params);
-                } catch (SocketException $e) {
-                    \Yii::error($e, __METHOD__);
-                    // backup retries, fail on commands that fail inside here
-                    $retries = $this->retries;
-                    $this->retries = 0;
-                    $this->close();
-                    $this->open();
-                    $this->retries = $retries;
-                }
-            }
-        }
+
         return $this->sendCommandInternal($command, $params);
     }
 
