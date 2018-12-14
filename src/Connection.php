@@ -9,7 +9,9 @@ namespace yii\redis;
 
 use yii\base\Component;
 use yii\db\Exception;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
+use yii\helpers\VarDumper;
 
 /**
  * The redis connection class is used to establish a connection to a [redis](http://redis.io/) server.
@@ -226,6 +228,8 @@ use yii\helpers\Inflector;
  * @property string $driverName Name of the DB driver. This property is read-only.
  * @property bool $isActive Whether the DB connection is established. This property is read-only.
  * @property LuaScriptBuilder $luaScriptBuilder This property is read-only.
+ * @property string $connectionString
+ * @property resource $socket
  *
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
@@ -245,7 +249,7 @@ class Connection extends Component
     /**
      * @var string if the query gets redirected, use this as the temporary new hostname
      */
-    public $redirectHostname;
+    public $redirectConnectionString;
     /**
      * @var integer the port to use for connecting to the redis server. Default port is 6379.
      * If [[unixSocket]] is specified, [[hostname]] and port will be ignored.
@@ -516,10 +520,9 @@ class Connection extends Component
     ];
 
     /**
-     * @var resource redis socket connection
+     * @var array redis redirect socket connection pool
      */
-    private $_socket = false;
-
+    private $_pool = [];
 
     /**
      * Closes the connection when this component is being serialized.
@@ -531,13 +534,27 @@ class Connection extends Component
         return array_keys(get_object_vars($this));
     }
 
+    public function getConnectionString()
+    {
+        if ($this->unixSocket) {
+            return 'unix://' . $this->unixSocket;
+        }
+
+        return 'tcp://' . ($this->redirectConnectionString ?: "$this->hostname:$this->port");
+    }
+
+    public function getSocket()
+    {
+        return ArrayHelper::getValue($this->_pool, $this->connectionString, false);
+    }
+
     /**
      * Returns a value indicating whether the DB connection is established.
      * @return bool whether the DB connection is established
      */
     public function getIsActive()
     {
-        return $this->_socket !== false;
+        return ArrayHelper::getValue($this->_pool, "$this->hostname:$this->port") !== false;
     }
 
     /**
@@ -547,23 +564,25 @@ class Connection extends Component
      */
     public function open()
     {
-        if ($this->_socket !== false) {
+        if ($this->socket !== false) {
             return;
         }
 
-        $hostname = $this->redirectHostname ?: $this->hostname;
-        $connection = ($this->unixSocket ?: $hostname . ':' . $this->port) . ', database=' . $this->database;
+        $connection = $this->connectionString . ', database=' . $this->database;
         \Yii::trace('Opening redis DB connection: ' . $connection, __METHOD__);
-        $this->_socket = @stream_socket_client(
-            $this->unixSocket ? 'unix://' . $this->unixSocket : 'tcp://' . $hostname . ':' . $this->port,
+        $socket = @stream_socket_client(
+            $this->connectionString,
             $errorNumber,
             $errorDescription,
             $this->connectionTimeout ? $this->connectionTimeout : ini_get('default_socket_timeout'),
             $this->socketClientFlags
         );
-        if ($this->_socket) {
+
+        if ($socket) {
+            $this->_pool[ $this->connectionString ] = $socket;
+
             if ($this->dataTimeout !== null) {
-                stream_set_timeout($this->_socket, $timeout = (int) $this->dataTimeout, (int) (($this->dataTimeout - $timeout) * 1000000));
+                stream_set_timeout($socket, $timeout = (int) $this->dataTimeout, (int) (($this->dataTimeout - $timeout) * 1000000));
             }
             if ($this->password !== null) {
                 $this->executeCommand('AUTH', [$this->password]);
@@ -585,16 +604,15 @@ class Connection extends Component
      */
     public function close()
     {
-        if ($this->_socket !== false) {
-            $connection = ($this->unixSocket ?: $this->hostname . ':' . $this->port) . ', database=' . $this->database;
+        foreach ($this->_pool as $socket) {
+            $connection = $this->connectionString . ', database=' . $this->database;
             \Yii::trace('Closing DB connection: ' . $connection, __METHOD__);
             try {
                 $this->executeCommand('QUIT');
             } catch (SocketException $e) {
                 // ignore errors when quitting a closed connection
             }
-            fclose($this->_socket);
-            $this->_socket = false;
+            fclose($socket);
         }
     }
 
@@ -719,7 +737,7 @@ class Connection extends Component
      */
     private function sendCommandInternal($command, $params)
     {
-        $written = @fwrite($this->_socket, $command);
+        $written = @fwrite($this->socket, $command);
         if ($written === false) {
             throw new SocketException("Failed to write to socket.\nRedis command was: " . $command);
         }
@@ -727,24 +745,22 @@ class Connection extends Component
             throw new SocketException("Failed to write to socket. $written of $len bytes written.\nRedis command was: " . $command);
         }
 
-        $response = $this->parseResponse(implode(' ', $params));
-
-        if ($this->isRedirect($response)) {
-            return $this->redirect($response, $command, $params);
-        }
-
-        return $response;
+        return $this->parseResponse($params, $command);
     }
 
     /**
-     * @param string $command
+     * @param array $params
+     * @param null  $command
      * @return mixed
      * @throws Exception on error
+     * @throws SocketException
      */
-    private function parseResponse($command)
+    private function parseResponse($params, $command = null)
     {
-        if (($line = fgets($this->_socket)) === false) {
-            throw new SocketException("Failed to read from socket.\nRedis command was: " . $command);
+        $prettyCommand = implode(' ', $params);
+
+        if (($line = fgets($this->socket)) === false) {
+            throw new SocketException("Failed to read from socket.\nRedis command was: " . $prettyCommand);
         }
         $type = $line[0];
         $line = mb_substr($line, 1, -2, '8bit');
@@ -758,10 +774,10 @@ class Connection extends Component
             case '-': // Error reply
 
                 if ($this->isRedirect($line)) {
-                    return $line;
+                    return $this->redirect($line, $command, $params);
                 }
 
-                throw new Exception("Redis error: " . $line . "\nRedis command was: " . $command);
+                throw new Exception("Redis error: " . $line . "\nRedis command was: " . $prettyCommand);
             case ':': // Integer reply
                 // no cast to int as it is in the range of a signed 64 bit integer
                 return $line;
@@ -772,8 +788,8 @@ class Connection extends Component
                 $length = (int)$line + 2;
                 $data = '';
                 while ($length > 0) {
-                    if (($block = fread($this->_socket, $length)) === false) {
-                        throw new SocketException("Failed to read from socket.\nRedis command was: " . $command);
+                    if (($block = fread($this->socket, $length)) === false) {
+                        throw new SocketException("Failed to read from socket.\nRedis command was: " . $prettyCommand);
                     }
                     $data .= $block;
                     $length -= mb_strlen($block, '8bit');
@@ -784,12 +800,12 @@ class Connection extends Component
                 $count = (int) $line;
                 $data = [];
                 for ($i = 0; $i < $count; $i++) {
-                    $data[] = $this->parseResponse($command);
+                    $data[] = $this->parseResponse($prettyCommand);
                 }
 
                 return $data;
             default:
-                throw new Exception('Received illegal data from redis: ' . $line . "\nRedis command was: " . $command);
+                throw new Exception('Received illegal data from redis: ' . $line . "\nRedis command was: " . $prettyCommand);
         }
     }
 
@@ -814,16 +830,20 @@ class Connection extends Component
     {
         $responseParts = preg_split('/\s+/', $redirect);
 
-        if (isset($responseParts[2])) {
-            $this->close();
-            $this->redirectHostname = $responseParts[2];
+        $this->redirectConnectionString = $responseParts[2] ?? false;
+
+        if ($this->redirectConnectionString) {
+            \Yii::info('Redirecting to ' . $this->connectionString, __METHOD__);
+
             $this->open();
 
             $response = $this->sendCommandInternal($command, $params);
-            $this->close();
-            $this->redirectHostname = null;
+
+            $this->redirectConnectionString = null;
 
             return $response;
         }
+
+        throw new Exception('No hostname found in redis redirect (MOVED): ' . VarDumper::dumpAsString($redirect));
     }
 }
