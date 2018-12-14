@@ -1,10 +1,11 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
-2.0.9 under development
------------------------
+2.0.9 September 23, 2018
+------------------------
 
-- no changes in this release.
+- Bug #166: zrangebyscore without scores does not work (razonyang)
+- Enh #13: Added `>`, `<`, `>=` and `<=` conditions support in ActiveQuery (nailfor, zacksleo)
 
 
 2.0.8 March 20, 2018

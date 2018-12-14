@@ -2,7 +2,7 @@
 ======================
 Для получения общей информации о том, как использовать Yii ActiveRecord, обратитесь к
 [руководству](https://github.com/yiisoft/yii2/blob/master/docs/guide/db-active-record.md).
-Для определения redis ActiveRecord класс записи должен расширяться от класса [[yii\redis\ActiveRecord]] и реализовывать хотябы метод `attributes()` для определения атрибутов записи.
+Для определения redis ActiveRecord класс записи должен расширяться от класса [[yii\redis\ActiveRecord]] и реализовывать хотя бы метод `attributes()` для определения атрибутов записи.
 Первичный ключ может быть определен с помощью [[yii\redis\ActiveRecord::primaryKey()]] который по умолчанию имеет значение `id` если не указано.
 Первичный ключ должен быть частью атрибутов, поэтому убедитесь, что атрибут `id` определен, если вы не указали свой собственный первичный ключ.
 
@@ -27,12 +27,20 @@ class Customer extends \yii\redis\ActiveRecord
         return $this->hasMany(Order::className(), ['customer_id' => 'id']);
     }
 
+    public static function find()
+    {
+        return new CustomerQuery(get_called_class());
+    }
+}
+
+class CustomerQuery extends \yii\redis\ActiveQuery
+{
     /**
      * Defines a scope that modifies the `$query` to return only active(status = 1) customers
      */
-    public static function active($query)
+    public function active()
     {
-        $query->andWhere(['status' => 1]);
+        return $this->andWhere(['status' => 1]);
     }
 }
 ```
