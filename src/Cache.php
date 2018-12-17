@@ -131,8 +131,8 @@ class Cache extends \yii\caching\Cache
     public $replicas = [];
     /**
      * @var bool|null force cluster mode, don't check on every request. If this is null, cluster mode will be checked
-     *                whenever the cache is accessed. To disable the check, set to true if cluster mode should be enabled,
-     *                or false if it should be disabled.
+     *                once per request whenever the cache is accessed. To disable the check, set to true if cluster
+     *                mode should be enabled, or false if it should be disabled.
      */
     public $forceClusterMode;
 
@@ -141,11 +141,11 @@ class Cache extends \yii\caching\Cache
      */
     private $_replica;
     /**
-     * @var bool
+     * @var bool remember if redis is in cluster mode for the whole request
      */
     private $_isCluster;
     /**
-     * @var string hash tag to use to put cache values into same hash slot
+     * @var string check if hash tags were supplied for a MGET/MSET operation
      */
     private $hashTagAvailable = false;
 
@@ -239,8 +239,6 @@ class Cache extends \yii\caching\Cache
      */
     protected function setValues($data, $expire)
     {
-        $failedKeys = [];
-
         if ($this->isCluster && !$this->hashTagAvailable) {
             return parent::setValues($data, $expire);
         }
@@ -251,6 +249,7 @@ class Cache extends \yii\caching\Cache
             $args[] = $value;
         }
 
+        $failedKeys = [];
         if ($expire == 0) {
             $this->redis->executeCommand('MSET', $args);
         } else {
