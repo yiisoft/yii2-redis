@@ -614,6 +614,8 @@ class Connection extends Component
             }
             fclose($socket);
         }
+
+        $this->_pool = [];
     }
 
     /**
