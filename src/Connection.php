@@ -800,7 +800,7 @@ class Connection extends Component
                 $count = (int) $line;
                 $data = [];
                 for ($i = 0; $i < $count; $i++) {
-                    $data[] = $this->parseResponse($prettyCommand);
+                    $data[] = $this->parseResponse($params);
                 }
 
                 return $data;
