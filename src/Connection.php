@@ -830,7 +830,7 @@ class Connection extends Component
     {
         $responseParts = preg_split('/\s+/', $redirect);
 
-        $this->redirectConnectionString = $responseParts[2] ?? false;
+        $this->redirectConnectionString = ArrayHelper::getValue($responseParts, 2, false);
 
         if ($this->redirectConnectionString) {
             \Yii::info('Redirecting to ' . $this->connectionString, __METHOD__);
