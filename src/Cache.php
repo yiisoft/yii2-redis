@@ -130,17 +130,6 @@ class Cache extends \yii\caching\Cache
      */
     public $replicas = [];
     /**
-     * @var bool in a cluster environment you need to build the cache keys a certain way to be able to
-     *           retrieve them using [[multiGet]] (`MGET`). until this is implemented there has to be a
-     *           way to disable it
-     */
-    public $enableMultiGet = true;
-    /**
-     * @var bool enable [[multiSet]] (`MSET`)
-     * @see $enableMultiGet
-     */
-    public $enableMultiSet = true;
-    /**
      * @var bool|null force cluster mode, don't check on every request. If this is null, cluster mode will be checked
      *                whenever the cache is accessed. To disable the check, set to true if cluster mode should be enabled,
      *                or false if it should be disabled.
@@ -200,7 +189,7 @@ class Cache extends \yii\caching\Cache
      */
     protected function getValues($keys)
     {
-        if (!$this->enableMultiGet || $this->isCluster && !$this->hashTagAvailable) {
+        if ($this->isCluster && !$this->hashTagAvailable) {
             return parent::getValues($keys);
         }
 
@@ -252,7 +241,7 @@ class Cache extends \yii\caching\Cache
     {
         $failedKeys = [];
 
-        if (!$this->enableMultiSet || $this->isCluster && !$this->hashTagAvailable) {
+        if ($this->isCluster && !$this->hashTagAvailable) {
             return parent::setValues($data, $expire);
         }
 
