@@ -21,7 +21,8 @@
         "yiisoft/yii2": "~2.0.14"
     },
     "require-dev": {
-        "phpunit/phpunit": "<7"
+        "phpunit/phpunit": "<7",
+        "yiisoft/yii2-dev": "~2.0.14"
     },
     "autoload": {
         "psr-4": { "yii\\redis\\": "src" }
@@ -39,8 +40,5 @@
             "type": "composer",
             "url": "https://asset-packagist.org"
         }
-    ],
-    "require-dev": {
-        "yiisoft/yii2-dev": "~2.0.14"
-    }
+    ]
 }
