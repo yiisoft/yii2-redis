@@ -7,21 +7,7 @@ php:
   - 7.0
   - 7.1
   - 7.2
-
-matrix:
-  include:
-  - php: hhvm
-    sudo: true
-    dist: trusty
-    group: edge
-    services:
-      - redis-server
-    cache:
-      directories: "$HOME/.composer/cache"
-    before_install:
-    - wget https://phar.phpunit.de/phpunit-4.5.1.phar
-    script:
-    - php phpunit-4.5.1.phar --verbose $PHPUNIT_FLAGS
+  - 7.3
 
 sudo: false
 
@@ -48,5 +34,5 @@ before_script:
     fi
 
 script:
-  - phpunit --verbose $PHPUNIT_FLAGS
+  - ./vendor/bin/phpunit --verbose $PHPUNIT_FLAGS
 
