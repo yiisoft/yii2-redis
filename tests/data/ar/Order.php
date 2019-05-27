@@ -20,6 +20,9 @@ namespace yiiunit\extensions\redis\data\ar;
  * @property Item[] $itemsWithNullFK
  * @property OrderItemWithNullFK[] $orderItemsWithNullFK
  * @property Item[] $books
+ *
+ * @property-read Item[] $expensiveItemsUsingViaWithCallable
+ * @property-read Item[] $cheapItemsUsingViaWithCallable
  */
 class Order extends ActiveRecord
 {
@@ -56,6 +59,22 @@ class Order extends ActiveRecord
             ->via('orderItems', function ($q) {
                 // additional query configuration
             });
+    }
+
+    public function getExpensiveItemsUsingViaWithCallable()
+    {
+        return $this->hasMany(Item::className(), ['id' => 'item_id'])
+            ->via('orderItems', function (\yii\redis\ActiveQuery $q) {
+                $q->where(['>=', 'subtotal', 10]);
+	     });
+     }
+
+    public function getCheapItemsUsingViaWithCallable()
+    {
+        return $this->hasMany(Item::className(), ['id' => 'item_id'])
+            ->via('orderItems', function (\yii\redis\ActiveQuery $q) {
+	        $q->where(['<', 'subtotal', 10]);
+	    });
     }
 
     /**
