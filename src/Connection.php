@@ -300,6 +300,13 @@ class Connection extends Component
      */
     public $retries = 0;
     /**
+     * @var integer The retry interval in microseconds to wait between retry.
+     * This is used in [[executeCommand()]] when a [[SocketException]] is thrown.
+     * Defaults to 0 meaning no wait.
+     * @since 2.0.10
+     */
+    public $retryInterval = 0;
+    /**
      * @var array List of available redis commands.
      * @see http://redis.io/commands
      */
@@ -689,6 +696,7 @@ class Connection extends Component
                     $retries = $this->retries;
                     $this->retries = 0;
                     $this->close();
+                    usleep($this->retryInterval);
                     $this->open();
                     $this->retries = $retries;
                 }
