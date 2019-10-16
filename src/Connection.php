@@ -696,7 +696,9 @@ class Connection extends Component
                     $retries = $this->retries;
                     $this->retries = 0;
                     $this->close();
-                    usleep($this->retryInterval);
+                    if ($this->retryInterval > 0) {
+                        usleep($this->retryInterval);
+                    }
                     $this->open();
                     $this->retries = $retries;
                 }
