@@ -1,8 +1,8 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
-2.0.10 under development
-------------------------
+2.0.10 October 22, 2019
+-----------------------
 
 - Enh #188: Added option to wait between connection retry (marty-macfly, rob006)
 
