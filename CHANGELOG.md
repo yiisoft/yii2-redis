@@ -4,7 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.11 under development
 ------------------------
 
-- no changes in this release.
+- Enh #147 #143 #142 #136 #135 #134 #66: Support redis in cluster mode (hofrob)
 
 
 2.0.10 October 22, 2019
