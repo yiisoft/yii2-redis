@@ -248,6 +248,7 @@ class Connection extends Component
     public $hostname = 'localhost';
     /**
      * @var string if the query gets redirected, use this as the temporary new hostname
+     * @since 2.0.11
      */
     public $redirectConnectionString;
     /**
@@ -534,6 +535,11 @@ class Connection extends Component
         return array_keys(get_object_vars($this));
     }
 
+    /**
+     * Return the connection string used to open a socket connection. During a redirect (cluster mode) this will be the
+     * target of the redirect.
+     * @return string socket connection string
+     */
     public function getConnectionString()
     {
         if ($this->unixSocket) {
@@ -543,6 +549,10 @@ class Connection extends Component
         return 'tcp://' . ($this->redirectConnectionString ?: "$this->hostname:$this->port");
     }
 
+    /**
+     * Return the connection resource if a connection to the target has been established before, `false` otherwise.
+     * @return resource|false
+     */
     public function getSocket()
     {
         return ArrayHelper::getValue($this->_pool, $this->connectionString, false);

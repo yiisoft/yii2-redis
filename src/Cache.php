@@ -133,6 +133,7 @@ class Cache extends \yii\caching\Cache
      * @var bool|null force cluster mode, don't check on every request. If this is null, cluster mode will be checked
      *                once per request whenever the cache is accessed. To disable the check, set to true if cluster
      *                mode should be enabled, or false if it should be disabled.
+     * @since 2.0.11
      */
     public $forceClusterMode;
 
@@ -147,7 +148,7 @@ class Cache extends \yii\caching\Cache
     /**
      * @var string check if hash tags were supplied for a MGET/MSET operation
      */
-    private $hashTagAvailable = false;
+    private $_hashTagAvailable = false;
 
 
     /**
@@ -189,7 +190,7 @@ class Cache extends \yii\caching\Cache
      */
     protected function getValues($keys)
     {
-        if ($this->isCluster && !$this->hashTagAvailable) {
+        if ($this->isCluster && !$this->_hashTagAvailable) {
             return parent::getValues($keys);
         }
 
@@ -200,7 +201,7 @@ class Cache extends \yii\caching\Cache
             $result[$key] = $response[$i++];
         }
 
-        $this->hashTagAvailable = false;
+        $this->_hashTagAvailable = false;
 
         return $result;
     }
@@ -212,7 +213,7 @@ class Cache extends \yii\caching\Cache
             && $this->isCluster
             && preg_match('/^(.*)(\{.+\})(.*)$/', $key, $matches) === 1) {
 
-            $this->hashTagAvailable = true;
+            $this->_hashTagAvailable = true;
 
             return parent::buildKey($matches[1] . $matches[3]) . $matches[2];
         }
@@ -239,7 +240,7 @@ class Cache extends \yii\caching\Cache
      */
     protected function setValues($data, $expire)
     {
-        if ($this->isCluster && !$this->hashTagAvailable) {
+        if ($this->isCluster && !$this->_hashTagAvailable) {
             return parent::setValues($data, $expire);
         }
 
@@ -270,11 +271,18 @@ class Cache extends \yii\caching\Cache
             }
         }
 
-        $this->hashTagAvailable = false;
+        $this->_hashTagAvailable = false;
 
         return $failedKeys;
     }
 
+    /**
+     * Returns `true` if the redis extension is forced to run in cluster mode through config or the redis command
+     * `CLUSTER INFO` executes successfully, `false` otherwise.
+     *
+     * Setting [[forceClusterMode]] to either `true` or `false` is preferred.
+     * @return bool whether redis is running in cluster mode or not
+     */
     public function getIsCluster()
     {
         if ($this->forceClusterMode !== null) {
