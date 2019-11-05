@@ -229,7 +229,7 @@ use yii\helpers\VarDumper;
  * @property bool $isActive Whether the DB connection is established. This property is read-only.
  * @property LuaScriptBuilder $luaScriptBuilder This property is read-only.
  * @property string $connectionString
- * @property resource $socket
+ * @property resource|false $socket
  *
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
@@ -276,11 +276,11 @@ class Connection extends Component
     /**
      * @var float timeout to use for connection to redis. If not set the timeout set in php.ini will be used: `ini_get("default_socket_timeout")`.
      */
-    public $connectionTimeout = null;
+    public $connectionTimeout;
     /**
      * @var float timeout to use for redis socket when reading and writing data. If not set the php default value will be used.
      */
-    public $dataTimeout = null;
+    public $dataTimeout;
     /**
      * @var integer Bitmask field which may be set to any combination of connection flags passed to [stream_socket_client()](http://php.net/manual/en/function.stream-socket-client.php).
      * Currently the select of connection flags is limited to `STREAM_CLIENT_CONNECT` (default), `STREAM_CLIENT_ASYNC_CONNECT` and `STREAM_CLIENT_PERSISTENT`.
@@ -539,6 +539,7 @@ class Connection extends Component
      * Return the connection string used to open a socket connection. During a redirect (cluster mode) this will be the
      * target of the redirect.
      * @return string socket connection string
+     * @since 2.0.11
      */
     public function getConnectionString()
     {
@@ -762,7 +763,7 @@ class Connection extends Component
 
     /**
      * @param array $params
-     * @param null  $command
+     * @param string|null $command
      * @return mixed
      * @throws Exception on error
      * @throws SocketException
@@ -827,13 +828,13 @@ class Connection extends Component
      */
     private function isRedirect($line)
     {
-        return is_string($line) && mb_substr($line, 0, 5) === 'MOVED';
+        return is_string($line) && mb_strpos($line, 'MOVED') === 0;
     }
 
     /**
      * @param string $redirect
      * @param string $command
-     * @param array  $params
+     * @param array $params
      * @return mixed
      * @throws Exception
      * @throws SocketException
@@ -842,7 +843,7 @@ class Connection extends Component
     {
         $responseParts = preg_split('/\s+/', $redirect);
 
-        $this->redirectConnectionString = ArrayHelper::getValue($responseParts, 2, false);
+        $this->redirectConnectionString = ArrayHelper::getValue($responseParts, 2);
 
         if ($this->redirectConnectionString) {
             \Yii::info('Redirecting to ' . $this->connectionString, __METHOD__);

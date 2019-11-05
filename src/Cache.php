@@ -78,15 +78,16 @@ use yii\di\Instance;
  *
  * If you're using redis in cluster mode and want to use `MGET` and `MSET` effectively, you will need to supply a
  * [hash tag](https://redis.io/topics/cluster-spec#keys-hash-tags) to allocate cache keys to the same hash slot.
+ *
  * ~~~
  * \Yii::$app->cache->multiSet([
- *          'posts{user1}' => 123,
- *          'settings{user1}' => [
- *              'showNickname' => false,
- *              'sortBy' => 'created_at',
- *          ],
- *          'unreadMessages{user1}' => 5,
- *      ]);
+ *     'posts{user1}' => 123,
+ *     'settings{user1}' => [
+ *         'showNickname' => false,
+ *         'sortBy' => 'created_at',
+ *     ],
+ *     'unreadMessages{user1}' => 5,
+ * ]);
  * ~~~
  *
  * @property bool $isCluster
@@ -131,8 +132,8 @@ class Cache extends \yii\caching\Cache
     public $replicas = [];
     /**
      * @var bool|null force cluster mode, don't check on every request. If this is null, cluster mode will be checked
-     *                once per request whenever the cache is accessed. To disable the check, set to true if cluster
-     *                mode should be enabled, or false if it should be disabled.
+     * once per request whenever the cache is accessed. To disable the check, set to true if cluster mode
+     * should be enabled, or false if it should be disabled.
      * @since 2.0.11
      */
     public $forceClusterMode;
@@ -146,7 +147,7 @@ class Cache extends \yii\caching\Cache
      */
     private $_isCluster;
     /**
-     * @var string check if hash tags were supplied for a MGET/MSET operation
+     * @var bool if hash tags were supplied for a MGET/MSET operation
      */
     private $_hashTagAvailable = false;
 
@@ -211,7 +212,7 @@ class Cache extends \yii\caching\Cache
         if (
             is_string($key)
             && $this->isCluster
-            && preg_match('/^(.*)(\{.+\})(.*)$/', $key, $matches) === 1) {
+            && preg_match('/^(.*)({.+})(.*)$/', $key, $matches) === 1) {
 
             $this->_hashTagAvailable = true;
 
@@ -282,6 +283,7 @@ class Cache extends \yii\caching\Cache
      *
      * Setting [[forceClusterMode]] to either `true` or `false` is preferred.
      * @return bool whether redis is running in cluster mode or not
+     * @since 2.0.11
      */
     public function getIsCluster()
     {
@@ -292,14 +294,13 @@ class Cache extends \yii\caching\Cache
         if ($this->_isCluster === null) {
             $this->_isCluster = false;
             try {
-                /**
-                 * if redis is running without cluster support, this command results in:
-                 * `ERR This instance has cluster support disabled`
-                 * and [[Connection::executeCommand]] throws an exception
-                 */
                 $this->redis->executeCommand('CLUSTER INFO');
                 $this->_isCluster = true;
             } catch (Exception $exception) {
+                // if redis is running without cluster support, this command results in:
+                // `ERR This instance has cluster support disabled`
+                // and [[Connection::executeCommand]] throws an exception
+                // we want to ignore it
             }
         }
 
