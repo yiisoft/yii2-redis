@@ -8,6 +8,7 @@
 namespace yii\redis;
 
 use Yii;
+use yii\db\Exception;
 use yii\di\Instance;
 
 /**
@@ -75,6 +76,22 @@ use yii\di\Instance;
  * ]
  * ~~~
  *
+ * If you're using redis in cluster mode and want to use `MGET` and `MSET` effectively, you will need to supply a
+ * [hash tag](https://redis.io/topics/cluster-spec#keys-hash-tags) to allocate cache keys to the same hash slot.
+ *
+ * ~~~
+ * \Yii::$app->cache->multiSet([
+ *     'posts{user1}' => 123,
+ *     'settings{user1}' => [
+ *         'showNickname' => false,
+ *         'sortBy' => 'created_at',
+ *     ],
+ *     'unreadMessages{user1}' => 5,
+ * ]);
+ * ~~~
+ *
+ * @property bool $isCluster
+ *
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
  */
@@ -113,11 +130,26 @@ class Cache extends \yii\caching\Cache
      * @see $enableReplicas
      */
     public $replicas = [];
+    /**
+     * @var bool|null force cluster mode, don't check on every request. If this is null, cluster mode will be checked
+     * once per request whenever the cache is accessed. To disable the check, set to true if cluster mode
+     * should be enabled, or false if it should be disabled.
+     * @since 2.0.11
+     */
+    public $forceClusterMode;
 
     /**
      * @var Connection currently active connection.
      */
     private $_replica;
+    /**
+     * @var bool remember if redis is in cluster mode for the whole request
+     */
+    private $_isCluster;
+    /**
+     * @var bool if hash tags were supplied for a MGET/MSET operation
+     */
+    private $_hashTagAvailable = false;
 
 
     /**
@@ -159,6 +191,10 @@ class Cache extends \yii\caching\Cache
      */
     protected function getValues($keys)
     {
+        if ($this->isCluster && !$this->_hashTagAvailable) {
+            return parent::getValues($keys);
+        }
+
         $response = $this->getReplica()->executeCommand('MGET', $keys);
         $result = [];
         $i = 0;
@@ -166,7 +202,24 @@ class Cache extends \yii\caching\Cache
             $result[$key] = $response[$i++];
         }
 
+        $this->_hashTagAvailable = false;
+
         return $result;
+    }
+
+    public function buildKey($key)
+    {
+        if (
+            is_string($key)
+            && $this->isCluster
+            && preg_match('/^(.*)({.+})(.*)$/', $key, $matches) === 1) {
+
+            $this->_hashTagAvailable = true;
+
+            return parent::buildKey($matches[1] . $matches[3]) . $matches[2];
+        }
+
+        return parent::buildKey($key);
     }
 
     /**
@@ -188,6 +241,10 @@ class Cache extends \yii\caching\Cache
      */
     protected function setValues($data, $expire)
     {
+        if ($this->isCluster && !$this->_hashTagAvailable) {
+            return parent::setValues($data, $expire);
+        }
+
         $args = [];
         foreach ($data as $key => $value) {
             $args[] = $key;
@@ -215,7 +272,39 @@ class Cache extends \yii\caching\Cache
             }
         }
 
+        $this->_hashTagAvailable = false;
+
         return $failedKeys;
+    }
+
+    /**
+     * Returns `true` if the redis extension is forced to run in cluster mode through config or the redis command
+     * `CLUSTER INFO` executes successfully, `false` otherwise.
+     *
+     * Setting [[forceClusterMode]] to either `true` or `false` is preferred.
+     * @return bool whether redis is running in cluster mode or not
+     * @since 2.0.11
+     */
+    public function getIsCluster()
+    {
+        if ($this->forceClusterMode !== null) {
+            return $this->forceClusterMode;
+        }
+
+        if ($this->_isCluster === null) {
+            $this->_isCluster = false;
+            try {
+                $this->redis->executeCommand('CLUSTER INFO');
+                $this->_isCluster = true;
+            } catch (Exception $exception) {
+                // if redis is running without cluster support, this command results in:
+                // `ERR This instance has cluster support disabled`
+                // and [[Connection::executeCommand]] throws an exception
+                // we want to ignore it
+            }
+        }
+
+        return $this->_isCluster;
     }
 
     /**
