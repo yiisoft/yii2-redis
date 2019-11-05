@@ -525,6 +525,7 @@ class Connection extends Component
      */
     private $_pool = [];
 
+
     /**
      * Closes the connection when this component is being serialized.
      * @return array
