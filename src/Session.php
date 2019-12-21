@@ -8,6 +8,7 @@
 namespace yii\redis;
 
 use Yii;
+use yii\di\Instance;
 use yii\base\InvalidConfigException;
 
 /**
@@ -80,7 +81,7 @@ class Session extends \yii\web\Session
     public function init()
     {
         if (is_string($this->redis)) {
-            $this->redis = Yii::$app->get($this->redis);
+            $this->redis = Instance::ensure($this->redis, Connection::className());
         } elseif (is_array($this->redis)) {
             if (!isset($this->redis['class'])) {
                 $this->redis['class'] = Connection::className();

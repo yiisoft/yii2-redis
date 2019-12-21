@@ -10,6 +10,7 @@ namespace yii\redis;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\db\BaseActiveRecord;
+use yii\di\Instance;
 use yii\helpers\Inflector;
 use yii\helpers\StringHelper;
 
@@ -46,7 +47,7 @@ class ActiveRecord extends BaseActiveRecord
      */
     public static function getDb()
     {
-        return Yii::$app->get('redis');
+        return Instance::ensure('redis', Connection::className());
     }
 
     /**
