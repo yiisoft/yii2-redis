@@ -9,6 +9,7 @@ namespace yii\redis;
 
 use Yii;
 use yii\base\InvalidConfigException;
+use yii\di\Instance;
 
 /**
  * Redis Session implements a session component using [redis](http://redis.io/) as the storage medium.
@@ -79,17 +80,7 @@ class Session extends \yii\web\Session
      */
     public function init()
     {
-        if (is_string($this->redis)) {
-            $this->redis = Yii::$app->get($this->redis);
-        } elseif (is_array($this->redis)) {
-            if (!isset($this->redis['class'])) {
-                $this->redis['class'] = Connection::className();
-            }
-            $this->redis = Yii::createObject($this->redis);
-        }
-        if (!$this->redis instanceof Connection) {
-            throw new InvalidConfigException("Session::redis must be either a Redis connection instance or the application component ID of a Redis connection.");
-        }
+        $this->redis = Instance::ensure($this->redis, Connection::className());
         if ($this->keyPrefix === null) {
             $this->keyPrefix = substr(md5(Yii::$app->id), 0, 5);
         }
