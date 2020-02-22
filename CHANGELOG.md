@@ -4,7 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.12 under development
 ------------------------
 
-- no changes in this release.
+- Enh #195: Use `Instance::ensure()` to initialize `Session::$redis` (rob006)
 
 
 2.0.11 November 05, 2019
