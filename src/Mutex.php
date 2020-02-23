@@ -137,17 +137,20 @@ else
     return 0
 end
 LUA;
-        if (!isset($this->_lockValues[$name]) || !$this->redis->executeCommand('EVAL', [
+        if (
+            !isset($this->_lockValues[$name])
+            || !$this->redis->executeCommand('EVAL', [
                 $releaseLuaScript,
                 1,
                 $this->calculateKey($name),
-                $this->_lockValues[$name]
-            ])) {
+                $this->_lockValues[$name],
+            ])
+        ) {
             return false;
-        } else {
-            unset($this->_lockValues[$name]);
-            return true;
         }
+
+        unset($this->_lockValues[$name]);
+        return true;
     }
 
     /**

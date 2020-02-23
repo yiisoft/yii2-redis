@@ -586,7 +586,7 @@ class Connection extends Component
             $this->connectionString,
             $errorNumber,
             $errorDescription,
-            $this->connectionTimeout ? $this->connectionTimeout : ini_get('default_socket_timeout'),
+            $this->connectionTimeout ?: ini_get('default_socket_timeout'),
             $this->socketClientFlags
         );
 
@@ -673,9 +673,9 @@ class Connection extends Component
         $redisCommand = strtoupper(Inflector::camel2words($name, false));
         if (in_array($redisCommand, $this->redisCommands)) {
             return $this->executeCommand($redisCommand, $params);
-        } else {
-            return parent::__call($name, $params);
         }
+
+        return parent::__call($name, $params);
     }
 
     /**
@@ -782,9 +782,9 @@ class Connection extends Component
             case '+': // Status reply
                 if ($line === 'OK' || $line === 'PONG') {
                     return true;
-                } else {
-                    return $line;
                 }
+
+                return $line;
             case '-': // Error reply
 
                 if ($this->isRedirect($line)) {

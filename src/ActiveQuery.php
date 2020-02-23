@@ -231,9 +231,9 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             }
 
             return $db->executeCommand('LLEN', [$modelClass::keyPrefix()]);
-        } else {
-            return $this->executeScript($db, 'Count');
         }
+
+        return $this->executeScript($db, 'Count');
     }
 
     /**
@@ -349,9 +349,9 @@ class ActiveQuery extends Component implements ActiveQueryInterface
         $record = $this->one($db);
         if ($record !== null) {
             return $record->hasAttribute($attribute) ? $record->$attribute : null;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
     /**
@@ -397,10 +397,13 @@ class ActiveQuery extends Component implements ActiveQueryInterface
         }
 
         // find by primary key if possible. This is much faster than scanning all records
-        if (is_array($this->where) && (
-                !isset($this->where[0]) && $modelClass::isPrimaryKey(array_keys($this->where)) ||
-                isset($this->where[0]) && $this->where[0] === 'in' && $modelClass::isPrimaryKey((array) $this->where[1])
-            )) {
+        if (
+            is_array($this->where)
+            && (
+                (!isset($this->where[0]) && $modelClass::isPrimaryKey(array_keys($this->where)))
+                || (isset($this->where[0]) && $this->where[0] === 'in' && $modelClass::isPrimaryKey((array) $this->where[1]))
+            )
+        ) {
             return $this->findByPk($db, $type, $columnName);
         }
 

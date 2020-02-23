@@ -2,7 +2,6 @@
 
 namespace yiiunit\extensions\redis;
 
-use yii\base\InvalidConfigException;
 use yii\redis\Cache;
 use yii\redis\Connection;
 use yiiunit\framework\caching\CacheTestCase;

@@ -229,11 +229,11 @@ class Cache extends \yii\caching\Cache
     {
         if ($expire == 0) {
             return (bool) $this->redis->executeCommand('SET', [$key, $value]);
-        } else {
-            $expire = (int) ($expire * 1000);
-
-            return (bool) $this->redis->executeCommand('SET', [$key, $value, 'PX', $expire]);
         }
+
+        $expire = (int) ($expire * 1000);
+
+        return (bool) $this->redis->executeCommand('SET', [$key, $value, 'PX', $expire]);
     }
 
     /**
@@ -314,11 +314,11 @@ class Cache extends \yii\caching\Cache
     {
         if ($expire == 0) {
             return (bool) $this->redis->executeCommand('SET', [$key, $value, 'NX']);
-        } else {
-            $expire = (int) ($expire * 1000);
-
-            return (bool) $this->redis->executeCommand('SET', [$key, $value, 'PX', $expire, 'NX']);
         }
+
+        $expire = (int) ($expire * 1000);
+
+        return (bool) $this->redis->executeCommand('SET', [$key, $value, 'PX', $expire, 'NX']);
     }
 
     /**
