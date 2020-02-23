@@ -2,7 +2,6 @@
 
 namespace yiiunit\extensions\redis;
 
-use yii\base\InvalidConfigException;
 use yii\redis\Cache;
 use yii\redis\Connection;
 use yiiunit\framework\caching\CacheTestCase;
@@ -42,7 +41,7 @@ class RedisCacheTest extends CacheTestCase
 
     protected function resetCacheInstance()
     {
-        $this->getCacheInstance()->flush();
+        $this->getCacheInstance()->redis->flushdb();
         $this->_cacheInstance = null;
     }
 
@@ -183,5 +182,25 @@ class RedisCacheTest extends CacheTestCase
         $this->assertSame($cache->get($key), $value);
 
         $this->resetCacheInstance();
+    }
+
+    public function testFlushWithSharedDatabase()
+    {
+        $instance = $this->getCacheInstance();
+        $instance->shareDatabase = true;
+        $instance->keyPrefix = 'myprefix_';
+        $instance->redis->set('testkey', 'testvalue');
+
+        for ($i = 0; $i < 1000; $i++) {
+            $instance->set(sha1($i), uniqid('', true));
+        }
+        $keys = $instance->redis->keys('*');
+        $this->assertCount(1001, $keys);
+
+        $instance->flush();
+
+        $keys = $instance->redis->keys('*');
+        $this->assertCount(1, $keys);
+        $this->assertSame(['testkey'], $keys);
     }
 }
