@@ -142,10 +142,10 @@ class Cache extends \yii\caching\Cache
     public $forceClusterMode;
     /**
      * @var bool whether redis [[Connection::$database|database]] is shared and can contain other data than cache.
-     * Setting this to `true` will change [[flush()]] behavior - instead of using `FLUSHDB` command, component will
-     * iterate through all keys in database and remove only these with matching [[$keyPrefix]]. Note that this is no
-     * longer atomic operation and it is much less efficient than `FLUSHDB` command. It is recommended to use separate
-     * database for cache and leave this value as `false`.
+     * Setting this to `true` will change [[flush()]] behavior - instead of using [`FLUSHDB`](https://redis.io/commands/flushdb)
+     * command, component will iterate through all keys in database and remove only these with matching [[$keyPrefix]].
+     * Note that this will no longer be an atomic operation and it is much less efficient than `FLUSHDB` command. It is
+     * recommended to use separate database for cache and leave this value as `false`.
      */
     public $shareDatabase = false;
 
