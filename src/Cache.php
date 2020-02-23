@@ -146,6 +146,7 @@ class Cache extends \yii\caching\Cache
      * command, component will iterate through all keys in database and remove only these with matching [[$keyPrefix]].
      * Note that this will no longer be an atomic operation and it is much less efficient than `FLUSHDB` command. It is
      * recommended to use separate database for cache and leave this value as `false`.
+     * @since 2.0.12
      */
     public $shareDatabase = false;
 
