@@ -16,7 +16,7 @@ use yii\helpers\StringHelper;
 /**
  * ActiveRecord is the base class for classes representing relational data in terms of objects.
  *
- * This class implements the ActiveRecord pattern for the [redis](http://redis.io/) key-value store.
+ * This class implements the ActiveRecord pattern for the [redis](https://redis.io/) key-value store.
  *
  * For defining a record a subclass should at least implement the [[attributes()]] method to define
  * attributes. A primary key can be defined via [[primaryKey()]] which defaults to `id` if not specified.

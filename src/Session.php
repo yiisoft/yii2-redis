@@ -12,7 +12,7 @@ use yii\base\InvalidConfigException;
 use yii\di\Instance;
 
 /**
- * Redis Session implements a session component using [redis](http://redis.io/) as the storage medium.
+ * Redis Session implements a session component using [redis](https://redis.io/) as the storage medium.
  *
  * Redis Session requires redis version 2.6.12 or higher to work properly.
  *

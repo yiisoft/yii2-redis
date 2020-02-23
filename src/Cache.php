@@ -12,7 +12,7 @@ use yii\db\Exception;
 use yii\di\Instance;
 
 /**
- * Redis Cache implements a cache application component based on [redis](http://redis.io/) key-value store.
+ * Redis Cache implements a cache application component based on [redis](https://redis.io/) key-value store.
  *
  * Redis Cache requires redis version 2.6.12 or higher to work properly.
  *

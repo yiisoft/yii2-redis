@@ -13,7 +13,7 @@ use yii\di\Instance;
 use yii\mutex\RetryAcquireTrait;
 
 /**
- * Redis Mutex implements a mutex component using [redis](http://redis.io/) as the storage medium.
+ * Redis Mutex implements a mutex component using [redis](https://redis.io/) as the storage medium.
  *
  * Redis Mutex requires redis version 2.6.12 or higher to work properly.
  *
@@ -51,7 +51,7 @@ use yii\mutex\RetryAcquireTrait;
  * ```
  *
  * @see \yii\mutex\Mutex
- * @see http://redis.io/topics/distlock
+ * @see https://redis.io/topics/distlock
  *
  * @author Sergey Makinen <sergey@makinen.ru>
  * @author Alexander Zhuravlev <axelhex@gmail.com>
