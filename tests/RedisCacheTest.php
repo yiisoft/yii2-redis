@@ -2,7 +2,6 @@
 
 namespace yiiunit\extensions\redis;
 
-use yii\base\InvalidConfigException;
 use yii\redis\Cache;
 use yii\redis\Connection;
 use yiiunit\framework\caching\CacheTestCase;
@@ -76,7 +75,7 @@ class RedisCacheTest extends CacheTestCase
     {
         $cache = $this->getCacheInstance();
 
-        $data = str_repeat('XX', 8192); // http://www.php.net/manual/en/function.fread.php
+        $data = str_repeat('XX', 8192); // https://www.php.net/manual/en/function.fread.php
         $key = 'bigdata1';
 
         $this->assertFalse($cache->get($key));
@@ -84,7 +83,7 @@ class RedisCacheTest extends CacheTestCase
         $this->assertSame($cache->get($key), $data);
 
         // try with multibyte string
-        $data = str_repeat('ЖЫ', 8192); // http://www.php.net/manual/en/function.fread.php
+        $data = str_repeat('ЖЫ', 8192); // https://www.php.net/manual/en/function.fread.php
         $key = 'bigdata2';
 
         $this->assertFalse($cache->get($key));

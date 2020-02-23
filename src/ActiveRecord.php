@@ -16,7 +16,7 @@ use yii\helpers\StringHelper;
 /**
  * ActiveRecord is the base class for classes representing relational data in terms of objects.
  *
- * This class implements the ActiveRecord pattern for the [redis](http://redis.io/) key-value store.
+ * This class implements the ActiveRecord pattern for the [redis](https://redis.io/) key-value store.
  *
  * For defining a record a subclass should at least implement the [[attributes()]] method to define
  * attributes. A primary key can be defined via [[primaryKey()]] which defaults to `id` if not specified.
@@ -107,7 +107,7 @@ class ActiveRecord extends BaseActiveRecord
         $db = static::getDb();
         $values = $this->getDirtyAttributes($attributes);
         $pk = [];
-        foreach ($this->primaryKey() as $key) {
+        foreach (static::primaryKey() as $key) {
             $pk[$key] = $values[$key] = $this->getAttribute($key);
             if ($pk[$key] === null) {
                 // use auto increment if pk is null
@@ -316,9 +316,13 @@ class ActiveRecord extends BaseActiveRecord
     {
         if (is_numeric($key)) {
             return $key;
-        } elseif (is_string($key)) {
+        }
+
+        if (is_string($key)) {
             return ctype_alnum($key) && StringHelper::byteLength($key) <= 32 ? $key : md5($key);
-        } elseif (is_array($key)) {
+        }
+
+        if (is_array($key)) {
             if (count($key) == 1) {
                 return self::buildKey(reset($key));
             }

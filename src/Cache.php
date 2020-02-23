@@ -12,7 +12,7 @@ use yii\db\Exception;
 use yii\di\Instance;
 
 /**
- * Redis Cache implements a cache application component based on [redis](http://redis.io/) key-value store.
+ * Redis Cache implements a cache application component based on [redis](https://redis.io/) key-value store.
  *
  * Redis Cache requires redis version 2.6.12 or higher to work properly.
  *
@@ -229,11 +229,11 @@ class Cache extends \yii\caching\Cache
     {
         if ($expire == 0) {
             return (bool) $this->redis->executeCommand('SET', [$key, $value]);
-        } else {
-            $expire = (int) ($expire * 1000);
-
-            return (bool) $this->redis->executeCommand('SET', [$key, $value, 'PX', $expire]);
         }
+
+        $expire = (int) ($expire * 1000);
+
+        return (bool) $this->redis->executeCommand('SET', [$key, $value, 'PX', $expire]);
     }
 
     /**
@@ -314,11 +314,11 @@ class Cache extends \yii\caching\Cache
     {
         if ($expire == 0) {
             return (bool) $this->redis->executeCommand('SET', [$key, $value, 'NX']);
-        } else {
-            $expire = (int) ($expire * 1000);
-
-            return (bool) $this->redis->executeCommand('SET', [$key, $value, 'PX', $expire, 'NX']);
         }
+
+        $expire = (int) ($expire * 1000);
+
+        return (bool) $this->redis->executeCommand('SET', [$key, $value, 'PX', $expire, 'NX']);
     }
 
     /**
