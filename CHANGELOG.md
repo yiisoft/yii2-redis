@@ -5,6 +5,7 @@ Yii Framework 2 redis extension Change Log
 ------------------------
 
 - Enh #195: Use `Instance::ensure()` to initialize `Session::$redis` (rob006)
+- Enh #199: Increase frequency of lock tries when `$timeout` is used in `Mutex::acquire()` (rob006)
 
 
 2.0.11 November 05, 2019
