@@ -351,7 +351,9 @@ class Cache extends \yii\caching\Cache
             do {
                 list($cursor, $keys) = $this->redis->scan($cursor, 'MATCH', $this->keyPrefix . '*');
                 $cursor = (int) $cursor;
-                $this->redis->executeCommand('DEL', $keys);
+                if (!empty($keys)) {
+                    $this->redis->executeCommand('DEL', $keys);
+                }
             } while ($cursor !== 0);
 
             return true;
