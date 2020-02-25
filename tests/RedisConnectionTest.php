@@ -264,7 +264,7 @@ class ConnectionTest extends TestCase
                 $rows = $redis->zrangebyscore($set, $min, $max, $withScores, $limit, $offset, $count);
             } elseif ($withScores !== null) {
                 $rows = $redis->zrangebyscore($set, $min, $max, $withScores);
-            } elseif($limit !== null) {
+            } elseif ($limit !== null) {
                 $rows = $redis->zrangebyscore($set, $min, $max, $limit, $offset, $count);
             } else {
                 $rows = $redis->zrangebyscore($set, $min, $max);
