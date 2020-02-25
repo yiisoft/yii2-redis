@@ -276,4 +276,44 @@ class ConnectionTest extends TestCase
             }
         }
     }
+    
+    /**
+     * @return array
+     */
+    public function hmSetData()
+    {
+        return [
+            [
+                ['hmset1', 'one', '1', 'two', '2', 'three', '3'],
+                [
+                    'one' => '1',
+                    'two' => '2',
+                    'three' => '3'
+                ],
+            ],
+            [
+                ['hmset2', 'one', null, 'two', '2', 'three', '3'],
+                [
+                    'one' => '',
+                    'two' => '2',
+                    'three' => '3'
+                ],
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider hmSetData
+     * @param array $cases
+     */
+    public function testHMSet($params, $pairs)
+    {
+        $redis = $this->getConnection();
+        $set = $params[0];
+        call_user_func_array([$redis,'hmset'], $params);
+        foreach($pairs as $field => $expected) {
+            $actual = $redis->hget($set, $field);
+            $this->assertEquals($expected, $actual);
+        }
+    }
 }
