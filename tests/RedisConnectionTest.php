@@ -246,8 +246,8 @@ class ConnectionTest extends TestCase
 
     /**
      * @dataProvider zRangeByScoreData
-     * @param $members
-     * @param $cases
+     * @param array $members
+     * @param array $cases
      */
     public function testZRangeByScore($members, $cases)
     {
@@ -276,7 +276,7 @@ class ConnectionTest extends TestCase
             }
         }
     }
-    
+
     /**
      * @return array
      */
@@ -304,7 +304,8 @@ class ConnectionTest extends TestCase
 
     /**
      * @dataProvider hmSetData
-     * @param array $cases
+     * @param array $params
+     * @param array $pairs
      */
     public function testHMSet($params, $pairs)
     {
