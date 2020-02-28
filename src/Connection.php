@@ -523,7 +523,7 @@ class Connection extends Component
     /**
      * @var array redis redirect socket connection pool
      */
-    private $_pool = [];
+    protected $_pool = [];
 
 
     /**
