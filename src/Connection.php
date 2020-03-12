@@ -566,7 +566,7 @@ class Connection extends Component
      */
     public function getIsActive()
     {
-        return ArrayHelper::getValue($this->_pool, "$this->hostname:$this->port") !== false;
+        return ArrayHelper::getValue($this->_pool, "$this->hostname:$this->port", false) !== false;
     }
 
     /**
