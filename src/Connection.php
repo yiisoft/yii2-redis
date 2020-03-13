@@ -209,7 +209,7 @@ use yii\helpers\VarDumper;
  * @method mixed zrange($key, $start, $stop, $WITHSCORES = null) Return a range of members in a sorted set, by index. <https://redis.io/commands/zrange>
  * @method mixed zrangebylex($key, $min, $max, $LIMIT = null, $offset = null, $count = null) Return a range of members in a sorted set, by lexicographical range. <https://redis.io/commands/zrangebylex>
  * @method mixed zrevrangebylex($key, $max, $min, $LIMIT = null, $offset = null, $count = null) Return a range of members in a sorted set, by lexicographical range, ordered from higher to lower strings.. <https://redis.io/commands/zrevrangebylex>
- * @method mixed zrangebyscore($key, $min, $max, $WITHSCORES = null, $LIMIT = null, $offset = null, $count = null) Return a range of members in a sorted set, by score. <https://redis.io/commands/zrangebyscore>
+ * @method mixed zrangebyscore($key, $min, $max, ...$options) Return a range of members in a sorted set, by score. <https://redis.io/commands/zrangebyscore>
  * @method mixed zrank($key, $member) Determine the index of a member in a sorted set. <https://redis.io/commands/zrank>
  * @method mixed zrem($key, ...$members) Remove one or more members from a sorted set. <https://redis.io/commands/zrem>
  * @method mixed zremrangebylex($key, $min, $max) Remove all members in a sorted set between the given lexicographical range. <https://redis.io/commands/zremrangebylex>
@@ -718,17 +718,10 @@ class Connection extends Component
         $this->open();
 
         $params = array_merge(explode(' ', $name), $params);
-        $command = '';
-        $paramsCount = 0;
+        $command = '*' . count($params) . "\r\n";
         foreach ($params as $arg) {
-            if ($arg === null) {
-                continue;
-            }
-
-            $paramsCount++;
             $command .= '$' . mb_strlen($arg, '8bit') . "\r\n" . $arg . "\r\n";
         }
-        $command = '*' . $paramsCount . "\r\n" . $command;
 
         \Yii::trace("Executing Redis Command: {$name}", __METHOD__);
         if ($this->retries > 0) {

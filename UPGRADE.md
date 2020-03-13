@@ -32,3 +32,18 @@ If you're using redis in cluster mode and want to use `MGET` and `MSET` effectiv
 You might also want to force cluster mode for every request by setting `'forceClusterMode' => true` in your Redis component config. Otherwise an implicit check that executes Redis command `'CLUSTER INFO'` will be made on each request.
 
 If you do not intend on using Redis in cluster mode, it is advisable to set `'forceClusterMode' => false` to avoid additional overhead and possible troubles when extending `yii\redis\Connection::executeCommand`, because executing `'CLUSTER INFO'` will return an error on a single-node Redis.
+
+Upgrade from 2.0.11
+-------------------
+`zrangebyscore` was changed to:
+
+```php
+zrangebyscore($key, $min, $max, ...$options)
+```
+
+Usage:
+
+- `zrangebyscore($key, $min, $max)`
+- `zrangebyscore($key, $min, $max, 'WITHSCORES')`
+- `zrangebyscore($key, $min, $max, 'LIMIT', $offset, $count)`
+- `zrangebyscore($key, $min, $max, 'WITHSCORES', 'LIMIT', $offset, $count)`

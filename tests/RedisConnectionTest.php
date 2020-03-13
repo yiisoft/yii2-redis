@@ -246,8 +246,8 @@ class ConnectionTest extends TestCase
 
     /**
      * @dataProvider zRangeByScoreData
-     * @param $members
-     * @param $cases
+     * @param array $members
+     * @param array $cases
      */
     public function testZRangeByScore($members, $cases)
     {
@@ -260,12 +260,61 @@ class ConnectionTest extends TestCase
 
         foreach ($cases as $case) {
             list($min, $max, $withScores, $limit, $offset, $count, $expectedRows) = $case;
-            $rows = $redis->zrangebyscore($set, $min, $max, $withScores, $limit, $offset, $count);
+            if ($withScores !== null && $limit !== null) {
+                $rows = $redis->zrangebyscore($set, $min, $max, $withScores, $limit, $offset, $count);
+            } elseif ($withScores !== null) {
+                $rows = $redis->zrangebyscore($set, $min, $max, $withScores);
+            } elseif ($limit !== null) {
+                $rows = $redis->zrangebyscore($set, $min, $max, $limit, $offset, $count);
+            } else {
+                $rows = $redis->zrangebyscore($set, $min, $max);
+            }
             $this->assertTrue(is_array($rows));
             $this->assertEquals(count($expectedRows), count($rows));
             for ($i = 0; $i < count($expectedRows); $i++) {
                 $this->assertEquals($expectedRows[$i], $rows[$i]);
             }
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function hmSetData()
+    {
+        return [
+            [
+                ['hmset1', 'one', '1', 'two', '2', 'three', '3'],
+                [
+                    'one' => '1',
+                    'two' => '2',
+                    'three' => '3'
+                ],
+            ],
+            [
+                ['hmset2', 'one', null, 'two', '2', 'three', '3'],
+                [
+                    'one' => '',
+                    'two' => '2',
+                    'three' => '3'
+                ],
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider hmSetData
+     * @param array $params
+     * @param array $pairs
+     */
+    public function testHMSet($params, $pairs)
+    {
+        $redis = $this->getConnection();
+        $set = $params[0];
+        call_user_func_array([$redis,'hmset'], $params);
+        foreach($pairs as $field => $expected) {
+            $actual = $redis->hget($set, $field);
+            $this->assertEquals($expected, $actual);
         }
     }
 }
