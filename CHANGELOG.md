@@ -1,6 +1,12 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
+2.0.13 under development
+------------------------
+
+- no changes in this release.
+
+
 2.0.12 March 13, 2020
 ---------------------
 
