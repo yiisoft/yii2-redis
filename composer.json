@@ -18,7 +18,8 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "~2.0.16"
+        "yiisoft/yii2": "~2.0.16",
+        "ext-openssl": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "<7",
