@@ -5,10 +5,11 @@ Yii Framework 2 redis extension Change Log
 ------------------------
 
 - Bug #182: Better handle `cache/flush-all` command when cache component is using shared database (rob006)
+- Bug #191: getIsActive() returns true when socket is not connected (mdx86)
 - Enh #195: Use `Instance::ensure()` to initialize `Session::$redis` (rob006)
 - Enh #199: Increase frequency of lock tries when `$timeout` is used in `Mutex::acquire()` (rob006)
 - Bug #190: Accept null values (razonyang)
-
+- Enh #174: Add ability to set up SSL connection (kulavvy)
 
 2.0.11 November 05, 2019
 ------------------------

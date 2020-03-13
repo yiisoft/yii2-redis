@@ -62,3 +62,19 @@ return [
     ]
 ];
 ```
+
+**SSL configuration** example:
+```php
+return [
+    //....
+    'components' => [
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => 'localhost',
+            'port' => 6380,
+            'database' => 0,
+            'useSSL' => true,
+        ],
+    ],
+];
+```
