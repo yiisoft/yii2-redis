@@ -3,8 +3,8 @@ Yii Framework 2 redis extension Change Log
 
 2.0.13 under development
 ------------------------
-- Redis 5.0 stream commands added. Read more at [streams intro](https://redis.io/topics/streams-intro).
-- no changes in this release.
+
+- Enh #210: Add Redis 5.0 stream commands. Read more at [streams intro](https://redis.io/topics/streams-intro) (sartor)
 
 
 2.0.12 March 13, 2020
