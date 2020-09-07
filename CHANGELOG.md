@@ -4,7 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.1.0 under development
 ------------------------
 
-- Enh #: Added support for the 'session.use_strict_mode' ini directive in `yii\web\Session` (rhertogh)
+- Enh #212: Added support for the 'session.use_strict_mode' ini directive in `yii\web\Session` (rhertogh)
 
 
 2.0.13 May 02, 2020
