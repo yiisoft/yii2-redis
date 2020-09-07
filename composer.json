@@ -18,7 +18,7 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "~2.0.16",
+        "yiisoft/yii2": "~2.0.38",
         "ext-openssl": "*"
     },
     "require-dev": {
