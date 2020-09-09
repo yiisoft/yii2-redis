@@ -6,7 +6,7 @@ name: build
 
 jobs:
   tests:
-    name: PHP ${{ matrix.php }}-redis-${{ matrix.redis }}
+    name: PHP ${{ matrix.php }}-redis-4
 
     env:
       extensions: curl, intl, redis
@@ -29,12 +29,9 @@ jobs:
           - "7.3"
           - "7.4"
 
-        redis:
-          - "4"
-
     services:
       redis:
-        image: redis:${{ matrix.redis }}
+        image: redis:4
         ports:
           - 6379:6379
         options:
