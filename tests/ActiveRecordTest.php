@@ -654,4 +654,55 @@ class ActiveRecordTest extends TestCase
         $items = $itemClass::find()->where(['<=', 'name', 'Carts'])->all();
         $this->assertCount(2, $items);
     }
+
+    public function testFind()
+    {
+        /* @var $customerClass \yii\db\ActiveRecordInterface */
+        $customerClass = $this->getCustomerClass();
+        /* @var $this TestCase|ActiveRecordTestTrait */
+        // find one
+        $result = $customerClass::find();
+        $this->assertInstanceOf('\\yii\\db\\ActiveQueryInterface', $result);
+        $customer = $result->one();
+        $this->assertInstanceOf($customerClass, $customer);
+
+        // find all
+        $customers = $customerClass::find()->all();
+        $this->assertCount(3, $customers);
+        $this->assertInstanceOf($customerClass, $customers[0]);
+        $this->assertInstanceOf($customerClass, $customers[1]);
+        $this->assertInstanceOf($customerClass, $customers[2]);
+
+        // find by a single primary key
+        $customer = $customerClass::findOne(2);
+        $this->assertInstanceOf($customerClass, $customer);
+        $this->assertEquals('user2', $customer->name);
+        $customer = $customerClass::findOne(5);
+        $this->assertNull($customer);
+        $customer = $customerClass::findOne(['id' => [5, 6, 1]]);
+        $this->assertInstanceOf($customerClass, $customer);
+        $customer = $customerClass::find()->where(['id' => [5, 6, 1]])->one();
+        $this->assertNotNull($customer);
+
+        // find by column values
+        $customer = $customerClass::findOne(['id' => 2, 'name' => 'user2']);
+        $this->assertInstanceOf($customerClass, $customer);
+        $this->assertEquals('user2', $customer->name);
+        $customer = $customerClass::findOne(['id' => 2, 'name' => 'user1']);
+        $this->assertNull($customer);
+        $customer = $customerClass::findOne(['id' => 5]);
+        $this->assertNull($customer);
+        $customer = $customerClass::findOne(['name' => 'user5']);
+        $this->assertNull($customer);
+
+        // find by attributes
+        $customer = $customerClass::find()->where(['name' => 'user2'])->one();
+        $this->assertInstanceOf($customerClass, $customer);
+        $this->assertEquals(2, $customer->id);
+
+        // scope
+        $this->assertCount(2, $customerClass::find()->active()->all());
+        $this->assertEquals(2, $customerClass::find()->active()->count());
+    }
+
 }
