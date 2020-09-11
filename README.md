@@ -16,7 +16,7 @@ Documentation is at [docs/guide/README.md](docs/guide/README.md).
 
 [![Latest Stable Version](https://poser.pugx.org/yiisoft/yii2-redis/v/stable.png)](https://packagist.org/packages/yiisoft/yii2-redis)
 [![Total Downloads](https://poser.pugx.org/yiisoft/yii2-redis/downloads.png)](https://packagist.org/packages/yiisoft/yii2-redis)
-[![Build Status](https://travis-ci.com/yiisoft/yii2-redis.svg?branch=master)](https://travis-ci.com/yiisoft/yii2-redis)
+[![Build status](https://github.com/yiisoft/yii2-redis/workflows/build/badge.svg)](https://github.com/yiisoft/yii2-redis/actions?query=workflow%3Abuild)
 
 
 Requirements
