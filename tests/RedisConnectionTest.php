@@ -152,7 +152,7 @@ class ConnectionTest extends TestCase
         $db->configSet('timeout', 1);
         $db->on(Connection::EVENT_AFTER_OPEN, function() {
             // sleep 2 seconds after connect to make every command time out
-            sleep(4);
+            sleep(2);
         });
         $this->assertCount(3, $logger->messages, 'log of connection and init commands.');
 
