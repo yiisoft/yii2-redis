@@ -607,7 +607,7 @@ class Connection extends Component
      */
     public function open()
     {
-        if ($this->socket !== false) {
+        if ($this->getSocket() !== false) {
             return;
         }
 
@@ -741,6 +741,9 @@ class Connection extends Component
      */
     public function executeCommand($name, $params = [])
     {
+        var_dump($name);
+        var_dump($params);
+
         $this->open();
 
         $params = array_merge(explode(' ', $name), $params);
@@ -778,7 +781,7 @@ class Connection extends Component
      */
     private function sendCommandInternal($command, $params)
     {
-        $written = @fwrite($this->socket, $command);
+        $written = @fwrite($this->getSocket(), $command);
         if ($written === false) {
             throw new SocketException("Failed to write to socket.\nRedis command was: " . $command);
         }
@@ -800,7 +803,7 @@ class Connection extends Component
     {
         $prettyCommand = implode(' ', $params);
 
-        if (($line = fgets($this->socket)) === false) {
+        if (($line = fgets($this->getSocket())) === false) {
             throw new SocketException("Failed to read from socket.\nRedis command was: " . $prettyCommand);
         }
         $type = $line[0];
@@ -829,7 +832,7 @@ class Connection extends Component
                 $length = (int)$line + 2;
                 $data = '';
                 while ($length > 0) {
-                    if (($block = fread($this->socket, $length)) === false) {
+                    if (($block = fread($this->getSocket(), $length)) === false) {
                         throw new SocketException("Failed to read from socket.\nRedis command was: " . $prettyCommand);
                     }
                     $data .= $block;
