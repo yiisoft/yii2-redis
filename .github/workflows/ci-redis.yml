@@ -26,17 +26,14 @@ jobs:
           - "5"
           - "6"
 
-    services:
-      redis:
-        image: redis:${{ matrix.redis }}
-        ports:
-          - 6379:6379
-        options:
-          --health-cmd "redis-cli ping"
-
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Start Redis v${{ matrix.redis }}
+        uses: superchargejs/redis-github-action@1.1.0
+        with:
+          redis-version: ${{ matrix.redis }}
 
       - name: Setup cache environment
         id: cache
