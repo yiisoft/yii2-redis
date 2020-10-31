@@ -4,6 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.1.0 under development
 ------------------------
 
+- Bug #215: Fix `Connection::isActive()` returns `false` when the connection is active (cornernote)
 - Enh #212: Added support for the 'session.use_strict_mode' ini directive in `yii\web\Session` (rhertogh)
 
 
