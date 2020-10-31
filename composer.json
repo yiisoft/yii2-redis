@@ -17,6 +17,7 @@
             "email": "mail@cebe.cc"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "yiisoft/yii2": "~2.0.38",
         "ext-openssl": "*"
