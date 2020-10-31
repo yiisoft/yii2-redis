@@ -24,6 +24,7 @@ class RedisSessionTest extends TestCase
 
     /**
      * Test set name. Also check set name twice and after open
+     * @runInSeparateProcess
      */
     public function testSetName()
     {
@@ -40,6 +41,10 @@ class RedisSessionTest extends TestCase
         $session->destroy();
     }
 
+    /**
+     * @depends testReadWrite
+     * @runInSeparateProcess
+     */
     public function testStrictMode()
     {
         //non-strict-mode test
