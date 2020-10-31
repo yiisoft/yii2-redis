@@ -4,7 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.14 under development
 ------------------------
 
-- no changes in this release.
+- Bug #215: Fix `Connection::isActive()` returns `false` when the connection is active (cornernote)
 
 
 2.0.13 May 02, 2020
