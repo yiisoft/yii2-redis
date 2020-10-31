@@ -98,6 +98,26 @@ class Session extends \yii\web\Session
     }
 
     /**
+     * Session open handler.
+     * @internal Do not call this method directly.
+     * @param string $savePath session save path
+     * @param string $sessionName session name
+     * @return bool whether session is opened successfully
+     */
+    public function openSession($savePath, $sessionName)
+    {
+        if ($this->getUseStrictMode()) {
+            $id = $this->getId();
+            if (!$this->redis->exists($this->calculateKey($id))) {
+                //This session id does not exist, mark it for forced regeneration
+                $this->_forceRegenerateId = $id;
+            }
+        }
+
+        return parent::openSession($savePath, $sessionName);
+    }
+
+    /**
      * Session read handler.
      * Do not call this method directly.
      * @param string $id session ID
@@ -119,6 +139,11 @@ class Session extends \yii\web\Session
      */
     public function writeSession($id, $data)
     {
+        if ($this->getUseStrictMode() && $id === $this->_forceRegenerateId) {
+            //Ignore write when forceRegenerate is active for this id
+            return true;
+        }
+
         return (bool) $this->redis->executeCommand('SET', [$this->calculateKey($id), $data, 'EX', $this->getTimeout()]);
     }
 
