@@ -716,8 +716,6 @@ class Connection extends Component
                 $this->executeCommand('QUIT');
             } catch (SocketException $e) {
                 // ignore errors when quitting a closed connection
-            } catch (RedisException $e){
-                // ignore errors when quitting a closed connection
             }
             if($this->checkExtensionAvailable()){
                 $socket->close();
@@ -808,15 +806,53 @@ class Connection extends Component
     {
         $this->open();
 
+        \Yii::trace("Executing Redis Command: {$name}", __METHOD__);
+
         if ($this->checkExtensionAvailable()) {
-            // socket => redis
-            $response = $this->socket->rawCommand($name, ...$params);
+
+            // multi command conversion
+            $multiCommand = strpos($name, ' ');
+            if (false !== $multiCommand) {
+                array_unshift($params, substr($name, $multiCommand + 1));
+                $name = substr($name, 0, $multiCommand);
+            }
+
+            if ('hmset' === strtolower($name)) {
+                $key = $params[0];
+                $data = [];
+                $len = count($params);
+                for ($i = 1; $i < $len; $i += 2) {
+                    $data[$params[$i]] = $params[$i + 1];
+                }
+                $response =  $this->socket->hMSet($key,$data);
+            } elseif ('type' === strtolower($name)){
+                // socket => redis
+                $response = $this->socket->type( ...$params);
+                return [
+                    \Redis::REDIS_STRING => "string",
+                    \Redis::REDIS_SET => "set",
+                    \Redis::REDIS_LIST => "list",
+                    \Redis::REDIS_ZSET => "zset",
+                    \Redis::REDIS_HASH => "hash",
+                    \Redis::REDIS_NOT_FOUND => "other",
+                ][$response];
+            } else{
+                // socket => redis
+                $response = $this->socket->rawCommand($name, ...$params);
+            }
+
             // get latest error msg
             if ($err = $this->socket->getLastError()) {
                 // clear redis latest error
                 $this->socket->clearLastError();
-                throw new \RedisException($err);
+                throw new SocketException($err);
             }
+
+            // If key didn't exist, Null is returned.
+            if (strtolower($name) === 'get' && $response === false) {
+                $response = null;
+            }
+
             return $response;
         }
 
@@ -826,7 +862,6 @@ class Connection extends Component
             $command .= '$' . mb_strlen($arg, '8bit') . "\r\n" . $arg . "\r\n";
         }
 
-        \Yii::trace("Executing Redis Command: {$name}", __METHOD__);
         if ($this->retries > 0) {
             $tries = $this->retries;
             while ($tries-- > 0) {
