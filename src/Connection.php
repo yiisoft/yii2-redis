@@ -242,7 +242,7 @@ use yii\helpers\VarDumper;
  * @property-read string $driverName Name of the DB driver. This property is read-only.
  * @property-read bool $isActive Whether the DB connection is established. This property is read-only.
  * @property-read LuaScriptBuilder $luaScriptBuilder This property is read-only.
- * @property-read resource|false $socket This property is read-only.
+ * @property-read resource|\Redis|false $socket This property is read-only.
  *
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
@@ -556,6 +556,16 @@ class Connection extends Component
      */
     private $_pool = [];
 
+    /**
+     * @var boolean use pconnect with phpredis extension
+     */
+    public $pconnect = false;
+
+    /**
+     * @var boolean disable phpredis extension
+     */
+    public $disableExtension = false;
+
 
     /**
      * Closes the connection when this component is being serialized.
@@ -613,6 +623,62 @@ class Connection extends Component
 
         $connection = $this->connectionString . ', database=' . $this->database;
         \Yii::trace('Opening redis DB connection: ' . $connection, __METHOD__);
+
+        if($this->checkExtensionAvailable()){
+            $this->openForRedis($connection);
+        }else{
+            $this->openForSocket($connection);
+        }
+
+        if ($this->password !== null) {
+            $this->executeCommand('AUTH', [$this->password]);
+        }
+        if ($this->database !== null) {
+            $this->executeCommand('SELECT', [$this->database]);
+        }
+        $this->initConnection();
+    }
+
+    protected function openForRedis($connection)
+    {
+        $redis = new \Redis();
+        if ($this->pconnect) {
+            $redisConnected = $redis->pconnect(
+                $this->hostname,
+                $this->port,
+                $this->connectionTimeout ?: ini_get('default_socket_timeout'),
+                $connection,
+                $this->retryInterval,
+                (float)$this->dataTimeout
+            );
+            $redis->exec();
+        } else {
+            $redisConnected = $redis->connect(
+                $this->hostname,
+                $this->port,
+                $this->connectionTimeout ?: ini_get('default_socket_timeout'),
+                null,
+                $this->retryInterval,
+                (float)$this->dataTimeout
+            );
+        }
+
+        if ($redisConnected) {
+            $this->_pool[$this->connectionString] = $redis;
+
+//                if ($this->useSSL) {
+//                    stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+//                }
+        } else {
+            $errorDescription = $redis->getLastError();
+            \Yii::error("Failed to open redis DB connection for phpredis ($connection): $errorDescription", __CLASS__);
+            $message = YII_DEBUG ? "Failed to open redis DB connection for phpredis ($connection): $errorDescription" : 'Failed to open DB connection.';
+            throw new Exception($message, $errorDescription);
+        }
+    }
+
+    protected function openForSocket($connection)
+    {
         $socket = @stream_socket_client(
             $this->connectionString,
             $errorNumber,
@@ -630,16 +696,9 @@ class Connection extends Component
             if ($this->useSSL) {
                 stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
             }
-            if ($this->password !== null) {
-                $this->executeCommand('AUTH', [$this->password]);
-            }
-            if ($this->database !== null) {
-                $this->executeCommand('SELECT', [$this->database]);
-            }
-            $this->initConnection();
         } else {
-            \Yii::error("Failed to open redis DB connection ($connection): $errorNumber - $errorDescription", __CLASS__);
-            $message = YII_DEBUG ? "Failed to open redis DB connection ($connection): $errorNumber - $errorDescription" : 'Failed to open DB connection.';
+            \Yii::error("Failed to open redis DB connection for socket ($connection): $errorNumber - $errorDescription", __CLASS__);
+            $message = YII_DEBUG ? "Failed to open redis DB connection for socket ($connection): $errorNumber - $errorDescription" : 'Failed to open DB connection.';
             throw new Exception($message, $errorDescription, $errorNumber);
         }
     }
@@ -657,8 +716,14 @@ class Connection extends Component
                 $this->executeCommand('QUIT');
             } catch (SocketException $e) {
                 // ignore errors when quitting a closed connection
+            } catch (RedisException $e){
+                // ignore errors when quitting a closed connection
             }
-            fclose($socket);
+            if($this->checkExtensionAvailable()){
+                $socket->close();
+            }else{
+                fclose($socket);
+            }
         }
 
         $this->_pool = [];
@@ -737,11 +802,23 @@ class Connection extends Component
      *
      * See [redis protocol description](https://redis.io/topics/protocol)
      * for details on the mentioned reply types.
-     * @throws Exception for commands that return [error reply](https://redis.io/topics/protocol#error-reply).
+     * @throws \Exception for commands that return [error reply](https://redis.io/topics/protocol#error-reply).
      */
     public function executeCommand($name, $params = [])
     {
         $this->open();
+
+        if ($this->checkExtensionAvailable()) {
+            // socket => redis
+            $response = $this->socket->rawCommand($name, ...$params);
+            // get latest error msg
+            if ($err = $this->socket->getLastError()) {
+                // clear redis latest error
+                $this->socket->clearLastError();
+                throw new \RedisException($err);
+            }
+            return $response;
+        }
 
         $params = array_merge(explode(' ', $name), $params);
         $command = '*' . count($params) . "\r\n";
@@ -887,4 +964,14 @@ class Connection extends Component
 
         throw new Exception('No hostname found in redis redirect (MOVED): ' . VarDumper::dumpAsString($redirect));
     }
+
+    /**
+     * check redis extension installed and enable extension and not unix
+     * @return boolean
+     */
+    protected function checkExtensionAvailable()
+    {
+        return !$this->disableExtension && extension_loaded('redis') && !$this->unixSocket;
+    }
+
 }
