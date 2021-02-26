@@ -564,7 +564,7 @@ class Connection extends Component
     /**
      * @var boolean disable phpredis extension
      */
-    public $disableExtension = false;
+    public $disableExtension = true;
 
 
     /**
