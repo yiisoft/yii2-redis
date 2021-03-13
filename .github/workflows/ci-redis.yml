@@ -8,10 +8,6 @@ jobs:
   tests:
     name: PHP ${{ matrix.php }}-redis-${{ matrix.redis }}
 
-    env:
-      extensions: curl, intl, redis
-      key: cache
-
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -35,54 +31,39 @@ jobs:
         with:
           redis-version: ${{ matrix.redis }}
 
-      - name: Setup cache environment
-        id: cache
-        uses: shivammathur/cache-extensions@v1
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: ${{ env.extensions }}
-          key: ${{ env.key }}
-
-      - name: Cache extensions
-        uses: actions/cache@v2.1.1
-        with:
-          path: ${{ steps.cache.outputs.dir }}
-          key: ${{ steps.cache.outputs.key }}
-          restore-keys: ${{ steps.cache.outputs.key }}
-
       - name: Install PHP with extensions
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: ${{ env.extensions }}
+          extensions: curl, intl, redis
           ini-values: date.timezone='UTC'
           coverage: xdebug
           tools: composer:v2, pecl
 
-      - name: Determine composer cache directory on Linux
-        if: matrix.os == 'ubuntu-latest'
-        run: echo "::set-env name=COMPOSER_CACHE_DIR::$(composer config cache-dir)"
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - name: Determine composer cache directory on Windows
-        if: matrix.os == 'windows-latest'
-        run: ECHO "::set-env name=COMPOSER_CACHE_DIR::~\AppData\Local\Composer"
-
-      - name: Cache dependencies installed with composer
-        uses: actions/cache@v2.1.1
+      - name: Cache Composer dependencies
+        uses: actions/cache@v2.1.4
         with:
-          path: ${{ env.COMPOSER_CACHE_DIR }}
-          key: php${{ matrix.php }}-composer-${{ matrix.dependencies }}-${{ hashFiles('**/composer.json') }}
-          restore-keys: |
-            php${{ matrix.php }}-composer-${{ matrix.dependencies }}-
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+          restore-keys: ${{ runner.os }}-composer-
 
-      - name: Install dependencies with composer php 7.4
+      - name: Install dependencies with Composer
         run: composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader
 
-      - name: Run redis tests with phpunit
+      - name: Run Redis 5 tests with PhpUnit
+        if: matrix.redis == '5'
+        run: vendor/bin/phpunit
+
+      - name: Run Redis 6 tests with PhpUnit and coverage
+        if: matrix.redis == '6'
         run: vendor/bin/phpunit --coverage-clover=coverage.clover
 
       - name: Code coverage
-        if: matrix.php == '7.4'
+        if: matrix.redis == '6'
         run: |
           wget https://scrutinizer-ci.com/ocular.phar
           php ocular.phar code-coverage:upload --format=php-clover coverage.clover
