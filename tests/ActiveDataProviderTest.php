@@ -27,17 +27,11 @@ class ActiveDataProviderTest extends TestCase
     public function testQuery()
     {
         $query = Item::find();
-        $provider = new ActiveDataProvider([
-            'connectionClass' => 'yii\redis\Connection',
-            'query' => $query,
-        ]);
+        $provider = new ActiveDataProvider(['query' => $query]);
         $this->assertCount(2, $provider->getModels());
 
         $query = Item::find()->where(['category_id' => 1]);
-        $provider = new ActiveDataProvider([
-            'connectionClass' => 'yii\redis\Connection',
-            'query' => $query,
-        ]);
+        $provider = new ActiveDataProvider(['query' => $query]);
         $this->assertCount(1, $provider->getModels());
     }
 }
