@@ -4,7 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.15 under development
 ------------------------
 
-- no changes in this release.
+- Enh #227: Added support for adjusting PHP context options and parameters. This allows e.g. supporting self-signed certificates.
 
 
 2.0.14 November 10, 2020
