@@ -300,10 +300,10 @@ class Connection extends Component
      */
     public $useSSL = false;
     /**
-     * @var array PHP context options https://www.php.net/manual/en/context.ssl.php which are used in the Redis connection stream.
-     * @since 2.x
+     * @var array PHP context options which are used in the Redis connection stream.
+     * @see https://www.php.net/manual/en/context.ssl.php
+     * @since 2.0.15
      */
-
     public $contextOptions = [];
     /**
      * @var integer Bitmask field which may be set to any combination of connection flags passed to [stream_socket_client()](https://www.php.net/manual/en/function.stream-socket-client.php).
