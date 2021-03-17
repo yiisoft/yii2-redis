@@ -625,9 +625,7 @@ class Connection extends Component
             $errorDescription,
             $this->connectionTimeout ?: ini_get('default_socket_timeout'),
             $this->socketClientFlags,
-            $this->sslContextOptions ?
-                stream_context_create(['ssl' => $this->sslContextOptions])
-                : stream_context_create(),
+            $this->sslContextOptions ? stream_context_create(['ssl' => $this->sslContextOptions]) : stream_context_create()
         );
 
         if ($socket) {
