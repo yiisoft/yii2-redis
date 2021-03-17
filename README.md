@@ -74,28 +74,12 @@ return [
             'port' => 6380,
             'database' => 0,
             'useSSL' => true,
-        ],
-    ],
-];
-```
-
-**SSL configuration with self-signed certificates** NOTE: This has security implications.
-You can use all SSL context options listed here: https://www.php.net/manual/en/context.ssl.php.
-Example:
-```php
-return [
-    //....
-    'components' => [
-        'redis' => [
-            'class' => 'yii\redis\Connection',
-            'hostname' => 'localhost',
-            'port' => 6380,
-            'database' => 0,
-            'useSSL' => true,
-            'sslContextOptions' => [
-                'verify_peer'       => false,
-                'verify_peer_name'  => false,
-                'allow_self_signed' => true,
+            // Use contextOptions for more control over the connection (https://www.php.net/manual/en/context.php), not usually needed
+            'contextOptions' => [
+                'ssl' => [
+                    'local_cert' => '/path/to/local/certificate',
+                    'local_pk' => '/path/to/local/private_key',
+                ],
             ],
         ],
     ],
