@@ -92,11 +92,11 @@ return [
             'port' => 6380,
             'database' => 0,
             'useSSL' => true,
-            'sslContextOptions' => stream_context_create(['ssl' => [
+            'sslContextOptions' => [
                 'verify_peer'       => false,
                 'verify_peer_name'  => false,
                 'allow_self_signed' => true,
-            ]]),
+            ],
         ],
     ],
 ];
