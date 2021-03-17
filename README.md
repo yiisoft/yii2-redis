@@ -78,3 +78,26 @@ return [
     ],
 ];
 ```
+
+**SSL configuration with self-signed certificates** NOTE: This has security implications.
+You can use all SSL context options listed here: https://www.php.net/manual/en/context.ssl.php.
+Example:
+```php
+return [
+    //....
+    'components' => [
+        'redis' => [
+            'class' => 'yii\redis\Connection',
+            'hostname' => 'localhost',
+            'port' => 6380,
+            'database' => 0,
+            'useSSL' => true,
+            'sslContextOptions' => stream_context_create(['ssl' => [
+                'verify_peer'       => false,
+                'verify_peer_name'  => false,
+                'allow_self_signed' => true,
+            ]]),
+        ],
+    ],
+];
+```
