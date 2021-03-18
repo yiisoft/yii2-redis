@@ -300,6 +300,12 @@ class Connection extends Component
      */
     public $useSSL = false;
     /**
+     * @var array PHP context options which are used in the Redis connection stream.
+     * @see https://www.php.net/manual/en/context.ssl.php
+     * @since 2.0.15
+     */
+    public $contextOptions = [];
+    /**
      * @var integer Bitmask field which may be set to any combination of connection flags passed to [stream_socket_client()](https://www.php.net/manual/en/function.stream-socket-client.php).
      * Currently the select of connection flags is limited to `STREAM_CLIENT_CONNECT` (default), `STREAM_CLIENT_ASYNC_CONNECT` and `STREAM_CLIENT_PERSISTENT`.
      *
@@ -618,7 +624,8 @@ class Connection extends Component
             $errorNumber,
             $errorDescription,
             $this->connectionTimeout ?: ini_get('default_socket_timeout'),
-            $this->socketClientFlags
+            $this->socketClientFlags,
+            stream_context_create($this->contextOptions)
         );
 
         if ($socket) {

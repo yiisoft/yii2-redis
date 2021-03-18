@@ -74,6 +74,13 @@ return [
             'port' => 6380,
             'database' => 0,
             'useSSL' => true,
+            // Use contextOptions for more control over the connection (https://www.php.net/manual/en/context.php), not usually needed
+            'contextOptions' => [
+                'ssl' => [
+                    'local_cert' => '/path/to/local/certificate',
+                    'local_pk' => '/path/to/local/private_key',
+                ],
+            ],
         ],
     ],
 ];
