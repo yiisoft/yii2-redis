@@ -158,7 +158,7 @@ class ActiveRecordTest extends TestCase
         $orderItem->setAttributes(['order_id' => 2, 'item_id' => 5, 'quantity' => 1, 'subtotal' => 15.0], false);
         $orderItem->save(false);
         $orderItem = new OrderItemWithNullFK();
-        $orderItem->setAttributes(['order_id' => 2, 'item_id' => 3, 'quantity' => 1, 'subtotal' => 8.0], false);
+        $orderItem->setAttributes(['order_id' => 2, 'item_id' => 5, 'quantity' => 1, 'subtotal' => 8.0], false);
         $orderItem->save(false);
         $orderItem = new OrderItemWithNullFK();
         $orderItem->setAttributes(['order_id' => 3, 'item_id' => 2, 'quantity' => 1, 'subtotal' => 40.0], false);
