@@ -1,8 +1,8 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
-2.0.16 under development
-------------------------
+2.0.16 October 04, 2021
+-----------------------
 
 - Enh #223: Add `Connection::$username` for using username for authentication (samdark, rvkulikov)
 
