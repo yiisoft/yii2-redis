@@ -785,6 +785,8 @@ class Connection extends Component
                         // Fail to run initial commands, skip current trying
                         \Yii::error($exception, __METHOD__);
                         $this->close();
+                    } catch (Exception $exception) {
+                        $this->close();
                     }
 
                     $this->retries = $retries;
