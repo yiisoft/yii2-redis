@@ -1,0 +1,35 @@
+checks:
+    php: true
+
+filter:
+    paths:
+        - "src/*"
+
+build:
+    nodes:
+        analysis:
+            environment:
+                php: 7.4.12
+
+            tests:
+                override:
+                    - php-scrutinizer-run
+
+        tests-and-coverage:
+            environment:
+                php: 7.4.12
+
+            dependencies:
+                override:
+                    - composer self-update
+                    - composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader --ansi
+
+            tests:
+                override:
+                    -
+                        command: "./vendor/bin/phpunit --coverage-clover ./coverage.xml"
+                        on_node: 1
+                        coverage:
+                            file: coverage.xml
+                            format: php-clover
+
