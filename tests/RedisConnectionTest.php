@@ -146,7 +146,8 @@ class ConnectionTest extends TestCase
         Yii::setLogger($logger);
 
         $databases = TestCase::getParam('databases');
-        $db = new ConnectionWithErrorEmulator($databases['redis'] ?? []);
+        $redis = isset($databases['redis']) ? $databases['redis'] : [];
+        $db = new ConnectionWithErrorEmulator($redis);
         $db->retries = 3;
 
         $db->configSet('timeout', 1);
