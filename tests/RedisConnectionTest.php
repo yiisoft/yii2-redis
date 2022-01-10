@@ -281,12 +281,12 @@ class ConnectionTest extends TestCase
         $redis = $this->getConnection();
         $set = 'zrangebyscore';
         foreach ($members as $member) {
-            [$name, $score] = $member;
+            list($name, $score) = $member;
             $this->assertEquals(1, $redis->zadd($set, $score, $name));
         }
 
         foreach ($cases as $case) {
-            [$min, $max, $withScores, $limit, $offset, $count, $expectedRows] = $case;
+            list($min, $max, $withScores, $limit, $offset, $count, $expectedRows) = $case;
             if ($withScores !== null && $limit !== null) {
                 $rows = $redis->zrangebyscore($set, $min, $max, $withScores, $limit, $offset, $count);
             } elseif ($withScores !== null) {
