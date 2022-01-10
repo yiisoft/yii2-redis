@@ -769,7 +769,7 @@ class Connection extends Component
             $tries = $this->retries;
             while ($tries-- > 0) {
                 try {
-                    return $this->sendCommandInternal($command, $params);
+                    return $this->sendRawCommand($command, $params);
                 } catch (SocketException $e) {
                     \Yii::error($e, __METHOD__);
                     // backup retries, fail on commands that fail inside here
@@ -793,14 +793,31 @@ class Connection extends Component
                 }
             }
         }
-        return $this->sendCommandInternal($command, $params);
+        return $this->sendRawCommand($command, $params);
     }
 
     /**
      * Sends RAW command string to the server.
+     *
+     * @param string $command command string
+     * @param array $params list of parameters for the command
+     *
+     * @return array|bool|null|string Dependent on the executed command this method
+     * will return different data types:
+     *
+     * - `true` for commands that return "status reply" with the message `'OK'` or `'PONG'`.
+     * - `string` for commands that return "status reply" that does not have the message `OK` (since version 2.0.1).
+     * - `string` for commands that return "integer reply"
+     *   as the value is in the range of a signed 64 bit integer.
+     * - `string` or `null` for commands that return "bulk reply".
+     * - `array` for commands that return "Multi-bulk replies".
+     *
+     * See [redis protocol description](https://redis.io/topics/protocol)
+     * for details on the mentioned reply types.
+     * @throws Exception for commands that return [error reply](https://redis.io/topics/protocol#error-reply).
      * @throws SocketException on connection error.
      */
-    protected function sendCommandInternal($command, $params)
+    protected function sendRawCommand($command, $params)
     {
         $written = @fwrite($this->socket, $command);
         if ($written === false) {
@@ -902,7 +919,7 @@ class Connection extends Component
 
             $this->open();
 
-            $response = $this->sendCommandInternal($command, $params);
+            $response = $this->sendRawCommand($command, $params);
 
             $this->redirectConnectionString = null;
 

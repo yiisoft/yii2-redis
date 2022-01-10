@@ -1,10 +1,10 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
-2.0.17 under development
+2.0.17 January 10, 2022
 ------------------------
 
-- no changes in this release.
+- Enh #176: Fixed reconnect logic bug (ilyaplot)
 
 
 2.0.16 October 04, 2021
