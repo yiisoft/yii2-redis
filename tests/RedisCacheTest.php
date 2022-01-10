@@ -142,8 +142,13 @@ class RedisCacheTest extends CacheTestCase
         $cache->set($key, $value);
         $this->assertSame($cache->get($key), $value);
 
+        $databases = TestCase::getParam('databases');
+
         $cache->replicas = [
-            ['hostname' => 'localhost'],
+            [
+                'hostname' => $databases['redis']['hostname'] ?? 'localhost',
+                'password' => $databases['redis']['password'] ?? null,
+            ],
         ];
         $this->assertSame($cache->get($key), $value);
 
@@ -152,7 +157,10 @@ class RedisCacheTest extends CacheTestCase
         $cache = $this->getCacheInstance();
         $cache->enableReplicas = true;
         $cache->replicas = [
-            ['hostname' => 'localhost'],
+            [
+                'hostname' => $databases['redis']['hostname'] ?? 'localhost',
+                'password' => $databases['redis']['password'] ?? null,
+            ],
         ];
         $this->assertFalse($cache->get($key));
         $cache->set($key, $value);
@@ -164,8 +172,14 @@ class RedisCacheTest extends CacheTestCase
         $cache->enableReplicas = true;
 
         $cache->replicas = [
-            ['hostname' => 'localhost'],
-            ['hostname' => 'localhost'],
+            [
+                'hostname' => $databases['redis']['hostname'] ?? 'localhost',
+                'password' => $databases['redis']['password'] ?? null,
+            ],
+            [
+                'hostname' => $databases['redis']['hostname'] ?? 'localhost',
+                'password' => $databases['redis']['password'] ?? null,
+            ],
         ];
         $this->assertFalse($cache->get($key));
         $cache->set($key, $value);

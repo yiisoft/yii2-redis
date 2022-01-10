@@ -139,6 +139,46 @@ class ConnectionTest extends TestCase
             . print_r(array_map(function($s) { return (string) $s; }, ArrayHelper::getColumn($logger->messages, 0)), true));
     }
 
+    public function testConnectionTimeoutRetryWithFirstFail()
+    {
+        $logger = new Logger();
+        Yii::setLogger($logger);
+
+        $connectionWithErrorEmulator = new class extends Connection {
+            public $isTemporaryBroken = false;
+
+            protected function sendCommandInternal($command, $params)
+            {
+                // Emulate read from socket error
+                if ($this->isTemporaryBroken) {
+                    // Unset flag for emulate socket error
+                    $this->isTemporaryBroken = false;
+                    throw new SocketException("Failed to read from socket.\nRedis command was: " . $command);
+                }
+                return parent::sendCommandInternal($command, $params);
+            }
+        };
+
+        $databases = TestCase::getParam('databases');
+        $db = new $connectionWithErrorEmulator($databases['redis'] ?? []);
+        $db->retries = 3;
+
+        $db->configSet('timeout', 1);
+        $this->assertCount(3, $logger->messages, 'log of connection and init commands.');
+
+        $this->assertTrue($db->ping());
+        $this->assertCount(4, $logger->messages, 'log +1 ping command.');
+
+        sleep(2);
+
+        // Set flag for emulate socket error
+        $db->isTemporaryBroken = true;
+
+        $this->assertTrue($db->ping());
+        $this->assertCount(10, $logger->messages, 'log +1 ping command, and two reconnections.'
+            . print_r(array_map(function($s) { return (string) $s; }, ArrayHelper::getColumn($logger->messages, 0)), true));
+    }
+
     /**
      * Retry connecting 2 times
      */

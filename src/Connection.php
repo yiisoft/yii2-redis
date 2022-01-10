@@ -779,7 +779,14 @@ class Connection extends Component
                     if ($this->retryInterval > 0) {
                         usleep($this->retryInterval);
                     }
-                    $this->open();
+                    try {
+                        $this->open();
+                    } catch (SocketException $exception) {
+                        // Fail to run initial commands, skip current trying
+                        \Yii::error($exception, __METHOD__);
+                        $this->close();
+                    }
+
                     $this->retries = $retries;
                 }
             }
@@ -791,7 +798,7 @@ class Connection extends Component
      * Sends RAW command string to the server.
      * @throws SocketException on connection error.
      */
-    private function sendCommandInternal($command, $params)
+    protected function sendCommandInternal($command, $params)
     {
         $written = @fwrite($this->socket, $command);
         if ($written === false) {
