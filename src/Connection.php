@@ -782,7 +782,7 @@ class Connection extends Component
                     try {
                         $this->open();
                     } catch (SocketException $exception) {
-                        // Fail to run initial commands, skip current trying
+                        // Fail to run initial commands, skip current try
                         \Yii::error($exception, __METHOD__);
                         $this->close();
                     } catch (Exception $exception) {
