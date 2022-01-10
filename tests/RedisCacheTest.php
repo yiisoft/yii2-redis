@@ -143,11 +143,12 @@ class RedisCacheTest extends CacheTestCase
         $this->assertSame($cache->get($key), $value);
 
         $databases = TestCase::getParam('databases');
+        $redis = isset($databases['redis']) ? $databases['redis'] : null;
 
         $cache->replicas = [
             [
-                'hostname' => $databases['redis']['hostname'] ?? 'localhost',
-                'password' => $databases['redis']['password'] ?? null,
+                'hostname' => isset($redis['hostname']) ? $redis['hostname'] : 'localhost',
+                'password' => isset($redis['password']) ? $redis['password'] : null,
             ],
         ];
         $this->assertSame($cache->get($key), $value);
@@ -158,8 +159,8 @@ class RedisCacheTest extends CacheTestCase
         $cache->enableReplicas = true;
         $cache->replicas = [
             [
-                'hostname' => $databases['redis']['hostname'] ?? 'localhost',
-                'password' => $databases['redis']['password'] ?? null,
+                'hostname' => isset($redis['hostname']) ? $redis['hostname'] : 'localhost',
+                'password' => isset($redis['password']) ? $redis['password'] : null,
             ],
         ];
         $this->assertFalse($cache->get($key));
@@ -173,12 +174,12 @@ class RedisCacheTest extends CacheTestCase
 
         $cache->replicas = [
             [
-                'hostname' => $databases['redis']['hostname'] ?? 'localhost',
-                'password' => $databases['redis']['password'] ?? null,
+                'hostname' => isset($redis['hostname']) ? $redis['hostname'] : 'localhost',
+                'password' => isset($redis['password']) ? $redis['password'] : null,
             ],
             [
-                'hostname' => $databases['redis']['hostname'] ?? 'localhost',
-                'password' => $databases['redis']['password'] ?? null,
+                'hostname' => isset($redis['hostname']) ? $redis['hostname'] : 'localhost',
+                'password' => isset($redis['password']) ? $redis['password'] : null,
             ],
         ];
         $this->assertFalse($cache->get($key));
