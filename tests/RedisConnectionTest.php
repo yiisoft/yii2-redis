@@ -6,6 +6,7 @@ use yii\helpers\ArrayHelper;
 use yii\log\Logger;
 use yii\redis\Connection;
 use yii\redis\SocketException;
+use yiiunit\extensions\redis\support\ConnectionWithErrorEmulator;
 
 /**
  * @group redis
@@ -144,23 +145,8 @@ class ConnectionTest extends TestCase
         $logger = new Logger();
         Yii::setLogger($logger);
 
-        $connectionWithErrorEmulator = new class extends Connection {
-            public $isTemporaryBroken = false;
-
-            protected function sendCommandInternal($command, $params)
-            {
-                // Emulate read from socket error
-                if ($this->isTemporaryBroken) {
-                    // Unset flag for emulate socket error
-                    $this->isTemporaryBroken = false;
-                    throw new SocketException("Failed to read from socket.\nRedis command was: " . $command);
-                }
-                return parent::sendCommandInternal($command, $params);
-            }
-        };
-
         $databases = TestCase::getParam('databases');
-        $db = new $connectionWithErrorEmulator($databases['redis'] ?? []);
+        $db = new ConnectionWithErrorEmulator($databases['redis'] ?? []);
         $db->retries = 3;
 
         $db->configSet('timeout', 1);
@@ -294,12 +280,12 @@ class ConnectionTest extends TestCase
         $redis = $this->getConnection();
         $set = 'zrangebyscore';
         foreach ($members as $member) {
-            list($name, $score) = $member;
+            [$name, $score] = $member;
             $this->assertEquals(1, $redis->zadd($set, $score, $name));
         }
 
         foreach ($cases as $case) {
-            list($min, $max, $withScores, $limit, $offset, $count, $expectedRows) = $case;
+            [$min, $max, $withScores, $limit, $offset, $count, $expectedRows] = $case;
             if ($withScores !== null && $limit !== null) {
                 $rows = $redis->zrangebyscore($set, $min, $max, $withScores, $limit, $offset, $count);
             } elseif ($withScores !== null) {
