@@ -238,11 +238,11 @@ use yii\helpers\VarDumper;
  * @method mixed hscan($key, $cursor, $MATCH = null, $pattern = null, $COUNT = null, $count = null) Incrementally iterate hash fields and associated values. <https://redis.io/commands/hscan>
  * @method mixed zscan($key, $cursor, $MATCH = null, $pattern = null, $COUNT = null, $count = null) Incrementally iterate sorted sets elements and associated scores. <https://redis.io/commands/zscan>
  *
- * @property-read string $connectionString Socket connection string. This property is read-only.
- * @property-read string $driverName Name of the DB driver. This property is read-only.
- * @property-read bool $isActive Whether the DB connection is established. This property is read-only.
- * @property-read LuaScriptBuilder $luaScriptBuilder This property is read-only.
- * @property-read resource|false $socket This property is read-only.
+ * @property-read string $connectionString Socket connection string.
+ * @property-read string $driverName Name of the DB driver.
+ * @property-read bool $isActive Whether the DB connection is established.
+ * @property-read LuaScriptBuilder $luaScriptBuilder
+ * @property-read resource|false $socket
  *
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
