@@ -5,5 +5,4 @@
 /tests/CacheTestCase.php
 /tests/BaseTestCase.php
 /tests/data/config.local.php
-/tests/docker
 /tests/dockerids
