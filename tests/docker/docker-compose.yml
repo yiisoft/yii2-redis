@@ -1,0 +1,24 @@
+version: '3.8'
+
+# NOTE: When using docker-compose for testing, make sure you set 'hostname' to 'redis' in tests/data/config.php
+
+services:
+
+  PHP:
+    image: "yiisoftware/yii2-php:7.4-apache"
+    networks:
+      - yii2-redis
+    volumes:
+      - ../..:/app # Mount source-code for development
+
+  Redis:
+    image: "redis"
+    networks:
+      - yii2-redis
+    ports:
+      - "6379:6379"
+
+networks:
+  yii2-redis:
+    driver: bridge
+    name: yii2-redis
