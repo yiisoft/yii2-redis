@@ -12,6 +12,16 @@ if you want to upgrade from version A to version C and there is
 version B between A and C, you need to follow the instructions
 for both A and B.
 
+Upgrade from 2.0.17
+------------------
+
+* The `Cache::getValue()` method now adheres to the specifications and returns `false` in case of a missing 
+  (or expired) key. This might have impact in the following scenarios:  
+  * You specified a custom `Cache::$serializer`, depending on the serializer used `Cache::get()` might now 
+    return `false` instead of `null` in case of a missing (or expired) key.
+  * You extended the `Cache` class, are using the protected method `Cache::getValue()` directly and expect 
+    a return value of `null` in case of a missing (or expired) key.
+
 Upgrade from 2.0.13
 ------------------
 

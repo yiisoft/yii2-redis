@@ -195,7 +195,12 @@ class Cache extends \yii\caching\Cache
      */
     protected function getValue($key)
     {
-        return $this->getReplica()->executeCommand('GET', [$key]);
+        $value = $this->getReplica()->executeCommand('GET', [$key]);
+        if ($value === null) {
+            return false; // Key is not in the cache or expired
+        }
+
+        return $value;
     }
 
     /**
