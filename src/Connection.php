@@ -260,6 +260,10 @@ class Connection extends Component
      */
     public $hostname = 'localhost';
     /**
+     * @var string the connection scheme used for connecting to the redis server. Defaults to 'tcp'.
+     */
+    public $scheme = 'tcp';
+    /**
      * @var string if the query gets redirected, use this as the temporary new hostname
      * @since 2.0.11
      */
@@ -593,7 +597,7 @@ class Connection extends Component
             return 'unix://' . $this->unixSocket;
         }
 
-        return 'tcp://' . ($this->redirectConnectionString ?: "$this->hostname:$this->port");
+        return $this->scheme . '://' . ($this->redirectConnectionString ?: "$this->hostname:$this->port");
     }
 
     /**
