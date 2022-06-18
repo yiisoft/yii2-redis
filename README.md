@@ -85,3 +85,18 @@ return [
     ],
 ];
 ```
+
+**Configuring The Connection Scheme**
+
+By default, Redis will use the tcp scheme when connecting to your Redis server; however, you may use TLS / SSL encryption by specifying a scheme configuration option in your application configuration:
+```php
+return [
+    //....
+    'components' => [
+        'redis' => [
+            //....
+            'scheme' => 'tls'
+        ]
+    ]
+];
+```
