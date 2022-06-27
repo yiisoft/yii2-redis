@@ -261,6 +261,7 @@ class Connection extends Component
     public $hostname = 'localhost';
     /**
      * @var string the connection scheme used for connecting to the redis server. Defaults to 'tcp'.
+     * @since 2.0.18
      */
     public $scheme = 'tcp';
     /**
