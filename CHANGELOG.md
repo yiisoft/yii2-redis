@@ -5,6 +5,7 @@ Yii Framework 2 redis extension Change Log
 ------------------------
 
 - Bug #247: `Cache::getValue()` now returns `false` in case of missing key (rhertogh)
+- Enh #249 Added support to set the redis scheme to tls. Add to configuration: `'scheme' => 'tls'` (tychovbh)
 
 
 2.0.17 January 11, 2022
