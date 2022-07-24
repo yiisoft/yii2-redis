@@ -32,7 +32,7 @@ class CustomerBinary extends ActiveRecord
 
     public static function primaryKey()
     {
-        return 'guid';
+        return ['guid'];
     }
 
     /**
