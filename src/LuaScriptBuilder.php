@@ -304,8 +304,8 @@ EOF;
                     $column = $this->addColumn($column, $columns);
                     $parts[] = "$column==" . $value->expression;
                 } else {
-                    $column = $this->addColumn($column, $columns);
-                    $value = $this->quoteValue($value);
+                    $column = $this->addColumn($column, $columns);var_dump(bin2hex($value));
+                    $value = $this->quoteValue($value);var_dump(bin2head($value));
                     $parts[] = "$column==$value";
                 }
             }
