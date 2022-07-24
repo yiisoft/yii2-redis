@@ -176,8 +176,8 @@ class ActiveRecordTest extends TestCase
         $this->fkBinary1 = hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fa-e77bbf73845f'));
         $this->fkBinary2 = hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fb-e77bbf73845f'));
         $this->fkBinary3 = hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fc-e77bbf73845f'));
-        $customer = new CustomerBinary();var_dump($customer->attributes);
-        $customer->setAttributes(['guid' => $this->fkBinary1, 'email' => 'user1@example.com', 'name' => 'user1', 'address' => 'address1', 'status' => 1, 'profile_id' => 1], false);var_dump($customer->attributes);
+        $customer = new CustomerBinary();
+        $customer->setAttributes(['guid' => $this->fkBinary1, 'email' => 'user1@example.com', 'name' => 'user1', 'address' => 'address1', 'status' => 1, 'profile_id' => 1], false);
         $customer->save(false);
         $customer = new CustomerBinary();
         $customer->setAttributes(['guid' => $this->fkBinary2, 'email' => 'user2@example.com', 'name' => 'user2', 'address' => 'address2', 'status' => 1, 'profile_id' => null], false);
