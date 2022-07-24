@@ -291,7 +291,7 @@ EOF;
     private function buildHashCondition($condition, &$columns)
     {
         $parts = [];
-        foreach ($condition as $column => $value) {
+        foreach ($condition as $column => $value) {var_dump($value);
             if (is_array($value)) { // IN condition
                 $parts[] = $this->buildInCondition('in', [$column, $value], $columns);
             } else {
