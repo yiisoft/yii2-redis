@@ -728,7 +728,7 @@ class ActiveRecordTest extends TestCase
         /* @var $this TestCase|ActiveRecordTestTrait */
         $result = $customerClass::find();
         $this->assertInstanceOf('\\yii\\db\\ActiveQueryInterface', $result);
-        $customer = $result->one();
+        $customer = $result->where(['id' => hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fa-e77bbf73845f'))])->one();
         $this->assertInstanceOf($customerClass, $customer);
     }
 }
