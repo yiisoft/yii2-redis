@@ -5,7 +5,7 @@ namespace yiiunit\extensions\redis\data\ar;
 use yiiunit\extensions\redis\ActiveRecordTest;
 
 /**
- * Customer
+ * CustomerBinary
  *
  * @property int $id
  * @property string $name
@@ -42,10 +42,10 @@ class CustomerBinary extends ActiveRecord
 
     /**
      * @inheritdoc
-     * @return CustomerQuery
+     * @return CustomerBinaryQuery
      */
     public static function find()
     {
-        return new CustomerQuery(get_called_class());
+        return new CustomerBinaryQuery(get_called_class());
     }
 }
