@@ -6,6 +6,7 @@ use yii\redis\ActiveQuery;
 use yii\redis\LuaScriptBuilder;
 use yiiunit\extensions\redis\data\ar\ActiveRecord;
 use yiiunit\extensions\redis\data\ar\Customer;
+use yiiunit\extensions\redis\data\ar\CustomerBinary;
 use yiiunit\extensions\redis\data\ar\OrderItem;
 use yiiunit\extensions\redis\data\ar\Order;
 use yiiunit\extensions\redis\data\ar\Item;
@@ -26,6 +27,11 @@ class ActiveRecordTest extends TestCase
     public function getCustomerClass()
     {
         return Customer::className();
+    }
+
+    public function getCustomerBinaryClass()
+    {
+        return CustomerBinary::className();
     }
 
     /**
@@ -164,13 +170,13 @@ class ActiveRecordTest extends TestCase
         $orderItem->setAttributes(['order_id' => 3, 'item_id' => 2, 'quantity' => 1, 'subtotal' => 40.0], false);
         $orderItem->save(false);
 
-        $customer = new Customer();
+        $customer = new CustomerBnary();
         $customer->setAttributes(['id' => hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fa-e77bbf73845f')), 'email' => 'user1@example.com', 'name' => 'user1', 'address' => 'address1', 'status' => 1, 'profile_id' => 1], false);
         $customer->save(false);
-        $customer = new Customer();
+        $customer = new CustomerBnary();
         $customer->setAttributes(['id' => hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fa-e77bbf73845f')), 'email' => 'user2@example.com', 'name' => 'user2', 'address' => 'address2', 'status' => 1, 'profile_id' => null], false);
         $customer->save(false);
-        $customer = new Customer();
+        $customer = new CustomerBnary();
         $customer->setAttributes(['id' => hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fa-e77bbf73845f')), 'email' => 'user3@example.com', 'name' => 'user3', 'address' => 'address3', 'status' => 2, 'profile_id' => 2], false);
         $customer->save(false);
 
@@ -722,7 +728,7 @@ class ActiveRecordTest extends TestCase
     public function testFindBinaryPk()
     {
         /* @var $customerClass \yii\db\ActiveRecordInterface */
-        $customerClass = $this->getCustomerClass();
+        $customerClass = $this->getCustomerBinaryClass();
 
         // find one
         /* @var $this TestCase|ActiveRecordTestTrait */
