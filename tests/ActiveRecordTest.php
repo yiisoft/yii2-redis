@@ -754,5 +754,9 @@ class ActiveRecordTest extends TestCase
         $customer = $customerClass::findOne($this->fkBinary2);
         $this->assertInstanceOf($customerClass, $customer);
         $this->assertEquals('user2', $customer->name);
+
+        $customer = $customerClass::find()->andWhere(['guid' => $this->fkBinary1])->one();
+        $this->assertInstanceOf($customerClass, $customer);
+        $this->assertEquals('user1', $customer->name);
     }
 }
