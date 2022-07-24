@@ -20,11 +20,9 @@ use yiiunit\framework\ar\ActiveRecordTestTrait;
 class ActiveRecordTest extends TestCase
 {
     use ActiveRecordTestTrait;
-    static $fkBinary = [
-        hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fa-e77bbf73845f')),
-        hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fb-e77bbf73845f')),
-        hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fc-e77bbf73845f')),
-    ];
+    static $fkBinary1 = hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fa-e77bbf73845f'));
+    static $fkBinary2 = hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fb-e77bbf73845f'));
+    static $fkBinary3 = hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fc-e77bbf73845f'));
 
     /**
      * @return string
@@ -176,13 +174,13 @@ class ActiveRecordTest extends TestCase
         $orderItem->save(false);
 
         $customer = new CustomerBinary();
-        $customer->setAttributes(['id' => static::$fkBinary[0], 'email' => 'user1@example.com', 'name' => 'user1', 'address' => 'address1', 'status' => 1, 'profile_id' => 1], false);
+        $customer->setAttributes(['id' => static::$fkBinary1, 'email' => 'user1@example.com', 'name' => 'user1', 'address' => 'address1', 'status' => 1, 'profile_id' => 1], false);
         $customer->save(false);
         $customer = new CustomerBinary();
-        $customer->setAttributes(['id' => static::$fkBinary[1], 'email' => 'user2@example.com', 'name' => 'user2', 'address' => 'address2', 'status' => 1, 'profile_id' => null], false);
+        $customer->setAttributes(['id' => static::$fkBinary2, 'email' => 'user2@example.com', 'name' => 'user2', 'address' => 'address2', 'status' => 1, 'profile_id' => null], false);
         $customer->save(false);
         $customer = new CustomerBinary();
-        $customer->setAttributes(['id' => static::$fkBinary[2], 'email' => 'user3@example.com', 'name' => 'user3', 'address' => 'address3', 'status' => 2, 'profile_id' => 2], false);
+        $customer->setAttributes(['id' => static::$fkBinary3, 'email' => 'user3@example.com', 'name' => 'user3', 'address' => 'address3', 'status' => 2, 'profile_id' => 2], false);
         $customer->save(false);
 
     }
