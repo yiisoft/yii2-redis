@@ -250,7 +250,7 @@ EOF;
      * @throws \yii\base\NotSupportedException if the condition is not an array
      */
     public function buildCondition($condition, &$columns)
-    {
+    {var_dump($condition, $columns);
         static $builders = [
             'not' => 'buildNotCondition',
             'and' => 'buildAndCondition',
@@ -305,7 +305,7 @@ EOF;
                     $parts[] = "$column==" . $value->expression;
                 } else {
                     $column = $this->addColumn($column, $columns);var_dump(bin2hex($value));
-                    $value = $this->quoteValue($value);var_dump(bin2head($value));
+                    $value = $this->quoteValue($value);var_dump(bin2hex($value));
                     $parts[] = "$column==$value";
                 }
             }
