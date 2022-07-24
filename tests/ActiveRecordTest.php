@@ -170,13 +170,13 @@ class ActiveRecordTest extends TestCase
         $orderItem->setAttributes(['order_id' => 3, 'item_id' => 2, 'quantity' => 1, 'subtotal' => 40.0], false);
         $orderItem->save(false);
 
-        $customer = new CustomerBnary();
+        $customer = new CustomerBinary();
         $customer->setAttributes(['id' => hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fa-e77bbf73845f')), 'email' => 'user1@example.com', 'name' => 'user1', 'address' => 'address1', 'status' => 1, 'profile_id' => 1], false);
         $customer->save(false);
-        $customer = new CustomerBnary();
+        $customer = new CustomerBinary();
         $customer->setAttributes(['id' => hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fa-e77bbf73845f')), 'email' => 'user2@example.com', 'name' => 'user2', 'address' => 'address2', 'status' => 1, 'profile_id' => null], false);
         $customer->save(false);
-        $customer = new CustomerBnary();
+        $customer = new CustomerBinary();
         $customer->setAttributes(['id' => hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fa-e77bbf73845f')), 'email' => 'user3@example.com', 'name' => 'user3', 'address' => 'address3', 'status' => 2, 'profile_id' => 2], false);
         $customer->save(false);
 
