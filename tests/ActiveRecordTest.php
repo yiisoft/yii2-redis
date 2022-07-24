@@ -173,9 +173,9 @@ class ActiveRecordTest extends TestCase
         $orderItem->setAttributes(['order_id' => 3, 'item_id' => 2, 'quantity' => 1, 'subtotal' => 40.0], false);
         $orderItem->save(false);
 
-        $this->fkBinary1 = hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fa-e77bbf73845f'));
-        $this->fkBinary2 = hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fb-e77bbf73845f'));
-        $this->fkBinary3 = hex2bin(str_replace([' ', '-'], '', 'febf943f-15f9-cf2d-88fc-e77bbf73845f'));
+        $this->fkBinary1 = hex2bin(str_replace([' ', '-'], '', '51a4e62e-1b1a-56c9-e9e5-9efe21f55276'));
+        $this->fkBinary2 = hex2bin(str_replace([' ', '-'], '', '51a4e62e-1b1a-56c9-e9e6-9efe21f55276'));
+        $this->fkBinary3 = hex2bin(str_replace([' ', '-'], '', '51a4e62e-1b1a-56c9-e9e7-9efe21f55276'));
         $customer = new CustomerBinary();
         $customer->setAttributes(['guid' => $this->fkBinary1, 'email' => 'user1@example.com', 'name' => 'user1', 'address' => 'address1', 'status' => 1, 'profile_id' => 1], false);
         $customer->save(false);
