@@ -250,7 +250,7 @@ EOF;
      * @throws \yii\base\NotSupportedException if the condition is not an array
      */
     public function buildCondition($condition, &$columns)
-    {var_dump($condition, $columns);
+    {
         static $builders = [
             'not' => 'buildNotCondition',
             'and' => 'buildAndCondition',
