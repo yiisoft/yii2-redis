@@ -749,5 +749,10 @@ class ActiveRecordTest extends TestCase
         $this->assertInstanceOf($customerClass, $customers[0]);
         $this->assertInstanceOf($customerClass, $customers[1]);
         $this->assertInstanceOf($customerClass, $customers[2]);
+
+        // find by a single primary key
+        $customer = $customerClass::findOne($this->fkBinary2);
+        $this->assertInstanceOf($customerClass, $customer);
+        $this->assertEquals('user2', $customer->name);
     }
 }
