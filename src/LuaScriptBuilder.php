@@ -237,7 +237,7 @@ EOF;
             return $str;
         }
 
-        return "'" . addcslashes($str, "\000\n\r\\\032\047") . "'";
+        return "'" . addcslashes($str, "\000\n\r\\\047") . "'";
     }
 
     /**
@@ -304,8 +304,8 @@ EOF;
                     $column = $this->addColumn($column, $columns);
                     $parts[] = "$column==" . $value->expression;
                 } else {
-                    $column = $this->addColumn($column, $columns);var_dump(bin2hex($value));
-                    $value = $this->quoteValue($value);var_dump(bin2hex($value));
+                    $column = $this->addColumn($column, $columns);
+                    $value = $this->quoteValue($value);
                     $parts[] = "$column==$value";
                 }
             }

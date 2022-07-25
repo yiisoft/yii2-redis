@@ -57,4 +57,4 @@ jobs:
         run: composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader
 
       - name: Run Redis tests with PhpUnit
-        run: vendor/bin/phpunit --group binary --coverage-clover=coverage.clover
+        run: vendor/bin/phpunit --coverage-clover=coverage.clover

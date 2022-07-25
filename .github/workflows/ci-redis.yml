@@ -56,11 +56,11 @@ jobs:
 
       - name: Run Redis 5 tests with PhpUnit
         if: matrix.redis == '5'
-        run: vendor/bin/phpunit --group binary 
+        run: vendor/bin/phpunit
 
       - name: Run Redis 6 tests with PhpUnit and coverage
         if: matrix.redis == '6'
-        run: vendor/bin/phpunit --group binary  --coverage-clover=coverage.clover
+        run: vendor/bin/phpunit --coverage-clover=coverage.clover
 
       - name: Code coverage
         if: matrix.redis == '6'
