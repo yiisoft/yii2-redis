@@ -13,7 +13,7 @@ use yiiunit\extensions\redis\ActiveRecordTest;
  * @property string $address
  * @property int $status
  *
- * @method CustomerQuery findBySql($sql, $params = []) static
+ * @method CustomerBinaryQuery findBySql($sql, $params = []) static
  */
 class CustomerBinary extends ActiveRecord
 {
