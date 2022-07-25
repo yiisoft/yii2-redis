@@ -364,7 +364,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * @return array|bool|null|string
      */
     protected function executeScript($db, $type, $columnName = null)
-    {var_dump($db, $type, $columnName);
+    {
         if ($this->primaryModel !== null) {
             // lazy loading
             if ($this->via instanceof self) {

@@ -27,12 +27,7 @@ class CustomerBinary extends ActiveRecord
      */
     public function attributes()
     {
-        return ['guid', 'email', 'name', 'address', 'status', 'profile_id'];
-    }
-
-    public static function primaryKey()
-    {
-        return ['guid'];
+        return ['id', 'guid', 'email', 'name', 'address', 'status', 'profile_id'];
     }
 
     /**
