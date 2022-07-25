@@ -7,9 +7,10 @@ use yiiunit\extensions\redis\ActiveRecordTest;
 /**
  * CustomerBinary
  *
- * @property int $id
- * @property string $name
+ * @property string $guid
+ * @property string $user_guid
  * @property string $email
+ * @property string $name
  * @property string $address
  * @property int $status
  *
@@ -27,7 +28,7 @@ class CustomerBinary extends ActiveRecord
      */
     public function attributes()
     {
-        return ['guid', 'user_guid', 'email', 'name', 'address', 'status', 'profile_id'];
+        return ['guid', 'user_guid', 'email', 'name', 'address', 'status'];
     }
 
     public static function primaryKey()
