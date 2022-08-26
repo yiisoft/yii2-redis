@@ -71,7 +71,17 @@ class Session extends \yii\web\Session
      * static value if the cached data needs to be shared among multiple applications.
      */
     public $keyPrefix;
-
+    /**
+     * @var string a string which is used in a schema for key as object-type
+     * Note: Try to stick with a schema. For instance "object-type:id" is a good idea, as in "user:1000".
+     * @see https://redis.io/docs/data-types/tutorial/#keys
+     */
+    public $objectType = '';
+    /**
+     * @var bool if true [[$keyPrefix]] will used after [[$objectType]] in a schema for key as objectType:keyPrefix:id
+     * Note: Ignore if [[$objectType]] is empty
+     */
+    public $usePrefixInSchema = false;
 
     /**
      * Initializes the redis Session component.
@@ -167,6 +177,13 @@ class Session extends \yii\web\Session
      */
     protected function calculateKey($id)
     {
-        return $this->keyPrefix . md5(json_encode([__CLASS__, $id]));
+        $hash = md5(json_encode([__CLASS__, $id]));
+        if (strlen($this->objectType) > 0) {
+            if ($this->usePrefixInSchema) {
+                return $this->objectType . ':' . $this->keyPrefix . ':' . $hash;
+            }
+            return $this->objectType . ':' . $this->keyPrefix . $hash;
+        }
+        return $this->keyPrefix . $hash;
     }
 }
