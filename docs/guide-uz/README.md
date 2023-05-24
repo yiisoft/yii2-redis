@@ -1,7 +1,7 @@
 Yii 2 Kesh, Sessiya va ActiveRecord uchun Redis
 ===============================================
 
-Bu kengaytma key-value(kalit-qiymat) ma'lumotlarni Yii2 [Redis](http://redis.io/) saqlash uchun yordam beradi.
+Bu kengaytma key-value(kalit-qiymat) ma'lumotlarni Yii2 [Redis](https://redis.io/) saqlash uchun yordam beradi.
 
 Ishni boshlash
 ---------------

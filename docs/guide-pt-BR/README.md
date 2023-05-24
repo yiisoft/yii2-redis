@@ -1,7 +1,7 @@
 Redis Cache, Session e ActiveRecord para Yii 2
 ===============================================
 
-Esta extensão fornece o suporte ao armazenamento de valores-chave [redis](http://redis.io/) para o framework Yii 2.0. Ele inclui um manipulador de armazenamento de Cache e Sessão e implementa o padrão ActiveRecord, que permite armazenar registros ativos em redis.
+Esta extensão fornece o suporte ao armazenamento de valores-chave [redis](https://redis.io/) para o framework Yii 2.0. Ele inclui um manipulador de armazenamento de Cache e Sessão e implementa o padrão ActiveRecord, que permite armazenar registros ativos em redis.
 
 Iniciando
 ---------------
