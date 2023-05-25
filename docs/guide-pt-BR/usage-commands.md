@@ -20,4 +20,4 @@ Existem atalhos disponíveis para cada comando suportado, portanto, em vez do ac
 $result = $redis->hmset('test_collection', 'key1', 'val1', 'key2', 'val2');
 ```
 
-Para uma lista de comandos disponíveis e seus parâmetros, consulte <http://redis.io/commands>.
+Para uma lista de comandos disponíveis e seus parâmetros, consulte <https://redis.io/commands>.

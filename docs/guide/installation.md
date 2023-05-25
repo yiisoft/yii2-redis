@@ -7,7 +7,7 @@ At least redis version 2.6.12 is required for all components to work properly.
 
 ## Getting Composer package
 
-The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
+The preferred way to install this extension is through [composer](https://getcomposer.org/download/).
 
 Either run
 

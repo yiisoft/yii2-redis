@@ -1,7 +1,7 @@
 Redis Cache, Session and ActiveRecord for Yii 2
 ===============================================
 
-This extension provides the [redis](http://redis.io/) key-value store support for the Yii2 framework.
+This extension provides the [redis](https://redis.io/) key-value store support for the Yii2 framework.
 It includes a `Cache` and `Session` storage handler and implements the `ActiveRecord` pattern that allows
 you to store active records in redis.
 
