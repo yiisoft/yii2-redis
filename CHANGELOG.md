@@ -4,7 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.19 under development
 ------------------------
 
-- no changes in this release.
+- Bug #251: Fixed string escaping issue of `\032` in LuaScriptBuilder (vistart)
 
 
 2.0.18 September 04, 2022
