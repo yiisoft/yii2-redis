@@ -844,10 +844,8 @@ class Connection extends Component
      */
     private function parseResponse($params, $command = null)
     {
-        $prettyCommand = implode(' ', $params);
-
         if (($line = fgets($this->socket)) === false) {
-            throw new SocketException("Failed to read from socket.\nRedis command was: " . $prettyCommand);
+            throw new SocketException("Failed to read from socket.\nRedis command was: " . implode(' ', $params));
         }
         $type = $line[0];
         $line = mb_substr($line, 1, -2, '8bit');
@@ -864,7 +862,7 @@ class Connection extends Component
                     return $this->redirect($line, $command, $params);
                 }
 
-                throw new Exception("Redis error: " . $line . "\nRedis command was: " . $prettyCommand);
+                throw new Exception("Redis error: " . $line . "\nRedis command was: " . implode(' ', $params));
             case ':': // Integer reply
                 // no cast to int as it is in the range of a signed 64 bit integer
                 return $line;
@@ -876,7 +874,7 @@ class Connection extends Component
                 $data = '';
                 while ($length > 0) {
                     if (($block = fread($this->socket, $length)) === false) {
-                        throw new SocketException("Failed to read from socket.\nRedis command was: " . $prettyCommand);
+                        throw new SocketException("Failed to read from socket.\nRedis command was: " . implode(' ', $params));
                     }
                     $data .= $block;
                     $length -= mb_strlen($block, '8bit');
@@ -892,7 +890,7 @@ class Connection extends Component
 
                 return $data;
             default:
-                throw new Exception('Received illegal data from redis: ' . $line . "\nRedis command was: " . $prettyCommand);
+                throw new Exception('Received illegal data from redis: ' . $line . "\nRedis command was: " . implode(' ', $params));
         }
     }
 
