@@ -4,7 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.20 under development
 ------------------------
 
-- no changes in this release.
+- Bug #270: Prevent null parameter on `mb_strlen` to avoid PHP 8.4 implicity nullable types deprecation (tehmaestro)
 
 
 2.0.19 February 13, 2025
