@@ -6,6 +6,7 @@ use yii\redis\ActiveQuery;
 use yii\redis\LuaScriptBuilder;
 use yiiunit\extensions\redis\data\ar\ActiveRecord;
 use yiiunit\extensions\redis\data\ar\Customer;
+use yiiunit\extensions\redis\data\ar\CustomerBinary;
 use yiiunit\extensions\redis\data\ar\OrderItem;
 use yiiunit\extensions\redis\data\ar\Order;
 use yiiunit\extensions\redis\data\ar\Item;
@@ -19,6 +20,11 @@ use yiiunit\framework\ar\ActiveRecordTestTrait;
 class ActiveRecordTest extends TestCase
 {
     use ActiveRecordTestTrait;
+    public $fkBinary1;
+    public $fkBinary2;
+    public $fkBinary3;
+    public $userBinary;
+    public $fkBinaryNonExist;
 
     /**
      * @return string
@@ -26,6 +32,11 @@ class ActiveRecordTest extends TestCase
     public function getCustomerClass()
     {
         return Customer::className();
+    }
+
+    public function getCustomerBinaryClass()
+    {
+        return CustomerBinary::className();
     }
 
     /**
@@ -163,6 +174,21 @@ class ActiveRecordTest extends TestCase
         $orderItem = new OrderItemWithNullFK();
         $orderItem->setAttributes(['order_id' => 3, 'item_id' => 2, 'quantity' => 1, 'subtotal' => 40.0], false);
         $orderItem->save(false);
+
+        $this->fkBinary1 = hex2bin(str_replace([' ', '-'], '', '51a4e62e-1b1a-56c9-e9e5-9efe21f55276'));
+        $this->fkBinary2 = hex2bin(str_replace([' ', '-'], '', '51a4e62e-1b1a-56c9-e9e6-9efe21f55276'));
+        $this->fkBinary3 = hex2bin(str_replace([' ', '-'], '', '51a4e62e-1b1a-56c9-e9e7-9efe21f55276'));
+        $this->userBinary = hex2bin(str_replace([' ', '-'], '', '51a4e62e-1b1a-56c9-e9e5-9efe21f55277'));
+        $this->fkBinaryNonExist = hex2bin(str_replace([' ', '-'], '', '51a4e62e-1b1a-56c9-e9e5-9efe21f55278'));
+        $customer = new CustomerBinary();
+        $customer->setAttributes(['guid' => $this->fkBinary1, 'user_guid' => $this->userBinary, 'email' => 'user1@example.com', 'name' => 'user1', 'address' => 'address1', 'status' => 1, 'profile_id' => 1], false);
+        $customer->save(false);
+        $customer = new CustomerBinary();
+        $customer->setAttributes(['guid' => $this->fkBinary2, 'user_guid' => $this->userBinary, 'email' => 'user2@example.com', 'name' => 'user2', 'address' => 'address2', 'status' => 1, 'profile_id' => null], false);
+        $customer->save(false);
+        $customer = new CustomerBinary();
+        $customer->setAttributes(['guid' => $this->fkBinary3, 'user_guid' => $this->userBinary, 'email' => 'user3@example.com', 'name' => 'user3', 'address' => 'address3', 'status' => 2, 'profile_id' => 2], false);
+        $customer->save(false);
 
     }
 
@@ -704,5 +730,65 @@ class ActiveRecordTest extends TestCase
         // scope
         $this->assertCount(2, $customerClass::find()->active()->all());
         $this->assertEquals(2, $customerClass::find()->active()->count());
+    }
+
+    /**
+     * @group binary
+     */
+    public function testFindBinaryPk()
+    {
+        /* @var $customerClass \yii\db\ActiveRecordInterface */
+        $customerClass = $this->getCustomerBinaryClass();
+
+        // find one
+        /* @var $this TestCase|ActiveRecordTestTrait */
+        $result = $customerClass::find();
+        $this->assertInstanceOf('\\yii\\db\\ActiveQueryInterface', $result);
+        $customer = $result->one();
+        $this->assertInstanceOf($customerClass, $customer);
+
+        // find all
+        $customers = $customerClass::find()->all();
+        $this->assertCount(3, $customers);
+        $this->assertInstanceOf($customerClass, $customers[0]);
+        $this->assertInstanceOf($customerClass, $customers[1]);
+        $this->assertInstanceOf($customerClass, $customers[2]);
+
+        // find by a single primary key
+        $customer = $customerClass::findOne($this->fkBinary1);
+        $this->assertInstanceOf($customerClass, $customer);
+        $this->assertEquals('user1', $customer->name);
+        $customer = $customerClass::findOne($this->fkBinaryNonExist);
+        $this->assertNull($customer);
+        $customer = $customerClass::findOne(['guid' => [$this->fkBinary1, $this->fkBinaryNonExist]]);
+        $this->assertInstanceOf($customerClass, $customer);
+        $customer = $customerClass::find()->where(['guid' => [$this->fkBinary1, $this->fkBinaryNonExist]])->one();
+        $this->assertNotNull($customer);
+
+        // find by column values
+        $customer = $customerClass::findOne(['guid' => $this->fkBinary2, 'name' => 'user2']);
+        $this->assertInstanceOf($customerClass, $customer);
+        $this->assertEquals('user2', $customer->name);
+        $customer = $customerClass::findOne(['guid' => $this->fkBinary2, 'name' => 'user1']);
+        $this->assertNull($customer);
+        $customer = $customerClass::findOne(['guid' => $this->fkBinaryNonExist]);
+        $this->assertNull($customer);
+        $customer = $customerClass::findOne(['name' => 'user5']);
+        $this->assertNull($customer);
+        $customer = $customerClass::findOne(['user_guid' => $this->userBinary]);
+        $this->assertInstanceOf($customerClass, $customer);
+
+        // find by attributes
+        $customer = $customerClass::find()->where(['name' => 'user2'])->one();
+        $this->assertInstanceOf($customerClass, $customer);
+        $this->assertEquals($this->fkBinary2, $customer->guid);
+        $customer = $customerClass::find()->where(['user_guid' => $this->userBinary])->one();
+        $this->assertInstanceOf($customerClass, $customer);
+
+        // scope
+        $this->assertCount(2, $customerClass::find()->active()->all());
+        $this->assertEquals(2, $customerClass::find()->active()->count());
+        $this->assertCount(3, $customerClass::find()->where(['user_guid' => $this->userBinary])->all());
+        $this->assertEquals(3, $customerClass::find()->where(['user_guid' => $this->userBinary])->count());
     }
 }

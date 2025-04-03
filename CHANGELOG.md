@@ -4,6 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.20 under development
 ------------------------
 
+- Bug #251: Fixed string escaping issue of `\032` in LuaScriptBuilder (vistart)
 - Bug #270: Prevent null parameter on `mb_strlen` to avoid PHP 8.4 implicity nullable types deprecation (tehmaestro)
 
 
