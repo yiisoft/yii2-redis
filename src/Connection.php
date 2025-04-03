@@ -766,7 +766,7 @@ class Connection extends Component
         $params = array_merge(explode(' ', $name), $params);
         $command = '*' . count($params) . "\r\n";
         foreach ($params as $arg) {
-            $command .= '$' . mb_strlen($arg, '8bit') . "\r\n" . $arg . "\r\n";
+            $command .= '$' . mb_strlen($arg ?? '', '8bit') . "\r\n" . $arg . "\r\n";
         }
 
         \Yii::trace("Executing Redis Command: {$name}", __METHOD__);
