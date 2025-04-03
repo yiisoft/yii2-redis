@@ -3,11 +3,11 @@ O'rnatish
 
 ## Talablar
 
-Barcha komponentlar to'g'ri ishlashi uchun kamida [Redis](http://redis.io/) 2.6.12 versiyasi talab qilinadi.
+Barcha komponentlar to'g'ri ishlashi uchun kamida [Redis](https://redis.io/) 2.6.12 versiyasi talab qilinadi.
 
 ## Composer orqali o'rnatish
 
-[Composer](http://getcomposer.org/download/) orqali o'rnatish eng yaxshi usuldir.
+[Composer](https://getcomposer.org/download/) orqali o'rnatish eng yaxshi usuldir.
 
 Quyidagi buyruq orqali o'rnatish mumkin:
 

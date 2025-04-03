@@ -7,7 +7,7 @@
 
 ## Composer パッケージを取得する
 
-このエクステンションをインストールするのに推奨される方法は [composer](http://getcomposer.org/download/) によるものです。
+このエクステンションをインストールするのに推奨される方法は [composer](https://getcomposer.org/download/) によるものです。
 
 下記のコマンドを実行してください。
 

@@ -20,4 +20,4 @@ $result = $redis->executeCommand('hmset', ['test_collection', 'key1', 'val1', 'k
 $result = $redis->hmset('test_collection', 'key1', 'val1', 'key2', 'val2');
 ```
 
-利用できるコマンドとそのパラメータについては、<http://redis.io/commands> のリストを参照してください。
+利用できるコマンドとそのパラメータについては、<https://redis.io/commands> のリストを参照してください。

@@ -7,7 +7,7 @@ A versão mínima do Redis necessária para todos os componentes funcionarem cor
 
 ## Instalando através do composer
 
-A maneira recomendada para instalar esta extensão é através do [composer](http://getcomposer.org/download/).
+A maneira recomendada para instalar esta extensão é através do [composer](https://getcomposer.org/download/).
 
 Então rode
 

@@ -19,4 +19,4 @@ Qo'llab quvvatlanadigan barcha buyruqlarni quyidagicha bajarish ham mumkin:
 $result = $redis->hmset('test_collection', 'key1', 'val1', 'key2', 'val2');
 ```
 
-Redis'ning mavjud buyruqlari haqida <http://redis.io/commands> sahifasida o'rganib chiqishingiz mumkin.
+Redis'ning mavjud buyruqlari haqida <https://redis.io/commands> sahifasida o'rganib chiqishingiz mumkin.
