@@ -4,7 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.0.20 under development
 ------------------------
 
-- Bug #270: Prevent null parameter on `mb_strlen` to avoid [PHP 8.4 deprecation](https://wiki.php.net/rfc/deprecate-implicitly-nullable-types)
+- Bug #270: Prevent null parameter on `mb_strlen` to avoid PHP 8.4 implicity nullable types deprecation (tehmaestro)
 
 
 2.0.19 February 13, 2025
