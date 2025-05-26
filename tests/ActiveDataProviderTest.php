@@ -11,7 +11,7 @@ use yiiunit\extensions\redis\data\ar\Item;
  */
 class ActiveDataProviderTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         ActiveRecord::$db = $this->getConnection();
