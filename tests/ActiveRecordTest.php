@@ -4,6 +4,7 @@ namespace yiiunit\extensions\redis;
 
 use yii\redis\ActiveQuery;
 use yii\redis\LuaScriptBuilder;
+use yiiunit\extensions\redis\base\ActiveRecordTestTrait;
 use yiiunit\extensions\redis\data\ar\ActiveRecord;
 use yiiunit\extensions\redis\data\ar\Customer;
 use yiiunit\extensions\redis\data\ar\OrderItem;
@@ -11,7 +12,6 @@ use yiiunit\extensions\redis\data\ar\Order;
 use yiiunit\extensions\redis\data\ar\Item;
 use yiiunit\extensions\redis\data\ar\OrderItemWithNullFK;
 use yiiunit\extensions\redis\data\ar\OrderWithNullFK;
-use yiiunit\framework\ar\ActiveRecordTestTrait;
 
 /**
  * @group redis
@@ -68,7 +68,7 @@ class ActiveRecordTest extends TestCase
         return OrderItemWithNullFK::className();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         ActiveRecord::$db = $this->getConnection();
@@ -539,10 +539,10 @@ class ActiveRecordTest extends TestCase
         $script = $lua->buildOne($query);
 
         foreach($expectedStrings as $string) {
-            $this->assertContains($string, $script);
+            $this->assertStringContainsString($string, $script);
         }
         foreach($unexpectedStrings as $string) {
-            $this->assertNotContains($string, $script);
+            $this->assertStringNotContainsString($string, $script);
         }
     }
 
@@ -594,10 +594,10 @@ class ActiveRecordTest extends TestCase
         $script = $lua->buildOne($query);
 
         foreach($expectedStrings as $string) {
-            $this->assertContains($string, $script);
+            $this->assertStringContainsString($string, $script);
         }
         foreach($unexpectedStrings as $string) {
-            $this->assertNotContains($string, $script);
+            $this->assertStringNotContainsString($string, $script);
         }
         // ensure injected FLUSHALL call did not succeed
         $query->one();

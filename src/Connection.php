@@ -631,7 +631,7 @@ class Connection extends Component
         }
 
         $connection = $this->connectionString . ', database=' . $this->database;
-        \Yii::trace('Opening redis DB connection: ' . $connection, __METHOD__);
+        \Yii::debug('Opening redis DB connection: ' . $connection, __METHOD__);
         $socket = @stream_socket_client(
             $this->connectionString,
             $errorNumber,
@@ -672,7 +672,7 @@ class Connection extends Component
     {
         foreach ($this->_pool as $socket) {
             $connection = $this->connectionString . ', database=' . $this->database;
-            \Yii::trace('Closing DB connection: ' . $connection, __METHOD__);
+            \Yii::debug('Closing DB connection: ' . $connection, __METHOD__);
             try {
                 $this->executeCommand('QUIT');
             } catch (SocketException $e) {
@@ -769,7 +769,7 @@ class Connection extends Component
             $command .= '$' . mb_strlen($arg ?? '', '8bit') . "\r\n" . $arg . "\r\n";
         }
 
-        \Yii::trace("Executing Redis Command: {$name}", __METHOD__);
+        \Yii::debug("Executing Redis Command: {$name}", __METHOD__);
         if ($this->retries > 0) {
             $tries = $this->retries;
             while ($tries-- > 0) {

@@ -4,14 +4,14 @@ namespace yiiunit\extensions\redis;
 
 use yii\redis\Cache;
 use yii\redis\Connection;
-use yiiunit\framework\caching\CacheTestCase;
+use yiiunit\extensions\redis\base\AbstractCacheTestCase;
 
 /**
  * Class for testing redis cache backend
  * @group redis
  * @group caching
  */
-class RedisCacheTest extends CacheTestCase
+class RedisCacheTest extends AbstractCacheTestCase
 {
     private $_cacheInstance;
 

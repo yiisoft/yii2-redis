@@ -22,7 +22,7 @@ Documentation is at [docs/guide/README.md](docs/guide/README.md).
 Requirements
 ------------
 
-At least redis version 2.6.12 is required for all components to work properly.
+At least redis version is required for all components to work properly.
 
 Installation
 ------------
@@ -32,13 +32,13 @@ The preferred way to install this extension is through [composer](https://getcom
 Either run
 
 ```
-php composer.phar require --prefer-dist yiisoft/yii2-redis:"~2.0.0"
+php composer.phar require --prefer-dist yiisoft/yii2-redis:^22.x-dev
 ```
 
 or add
 
 ```json
-"yiisoft/yii2-redis": "~2.0.0"
+"yiisoft/yii2-redis": "^22.x-dev"
 ```
 
 to the require section of your composer.json.

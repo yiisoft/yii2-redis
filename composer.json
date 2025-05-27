@@ -1,7 +1,13 @@
 {
     "name": "yiisoft/yii2-redis",
     "description": "Redis Cache, Session and ActiveRecord for the Yii framework",
-    "keywords": ["yii2", "redis", "active-record", "cache", "session"],
+    "keywords": [
+        "yii2",
+        "redis",
+        "active-record",
+        "cache",
+        "session"
+    ],
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
     "support": {
@@ -18,12 +24,12 @@
         }
     ],
     "require": {
-        "yiisoft/yii2": "~2.0.39",
-        "ext-openssl": "*"
+        "php": ">=8.1",
+        "ext-openssl": "*",
+        "yiisoft/yii2": "22.0.x-dev"
     },
     "require-dev": {
-        "phpunit/phpunit": "<7",
-        "yiisoft/yii2-dev": "~2.0.39"
+        "phpunit/phpunit": "^9.6"
     },
     "autoload": {
         "psr-4": { "yii\\redis\\": "src" }
@@ -31,17 +37,6 @@
     "autoload-dev": {
         "psr-4": { "yiiunit\\extensions\\redis\\": "tests/"}
     },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.0.x-dev"
-        }
-    },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://asset-packagist.org"
-        }
-    ],
     "config": {
         "allow-plugins": {
             "yiisoft/yii2-composer": true
