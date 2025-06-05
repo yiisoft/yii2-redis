@@ -5,6 +5,7 @@ Yii Framework 2 redis extension Change Log
 ------------------------
 
 - Bug #270: Prevent null parameter on `mb_strlen` to avoid PHP 8.4 implicity nullable types deprecation (tehmaestro)
+- Bug CVE-2025-48493: Prevent logging `AUTH` parameters when `YII_DEBUG` is off (samdark)
 
 
 2.0.19 February 13, 2025
