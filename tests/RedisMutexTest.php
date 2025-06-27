@@ -97,7 +97,7 @@ class RedisMutexTest extends TestCase
         }
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $databases = TestCase::getParam('databases');

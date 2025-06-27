@@ -68,7 +68,7 @@ class ActiveRecordTest extends TestCase
         return OrderItemWithNullFK::className();
     }
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         ActiveRecord::$db = $this->getConnection();
@@ -539,10 +539,10 @@ class ActiveRecordTest extends TestCase
         $script = $lua->buildOne($query);
 
         foreach($expectedStrings as $string) {
-            $this->assertContains($string, $script);
+            $this->assertStringContainsString($string, $script);
         }
         foreach($unexpectedStrings as $string) {
-            $this->assertNotContains($string, $script);
+            $this->assertStringNotContainsString($string, $script);
         }
     }
 
@@ -594,10 +594,10 @@ class ActiveRecordTest extends TestCase
         $script = $lua->buildOne($query);
 
         foreach($expectedStrings as $string) {
-            $this->assertContains($string, $script);
+            $this->assertStringContainsString($string, $script);
         }
         foreach($unexpectedStrings as $string) {
-            $this->assertNotContains($string, $script);
+            $this->assertStringNotContainsString($string, $script);
         }
         // ensure injected FLUSHALL call did not succeed
         $query->one();
@@ -657,7 +657,7 @@ class ActiveRecordTest extends TestCase
 
     public function testFind()
     {
-        /* @var $customerClass \yii\db\ActiveRecordInterface */
+        /* @var $customerClass \yii\db\ActiveRecordInterface|string */
         $customerClass = $this->getCustomerClass();
 
         // find one

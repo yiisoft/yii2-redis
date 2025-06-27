@@ -13,7 +13,7 @@ use yiiunit\extensions\redis\support\ConnectionWithErrorEmulator;
  */
 class ConnectionTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->getConnection(false)->configSet('timeout', 0);
         parent::tearDown();
