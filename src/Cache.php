@@ -391,7 +391,9 @@ class Cache extends \yii\caching\Cache
         $replicas = $this->replicas;
         shuffle($replicas);
         $config = array_shift($replicas);
-        $this->_replica = Instance::ensure($config, Connection::className());
+        $class = $config['class'] ?? 'yii\redis\Connection';
+        $connection = Yii::createObject($class, $config);
+        $this->_replica = Instance::ensure($connection, ConnectionInterface::class);
         return $this->_replica;
     }
 }
