@@ -139,7 +139,7 @@ class Cache extends \yii\caching\Cache
      * should be enabled, or false if it should be disabled.
      * @since 2.0.11
      */
-    public $forceClusterMode;
+    public $forceClusterMode = false;
     /**
      * @var bool whether redis [[Connection::$database|database]] is shared and can contain other data than cache.
      * Setting this to `true` will change [[flush()]] behavior - instead of using [`FLUSHDB`](https://redis.io/commands/flushdb)

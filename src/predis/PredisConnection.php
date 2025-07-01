@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace yii\redis;
+namespace yii\redis\predis;
 
 use Predis\Client;
 use Predis\Response\ErrorInterface;
@@ -10,7 +10,7 @@ use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\Inflector;
 use yii\redis\Connection as YiiRedisConnection;
-use yii\redis\predis\YiiCommandFactory;
+use yii\redis\predis\Command\CommandDecorator;
 
 /**
  * Class PredisConnection
@@ -66,77 +66,6 @@ use yii\redis\predis\YiiCommandFactory;
 class PredisConnection extends YiiRedisConnection
 {
     /**
-     * @internal  should not be modified from outside
-     * @deprecated
-     */
-    public $scheme;
-    /**
-     * @internal  should not be modified from outside
-     * @deprecated
-     */
-    public $hostname;
-    /**
-     * @internal  should not be modified from outside
-     * @deprecated
-     */
-    public $redirectConnectionString;
-    /**
-     * @internal  should not be modified from outside
-     * @deprecated
-     */
-    public $unixSocket;
-    /**
-     * @internal  should not be modified from outside
-     * @deprecated
-     */
-    public $username;
-    /**
-     * @internal  should not be modified from outside
-     * @deprecated
-     */
-    public $password;
-    /**
-     * @internal  should not be modified from outside
-     * @deprecated
-     */
-    public $database;
-    /**
-     * @internal  should not be modified from outside
-     * @deprecated
-     */
-    public $connectionTimeout;
-    /**
-     * @internal  should not be modified from outside
-     * @deprecated
-     */
-    public $dataTimeout;
-    /**
-     * @internal  should not be modified from outside
-     * @deprecated
-     */
-    public $useSSL;
-    /**
-     * @internal  should not be modified from outside
-     * @deprecated
-     */
-    public $contextOptions;
-    /**
-     * @internal  should not be modified from outside
-     * @deprecated
-     */
-    public $socketClientFlags;
-    /**
-     * @internal  should not be modified from outside
-     * @deprecated
-     */
-    public $retries;
-    /**
-     * @internal  should not be modified from outside
-     * @deprecated
-     */
-    public $retryInterval;
-
-    /**
      * @var mixed Connection parameters for one or more servers.
      */
     public mixed $parameters;
@@ -166,7 +95,7 @@ class PredisConnection extends YiiRedisConnection
      * @return mixed|ErrorInterface|ResponseInterface
      * @throws InvalidConfigException
      */
-    public function executeCommand($name, $params = [])
+    public function executeCommand($name, $params = []): mixed
     {
         $this->open();
 
@@ -175,7 +104,8 @@ class PredisConnection extends YiiRedisConnection
 //        $aaa = $this->database;
 //        $this->clientSocket->select(1);
 
-        $res = $this->clientSocket->executeCommand($this->clientSocket->createCommand($name, $params));
+        $command = $this->clientSocket->createCommand($name, $params);
+        $res = $this->clientSocket->executeCommand(new CommandDecorator($command));
         return $res;
     }
 
@@ -197,12 +127,12 @@ class PredisConnection extends YiiRedisConnection
 
         Yii::debug('Opening redis DB connection', __METHOD__);
 
-        $otp = array_merge([
-            'commands' => new YiiCommandFactory(),
-            $this->options,
-        ]);
+//        $otp = array_merge([
+//            'commands' => new CommandFactory(),
+//            $this->options,
+//        ]);
 
-        $this->clientSocket = new Client($this->parameters, $otp);
+        $this->clientSocket = new Client($this->parameters, $this->options);
         $this->initConnection();
     }
 
