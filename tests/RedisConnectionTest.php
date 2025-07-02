@@ -107,11 +107,7 @@ class ConnectionTest extends TestCase
         sleep(1);
         $this->assertTrue($db->ping());
         sleep(3);
-        if (method_exists($this, 'setExpectedException')) {
-            $this->setExpectedException('\yii\redis\SocketException');
-        } else {
-            $this->expectException('\yii\redis\SocketException');
-        }
+        $this->expectException('\yii\redis\SocketException');
         $this->assertTrue($db->ping());
     }
 
