@@ -4,8 +4,8 @@ version: '3.8'
 
 services:
 
-  PHP:
-    image: "yiisoftware/yii2-php:8.1-apache"
+  yii2-redis-php:
+    image: "yiisoftware/yii2-php:${PHP_VERSION:-8.1}-apache"
     networks:
       - yii2-redis
     volumes:
