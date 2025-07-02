@@ -102,11 +102,11 @@ class ConnectionTest extends TestCase
     public function testConnectionTimeout()
     {
         $db = $this->getConnection(false);
-        $db->configSet('timeout', 1);
+        $db->configSet('timeout', 2);
         $this->assertTrue($db->ping());
         sleep(1);
         $this->assertTrue($db->ping());
-        sleep(2);
+        sleep(3);
         if (method_exists($this, 'setExpectedException')) {
             $this->setExpectedException('\yii\redis\SocketException');
         } else {
@@ -122,7 +122,7 @@ class ConnectionTest extends TestCase
 
         $db = $this->getConnection(false);
         $db->retries = 1;
-        $db->configSet('timeout', 1);
+        $db->configSet('timeout', 2);
         $this->assertCount(3, $logger->messages, 'log of connection and init commands.');
 
         $this->assertTrue($db->ping());
@@ -131,7 +131,7 @@ class ConnectionTest extends TestCase
 
         $this->assertTrue($db->ping());
         $this->assertCount(5, $logger->messages, 'log +1 ping command.');
-        sleep(2);
+        sleep(3);
 
         // reconnect should happen here
 
