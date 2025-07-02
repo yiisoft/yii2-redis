@@ -1,4 +1,3 @@
-version: '3.8'
 
 # NOTE: When using docker-compose for testing, make sure you set 'hostname' to 'redis' in tests/data/config.php
 
