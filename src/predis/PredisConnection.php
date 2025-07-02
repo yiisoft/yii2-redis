@@ -41,24 +41,6 @@ use yii\redis\predis\Command\CommandDecorator;
  *           ],
  *      ],
  * ];
- * // redis-cluster
- *  'redis' = [
- *       'class' => PredisConnection::class,
- *       'parameters' => [
- *           'tcp://127.0.0.1:5380?timeout=0.100',
- *           'tcp://127.0.0.1:5381?timeout=0.100',
- *           'tcp://127.0.0.1:5382?timeout=0.100',
- *       ],
- *       'options' => [
- *           'cluster' => 'redis'
- *          'parameters' => [
- *              'password' => 'password',
- *              // @see \Predis\Connection\StreamConnection
- *              'persistent' => true, // performs the connection asynchronously
- *              'async_connect' => true, //the connection asynchronously
- *              'read_write_timeout' => 0.1, // timeout of read / write operations
- *          ],
- *  ];
  * ```
  */
 class PredisConnection extends Component implements ConnectionInterface
