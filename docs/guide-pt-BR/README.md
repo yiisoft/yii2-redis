@@ -7,6 +7,7 @@ Iniciando
 ---------------
 
 * [Instalação](installation.md)
+* [Поддержка predis](predis.md)
 
 Uso
 ----- 
