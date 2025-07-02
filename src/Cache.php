@@ -7,7 +7,6 @@
 
 namespace yii\redis;
 
-use Yii;
 use yii\db\Exception;
 use yii\di\Instance;
 
@@ -372,7 +371,7 @@ class Cache extends \yii\caching\Cache
      * defined in this instance. Only used in getValue() and getValues().
      * @since 2.0.8
      * @return array|string|ConnectionInterface
-     * @throws \yii\base\InvalidConfigException
+     * @throws \yii\base\InvalidConfigException|\yii\base\NotSupportedException
      */
     protected function getReplica()
     {
@@ -388,12 +387,16 @@ class Cache extends \yii\caching\Cache
             return $this->_replica = $this->redis;
         }
 
+        if ($this->redis instanceof \yii\redis\Predis\PredisConnection) {
+            throw new \yii\base\NotSupportedException(
+                'predis on supported replicas',
+            );
+        }
+
         $replicas = $this->replicas;
         shuffle($replicas);
         $config = array_shift($replicas);
-        $class = $config['class'] ?? 'yii\redis\Connection';
-        $connection = Yii::createObject($class, $config);
-        $this->_replica = Instance::ensure($connection, ConnectionInterface::class);
+        $this->_replica = Instance::ensure($config, Connection::className());
         return $this->_replica;
     }
 }
