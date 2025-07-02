@@ -31,7 +31,7 @@ class Customer extends ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributes():array
+    public function attributes(): array
     {
         return ['id', 'email', 'name', 'address', 'status', 'profile_id'];
     }

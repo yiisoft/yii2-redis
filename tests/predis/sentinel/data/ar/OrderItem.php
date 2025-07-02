@@ -48,6 +48,4 @@ class OrderItem extends ActiveRecord
     }
 
 
-
-
 }
