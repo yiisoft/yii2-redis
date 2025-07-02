@@ -32,7 +32,7 @@ class ConnectionTest extends TestCase
         $db->close();
 
         $db = $this->getConnection(false);
-        $db->getClientSocket()->select(1);
+        $db->getClient()->select(1);
         $db->open();
         $this->assertNull($db->get('YIITESTKEY'));
         $db->close();

@@ -6,6 +6,7 @@ namespace yii\redis\predis;
 use Predis\Client;
 use Predis\Response\ErrorInterface;
 use Predis\Response\ResponseInterface;
+use Predis\Response\Status;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
@@ -29,9 +30,6 @@ use yii\redis\predis\Command\CommandDecorator;
  *      ],
  *      'options' => [
  *          'replication' => 'sentinel',
- *          // значение для 'service' можно получить подключившись к redis
- *          // через redis-cli -h 127.0.0.1 -p 26379 --pass 'password'
- *          // и выполнить SENTINEL masters
  *          'service' => 'mymaster',
  *          'parameters' => [
  *              'password' => 'password',
@@ -40,7 +38,6 @@ use yii\redis\predis\Command\CommandDecorator;
  *              'persistent' => true, // performs the connection asynchronously
  *              'async_connect' => true, //the connection asynchronously
  *              'read_write_timeout' => 0.1, // timeout of read / write operations
- *              //'timeout' => 0.1, // @note timeout переопределяется в predis, timeout в строке подключения
  *           ],
  *      ],
  * ];
@@ -60,7 +57,6 @@ use yii\redis\predis\Command\CommandDecorator;
  *              'persistent' => true, // performs the connection asynchronously
  *              'async_connect' => true, //the connection asynchronously
  *              'read_write_timeout' => 0.1, // timeout of read / write operations
- *              //'timeout' => 0.1, // @note timeout переопределяется в predis, используй timeout в строке подключения
  *          ],
  *  ];
  * ```
@@ -70,13 +66,13 @@ class PredisConnection extends Component implements ConnectionInterface
     /**
      * @event Event an event that is triggered after a DB connection is established
      */
-    const EVENT_AFTER_OPEN = 'afterOpen';
+    public const EVENT_AFTER_OPEN = 'afterOpen';
 
     /**
      * @var array List of available redis commands.
      * @see https://redis.io/commands
      */
-    public $redisCommands = [
+    public array $redisCommands = [
         'APPEND', // Append a value to a key
         'AUTH', // Authenticate to the server
         'BGREWRITEAOF', // Asynchronously rewrite the append-only file
@@ -293,7 +289,7 @@ class PredisConnection extends Component implements ConnectionInterface
     /**
      * @return LuaScriptBuilder
      */
-    public function getLuaScriptBuilder()
+    public function getLuaScriptBuilder(): LuaScriptBuilder
     {
         return new LuaScriptBuilder();
     }
@@ -303,7 +299,7 @@ class PredisConnection extends Component implements ConnectionInterface
      * This method is invoked right after the DB connection is established.
      * The default implementation triggers an [[EVENT_AFTER_OPEN]] event.
      */
-    protected function initConnection()
+    protected function initConnection(): void
     {
         $this->trigger(self::EVENT_AFTER_OPEN);
     }
@@ -321,7 +317,7 @@ class PredisConnection extends Component implements ConnectionInterface
     /**
      * @var Client|null redis connection
      */
-    protected Client|null $clientSocket = null;
+    protected Client|null $client = null;
 
     /**
      * Returns a value indicating whether the DB connection is established.
@@ -330,7 +326,7 @@ class PredisConnection extends Component implements ConnectionInterface
      */
     public function getIsActive(): bool
     {
-        return (bool)$this->clientSocket?->isConnected();
+        return (bool)$this->client?->isConnected();
     }
 
     /**
@@ -341,14 +337,14 @@ class PredisConnection extends Component implements ConnectionInterface
     {
         $this->open();
 
-        Yii::debug("Executing Redis Command: {$name} " . implode(' ', $params), __METHOD__);
+        Yii::debug("Executing Redis Command: $name " . implode(' ', $params), __METHOD__);
 
-//        $aaa = $this->database;
-//        $this->clientSocket->select(1);
-
-        $command = $this->clientSocket->createCommand($name, $params);
-        $res = $this->clientSocket->executeCommand(new CommandDecorator($command));
-        return $res;
+        $command = $this->client->createCommand($name, $params);
+        $response = $this->client->executeCommand(new CommandDecorator($command));
+        if ($response instanceof Status) {
+            return (string)$response === 'OK' || (string)$response === 'PONG';
+        }
+        return $response;
     }
 
     /**
@@ -359,7 +355,7 @@ class PredisConnection extends Component implements ConnectionInterface
      */
     public function open(): void
     {
-        if (null !== $this->clientSocket) {
+        if (null !== $this->client) {
             return;
         }
 
@@ -369,20 +365,18 @@ class PredisConnection extends Component implements ConnectionInterface
 
         Yii::debug('Opening redis DB connection', __METHOD__);
 
-//        $otp = array_merge([
-//            'commands' => new CommandFactory(),
-//            $this->options,
-//        ]);
-
-        $this->clientSocket = new Client($this->parameters, $this->options);
+        $this->client = new Client($this->parameters, $this->options);
         $this->initConnection();
     }
 
+
     /**
+     * Closes the currently active DB connection.
+     * It does nothing if the connection is already closed.
      */
     public function close(): void
     {
-        $this->clientSocket?->disconnect();
+        $this->client?->disconnect();
     }
 
     /**
@@ -391,19 +385,11 @@ class PredisConnection extends Component implements ConnectionInterface
      * @return Client|null
      * @throws InvalidConfigException
      */
-    public function getClientSocket(): ?Client
+    public function getClient(): ?Client
     {
         $this->open();
 
-        return $this->clientSocket;
-    }
-
-    /**
-     */
-    public function ping($message = null): bool
-    {
-        $this->open();
-        return (string)$this->clientSocket->ping() === 'PONG';
+        return $this->client;
     }
 
     /**
@@ -415,13 +401,13 @@ class PredisConnection extends Component implements ConnectionInterface
      * @param string $name name of the missing method to execute
      * @param array $params method call arguments
      * @return mixed
+     * @throws InvalidConfigException
      */
-    public function __call($name, $params)
+    public function __call($name, $params): mixed
     {
         $redisCommand = strtoupper(Inflector::camel2words($name, false));
-        if (in_array($redisCommand, $this->redisCommands)) {
-            $res = $this->executeCommand($redisCommand, $params);
-            return $res;
+        if (in_array($redisCommand, $this->redisCommands, true)) {
+            return $this->executeCommand($redisCommand, $params);
         }
 
         return parent::__call($name, $params);

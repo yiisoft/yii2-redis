@@ -8,7 +8,6 @@
 $config = [
     'databases' => [
         'redis' => [
-//            'class' => PredisConnection::class,
             'parameters' => 'tcp://redis:6379',
             'options' => [
                 'parameters' => [

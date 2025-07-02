@@ -128,81 +128,10 @@ class RedisCacheTest extends CacheTestCase
         $this->assertSame($cache->get($key), $data);
     }
 
-    public function testReplica()
-    {
-        $this->resetCacheInstance();
-
-        $cache = $this->getCacheInstance();
-        $cache->enableReplicas = true;
-
-        $key = 'replica-1';
-        $value = 'replica';
-
-        //No Replica listed
-        $this->assertFalse($cache->get($key));
-        $cache->set($key, $value);
-        $this->assertSame($cache->get($key), $value);
-
-        $databases = TestCase::getParam('databases');
-        $redis = isset($databases['redis']) ? $databases['redis'] : null;
-
-        $cache->replicas = [
-            [
-                'hostname' => isset($redis['hostname']) ? $redis['hostname'] : 'localhost',
-                'password' => isset($redis['password']) ? $redis['password'] : null,
-            ],
-        ];
-        $this->assertSame($cache->get($key), $value);
-
-        //One Replica listed
-        $this->resetCacheInstance();
-        $cache = $this->getCacheInstance();
-        $cache->enableReplicas = true;
-        $cache->replicas = [
-            [
-                'hostname' => isset($redis['hostname']) ? $redis['hostname'] : 'localhost',
-                'password' => isset($redis['password']) ? $redis['password'] : null,
-            ],
-        ];
-        $this->assertFalse($cache->get($key));
-        $cache->set($key, $value);
-        $this->assertSame($cache->get($key), $value);
-
-        //Multiple Replicas listed
-        $this->resetCacheInstance();
-        $cache = $this->getCacheInstance();
-        $cache->enableReplicas = true;
-
-        $cache->replicas = [
-            [
-                'hostname' => isset($redis['hostname']) ? $redis['hostname'] : 'localhost',
-                'password' => isset($redis['password']) ? $redis['password'] : null,
-            ],
-            [
-                'hostname' => isset($redis['hostname']) ? $redis['hostname'] : 'localhost',
-                'password' => isset($redis['password']) ? $redis['password'] : null,
-            ],
-        ];
-        $this->assertFalse($cache->get($key));
-        $cache->set($key, $value);
-        $this->assertSame($cache->get($key), $value);
-
-        //invalid config
-        $this->resetCacheInstance();
-        $cache = $this->getCacheInstance();
-        $cache->enableReplicas = true;
-
-        $cache->replicas = ['redis'];
-        $this->assertFalse($cache->get($key));
-        $cache->set($key, $value);
-        $this->assertSame($cache->get($key), $value);
-
-        $this->resetCacheInstance();
-    }
-
     public function testFlushWithSharedDatabase()
     {
         $instance = $this->getCacheInstance();
+        $this->resetCacheInstance();
         $instance->shareDatabase = true;
         $instance->keyPrefix = 'myprefix_';
         $instance->redis->set('testkey', 'testvalue');

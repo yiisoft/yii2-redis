@@ -8,7 +8,6 @@
 $config = [
     'databases' => [
         'redis' => [
-//            'class' => PredisConnection::class,
             'parameters' => ['tcp://redis-sentinel-1:26379', 'tcp://redis-sentinel-2:26379', 'tcp://redis-sentinel-3:26379'],
             'options' => [
                 'replication' => 'sentinel',
