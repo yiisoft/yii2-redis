@@ -27,6 +27,7 @@ jobs:
 
       - name: PHP tests for PHP ${{ matrix.php }}
         run: |
+          ls -al
           make build v=${{ matrix.php }}
           make test v=${{ matrix.php }}
 
