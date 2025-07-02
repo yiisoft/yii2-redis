@@ -99,6 +99,30 @@ class ConnectionTest extends TestCase
         $this->assertTrue($db2->ping());
     }
 
+    public function testConnectionTimeout()
+    {
+        $db = $this->getConnection(false);
+        $db->configSet('timeout', 1);
+        $this->assertTrue($db->ping());
+        sleep(1);
+        $this->assertTrue($db->ping());
+
+        $db->close();
+        $db->on(Connection::EVENT_AFTER_OPEN, function() {
+            // sleep 2 seconds after connect to make every command time out
+            sleep(2);
+        });
+
+        $exception = false;
+        try {
+            sleep(3);
+            $db->ping();
+        } catch (SocketException $e) {
+            $exception = true;
+        }
+        $this->assertTrue($exception, 'SocketException should have been thrown.');
+    }
+
     public function testConnectionTimeoutRetry()
     {
         $logger = new Logger();
