@@ -1,16 +1,31 @@
 on:
-  - pull_request
-  - push
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - '.gitignore'
+      - '.gitattributes'
+
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - '.gitignore'
+      - '.gitattributes'
 
 name: build
 
 jobs:
   tests:
-    name: PHP ${{ matrix.php }}-redis-4
+    name: PHP ${{ matrix.php }}-redis-${{ matrix.redis }}
 
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
+
       matrix:
         os:
           - ubuntu-latest
@@ -29,5 +44,3 @@ jobs:
         run: |
           ls -al
           make test-sentinel v=${{ matrix.php }}
-
-

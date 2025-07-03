@@ -11,7 +11,7 @@ use yiiunit\extensions\redis\support\ConnectionWithErrorEmulator;
 /**
  * @group redis
  */
-class ConnectionTest extends TestCase
+class RedisConnectionTest extends TestCase
 {
     protected function tearDown(): void
     {

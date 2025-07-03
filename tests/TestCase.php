@@ -114,6 +114,11 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         return $db;
     }
 
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+    }
+
     /**
      * Invokes a inaccessible method.
      * @param $object
