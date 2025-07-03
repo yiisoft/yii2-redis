@@ -195,7 +195,7 @@ class ConnectionTest extends TestCase
         try {
             // should try to reconnect 2 times, before finally failing
             // results in 3 times sending the PING command to redis
-            sleep(3);
+            sleep(4);
             $db->ping();
         } catch (SocketException $e) {
             $exception = true;
