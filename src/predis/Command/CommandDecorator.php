@@ -20,10 +20,9 @@ class CommandDecorator extends COMMAND
      */
     public function parseResponse($data)
     {
-        return $data; // Ваша реализация
+        return $data;
     }
 
-    // Делегируем все остальные вызовы оригинальной команде
     public function __call($method, $args)
     {
         return call_user_func_array([$this->originalCommand, $method], $args);
