@@ -371,11 +371,12 @@ class Cache extends \yii\caching\Cache
      * defined in this instance. Only used in getValue() and getValues().
      * @since 2.0.8
      * @return array|string|ConnectionInterface
-     * @throws \yii\base\InvalidConfigException|\yii\base\NotSupportedException
+     * @throws \yii\base\InvalidConfigException
      */
     protected function getReplica()
     {
-        if ($this->enableReplicas === false) {
+        // @NOTE Predis uses its own implementation of balancing
+        if ($this->enableReplicas === false || $this->redis instanceof \yii\redis\Predis\PredisConnection) {
             return $this->redis;
         }
 
@@ -385,12 +386,6 @@ class Cache extends \yii\caching\Cache
 
         if (empty($this->replicas)) {
             return $this->_replica = $this->redis;
-        }
-
-        if ($this->redis instanceof \yii\redis\Predis\PredisConnection) {
-            throw new \yii\base\NotSupportedException(
-                'predis on supported replicas',
-            );
         }
 
         $replicas = $this->replicas;
