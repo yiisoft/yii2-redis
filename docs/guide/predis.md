@@ -1,4 +1,4 @@
-Predis for Redis Cache, Session и ActiveRecord 
+Predis for Redis Cache, Session, and ActiveRecord 
 ===============================================
 ## Configuring application
 
