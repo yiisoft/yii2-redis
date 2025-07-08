@@ -27,9 +27,6 @@ class RedisCacheTest extends AbstractCacheTestCase
             $this->markTestSkipped('No redis server connection configured.');
         }
         $connection = new PredisConnection($params);
-//        if (!@stream_socket_client($connection->hostname . ':' . $connection->port, $errorNumber, $errorDescription, 0.5)) {
-//            $this->markTestSkipped('No redis server running at ' . $connection->hostname . ':' . $connection->port . ' : ' . $errorNumber . ' - ' . $errorDescription);
-//        }
 
         $this->mockApplication(['components' => ['redis' => $connection]]);
 
