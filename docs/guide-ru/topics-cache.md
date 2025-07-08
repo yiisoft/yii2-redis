@@ -35,7 +35,7 @@ return [
 ```
 
 Кэш предоставляет все методы [[yii\caching\CacheInterface]]. Если вы хотите получить доступ к определенным redis методам, которые не присутствуют
-в интерфейсе, вы можете использовать их через [[yii\redis\Cache::$redis]], который является экземпляром [[yii\redis\Connection]]:
+в интерфейсе, вы можете использовать их через [[yii\redis\Cache::$redis]], который является экземпляром [[yii\redis\ConnectionInterface]]:
 
 ```php
 Yii::$app->cache->redis->hset('mykey', 'somefield', 'somevalue');

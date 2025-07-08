@@ -35,7 +35,7 @@ return [
 ];
 ```
 
-O cache fornece todos os métodos do [[yii\caching\CacheInterface]]. Se você quiser acessar os métodos específicos do redis que não são incluído na interface, você pode usá-los via [[yii\redis\Cache::$redis]], que é uma instância de [[yii\redis\Connection]]:
+O cache fornece todos os métodos do [[yii\caching\CacheInterface]]. Se você quiser acessar os métodos específicos do redis que não são incluído na interface, você pode usá-los via [[yii\redis\Cache::$redis]], que é uma instância de [[yii\redis\ConnectionInterface]]:
 
 ```php
 Yii::$app->cache->redis->hset('mykey', 'somefield', 'somevalue');
