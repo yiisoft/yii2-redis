@@ -16,6 +16,7 @@ class RedisConnectionTest extends TestCase
     protected function tearDown(): void
     {
         $this->getConnection(false)->configSet('timeout', 0);
+        $this->getConnection()->close();
         parent::tearDown();
     }
 
@@ -106,11 +107,21 @@ class RedisConnectionTest extends TestCase
         $this->assertTrue($db->ping());
         sleep(1);
         $this->assertTrue($db->ping());
-        sleep(2);
 
-        $this->expectException('\yii\redis\SocketException');
+        $db->close();
+        $db->on(Connection::EVENT_AFTER_OPEN, function() {
+            // sleep 2 seconds after connect to make every command time out
+            sleep(2);
+        });
 
-        $this->assertTrue($db->ping());
+        $exception = false;
+        try {
+            sleep(3);
+            $db->ping();
+        } catch (SocketException $e) {
+            $exception = true;
+        }
+        $this->assertTrue($exception, 'SocketException should have been thrown.');
     }
 
     public function testConnectionTimeoutRetry()
@@ -185,7 +196,7 @@ class RedisConnectionTest extends TestCase
         try {
             // should try to reconnect 2 times, before finally failing
             // results in 3 times sending the PING command to redis
-            sleep(2);
+            sleep(4);
             $db->ping();
         } catch (SocketException $e) {
             $exception = true;

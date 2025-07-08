@@ -14,7 +14,7 @@
 $config = [
     'databases' => [
         'redis' => [
-            'hostname' => 'localhost',
+            'hostname' => 'redis',
             'port' => 6379,
             'database' => 0,
             'password' => null,

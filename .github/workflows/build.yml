@@ -31,49 +31,16 @@ jobs:
           - ubuntu-latest
 
         php:
-          - 8.1
-          - 8.2
-          - 8.3
-          - 8.4
-
-        redis:
-          - 6
-          - 7
-          - 8
-
-    services:
-      redis:
-        image: redis:${{ matrix.redis }}
-        ports:
-          - 6379:6379
-        options: --health-cmd="redis-cli ping" --health-interval=10s --health-timeout=5s --health-retries=5
+          - "8.1"
+          - "8.2"
+          - "8.3"
+          - "8.4"
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
-      - name: Install PHP with extensions
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: curl, intl, redis
-          ini-values: date.timezone='UTC'
-          tools: composer:v2, pecl
-
-      - name: Install dependencies with Composer
-        run: composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader
-
-      - name: Run tests with phpunit.
-        if: matrix.php != '8.1'
-        run: vendor/bin/phpunit --colors=always
-
-      - name: Run tests with phpunit and generate coverage.
-        if: matrix.php == '8.1'
-        run: vendor/bin/phpunit --coverage-clover=coverage.xml --colors=always
-
-      - name: Upload coverage to Codecov.
-        if: matrix.php == '8.1'
-        uses: codecov/codecov-action@v4
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
+      - name: PHP tests for PHP ${{ matrix.php }}
+        run: |
+          ls -al
+          make test-sentinel v=${{ matrix.php }}

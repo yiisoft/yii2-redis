@@ -657,7 +657,7 @@ class ActiveRecordTest extends TestCase
 
     public function testFind()
     {
-        /* @var $customerClass \yii\db\ActiveRecordInterface */
+        /* @var $customerClass \yii\db\ActiveRecordInterface|string */
         $customerClass = $this->getCustomerClass();
 
         // find one

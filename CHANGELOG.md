@@ -1,9 +1,19 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
-2.0.20 under development
+2.0.21 under development
 ------------------------
 
+- New #276: Added support for predis (antonshevelev)
+- New #276: Changed default value of yii\redis\Cache::$forceClusterMode to false (antonshevelev)
+- New #276: Implemented yii\redis\ConnectionInterface in yii\redis\Connection (antonshevelev)
+- New #276: Updated minimum required PHP version to 8.1 (antonshevelev)
+
+
+2.0.20 June 05, 2025
+--------------------
+
+- Bug CVE-2025-48493: Prevent logging `AUTH` parameters when `YII_DEBUG` is off (samdark)
 - Bug #270: Prevent null parameter on `mb_strlen` to avoid PHP 8.4 implicity nullable types deprecation (tehmaestro)
 
 

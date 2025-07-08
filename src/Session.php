@@ -57,7 +57,7 @@ use yii\di\Instance;
 class Session extends \yii\web\Session
 {
     /**
-     * @var Connection|string|array the Redis [[Connection]] object or the application component ID of the Redis [[Connection]].
+     * @var ConnectionInterface|string|array the Redis [[Connection]] object or the application component ID of the Redis [[Connection]].
      * This can also be an array that is used to create a redis [[Connection]] instance in case you do not want do configure
      * redis connection as an application component.
      * After the Session object is created, if you want to change this property, you should only assign it
@@ -80,7 +80,7 @@ class Session extends \yii\web\Session
      */
     public function init()
     {
-        $this->redis = Instance::ensure($this->redis, Connection::className());
+        $this->redis = Instance::ensure($this->redis, ConnectionInterface::class);
         if ($this->keyPrefix === null) {
             $this->keyPrefix = substr(md5(Yii::$app->id), 0, 5);
         }

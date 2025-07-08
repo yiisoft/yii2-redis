@@ -37,7 +37,7 @@ return [
 ```
 
 このキャッシュは [[yii\caching\CacheInterface]] の全てのメソッドを提供します。インタフェイスに含まれていない redis 固有のメソッドにアクセスしたい場合は、
-[[yii\redis\Connection]] のインスタンスである [[yii\redis\Cache::$redis]] を通じてアクセスすることが出来ます。
+[[yii\redis\ConnectionInterface]] のインスタンスである [[yii\redis\Cache::$redis]] を通じてアクセスすることが出来ます。
 
 ```php
 Yii::$app->cache->redis->hset('mykey', 'somefield', 'somevalue');

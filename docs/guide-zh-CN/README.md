@@ -10,6 +10,7 @@ Yii 2 Redis 缓存，会话和活动记录
 ---------------
 
 * [安装](installation.md)
+* [支持“predis”](predis.md)
 
 用法
 ----- 

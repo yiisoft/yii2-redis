@@ -37,7 +37,7 @@ return [
 ```
 
 The cache provides all methods of the [[yii\caching\CacheInterface]]. If you want to access redis specific methods that are not
-included in the interface, you can use them via [[yii\redis\Cache::$redis]], which is an instance of [[yii\redis\Connection]]:
+included in the interface, you can use them via [[yii\redis\Cache::$redis]], which is an instance of [[yii\redis\ConnectionInterface]]:
 
 ```php
 Yii::$app->cache->redis->hset('mykey', 'somefield', 'somevalue');

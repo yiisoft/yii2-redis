@@ -100,3 +100,8 @@ return [
     ]
 ];
 ```
+
+Additional topics
+-----------------
+
+* [predis support](predis.md)

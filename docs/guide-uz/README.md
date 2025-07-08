@@ -7,6 +7,7 @@ Ishni boshlash
 ---------------
 
 * [O'rnatish](installation.md)
+* [predis qo'llab-quvvatlash](predis.md)
 
 Foydalanish
 ----- 

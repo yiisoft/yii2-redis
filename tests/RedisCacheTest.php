@@ -202,6 +202,7 @@ class RedisCacheTest extends AbstractCacheTestCase
     public function testFlushWithSharedDatabase()
     {
         $instance = $this->getCacheInstance();
+        $this->resetCacheInstance();
         $instance->shareDatabase = true;
         $instance->keyPrefix = 'myprefix_';
         $instance->redis->set('testkey', 'testvalue');

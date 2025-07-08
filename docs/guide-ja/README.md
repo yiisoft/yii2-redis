@@ -9,6 +9,7 @@ Yii 2 Redis キャッシュ、セッションおよびアクティブレコー�
 --------
 
 * [インストール](installation.md)
+* [Predisサポート](predis.md)
 
 使用方法
 --------
