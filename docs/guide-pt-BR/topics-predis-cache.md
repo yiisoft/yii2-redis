@@ -1,7 +1,8 @@
-Использование компонента Cache в месте с predis
+Usando o componente Cache com predis
 =========================
 
-Чтобы использовать компонент `Cache`, в дополнение к настройке соединения, как описано в разделе [predis](predis.md), вам также нужно настроить компонент `cache` как [[yii\redis\Cache]]:
+Para usar o componente `Cache`, além de configurar a conexão conforme descrito na seção [predis](predis.md),
+você também tem que configurar o componente `cache` para ser [[yii\redis\Cache]]:
 
 ```php
 return [
@@ -20,7 +21,7 @@ return [
 ];
 ```
 
-Если вы используете только кеш redis (т.е. не используете его ActiveRecord или Session), вы также можете настроить параметры соединения в пределах кеш-компонента (в этом случае необходимо настроить конфигурационный компонент подключения):
+Se você usa apenas o cache de redis (ou seja, não está usando seu ActiveRecord ou Session), você também pode configurar os parâmetros da conexão dentro do componente de cache (nenhum componente de aplicativo de conexão precisa ser configurado neste caso):
 
 ```php
 return [
@@ -39,8 +40,7 @@ return [
 ];
 ```
 
-Кэш предоставляет все методы [[yii\caching\CacheInterface]]. Если вы хотите получить доступ к определенным redis методам, которые не присутствуют
-в интерфейсе, вы можете использовать их через [[yii\redis\Cache::$redis]], который является экземпляром [[yii\redis\Connection]]:
+O cache fornece todos os métodos do [[yii\caching\CacheInterface]]. Se você quiser acessar os métodos específicos do redis que não são incluído na interface, você pode usá-los via [[yii\redis\Cache::$redis]], que é uma instância de [[yii\redis\ConnectionInterface]]:
 
 ```php
 Yii::$app->cache->redis->hset('mykey', 'somefield', 'somevalue');
@@ -48,4 +48,4 @@ Yii::$app->cache->redis->hget('mykey', 'somefield');
 ...
 ```
 
-Смотри [[yii\redis\Connection]] для получения полного списка доступных методов.
+Veja [[yii\redis\predis\PredisConnection]] para a lista completa de métodos disponíveis.

@@ -1,11 +1,10 @@
-Predis для Redis Cache, Session и ActiveRecord 
+Redis keshi, sessiya va ActiveRecord uchun Predis
 ===============================================
-## Конфигурирование приложения
+## Sozlash
 
-Чтобы использовать это расширение, вам необходимо настроить класс [[yii\redis\predis\PredisConnection]] в конфигурации вашего приложения:
+Kengaytmadan foydalanish uchun Yii2 sozlamalaridan `[[yii\redis\predis\PredisConnection]]` sinfini quyidagicha sozlashingiz kerak
 
-> [!WARNING]  
-> Класс yii\redis\predis\PredisConnection поддерживает подключение redis-cluster, но не даёт поддержки интерфейсов компонентов *cache*, *session*, *ActiveRecord*, *mutex*
+> Warning: Yii\redis\predis\PredisConnection klassi redis-klaster ulanishini qo‘llab-quvvatlaydi, lekin *kesh*, *sessiya*, *ActiveRecord*, *mutex* komponent interfeyslarini qo‘llab-quvvatlamaydi.
 
 ### standalone
 ```php
@@ -54,18 +53,18 @@ return [
 ];
 ```
 
->  Больше информации можно о конфигурации подключения и опциях можно получить в документации <a href="https://github.com/predis/predis">predis</a>.
+> Ulanish konfiguratsiyasi va opsiyalari haqida batafsil ma’lumotni <a href="https://github.com/predis/predis">predis</a> hujjatlarida topishingiz mumkin.
 
-Это обеспечивает базовый доступ к redis-хранилищу через компонент приложения `redis`:
+Quyidagi kodlar orqali redis'ga ma'lumot kiritish va o'qishning eng oddiy holatini ko'rish mumkin
 
 ```php
 Yii::$app->redis->set('mykey', 'some value');
 echo Yii::$app->redis->get('mykey');
 ```
 
-Дополнительно
+Qo'shimcha
 -----------------
 
-* [Использование компонента Cache с predis](topics-predis-cache.md)
-* [Использование компонента Session с predis](topics-predis-session.md)
+* [Kesh komponentidan predis bilan foydalanish](topics-predis-cache.md)
+* [Session komponentidan predis bilan foydalanish](topics-predis-session.md)
 
