@@ -4,6 +4,7 @@ namespace yiiunit\extensions\redis\predis\standalone;
 
 use yii\redis\ActiveQuery;
 use yii\redis\LuaScriptBuilder;
+use yiiunit\extensions\redis\base\ActiveRecordTestTrait;
 use yiiunit\extensions\redis\predis\standalone\data\ar\ActiveRecord;
 use yiiunit\extensions\redis\predis\standalone\data\ar\Customer;
 use yiiunit\extensions\redis\predis\standalone\data\ar\Item;
@@ -11,7 +12,6 @@ use yiiunit\extensions\redis\predis\standalone\data\ar\Order;
 use yiiunit\extensions\redis\predis\standalone\data\ar\OrderItem;
 use yiiunit\extensions\redis\predis\standalone\data\ar\OrderItemWithNullFK;
 use yiiunit\extensions\redis\predis\standalone\data\ar\OrderWithNullFK;
-use yiiunit\framework\ar\ActiveRecordTestTrait;
 
 /**
  * @group redis
