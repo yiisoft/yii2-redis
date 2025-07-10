@@ -324,6 +324,7 @@ class PredisConnection extends Component implements ConnectionInterface
         $command = $this->client->createCommand($name, $params);
         $response = $this->client->executeCommand(new CommandDecorator($command));
         if ($response instanceof Status) {
+            // ResponseStatus yii expect as bool
             return (string)$response === 'OK' || (string)$response === 'PONG';
         }
         return $response;

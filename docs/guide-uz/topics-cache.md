@@ -39,7 +39,7 @@ return [
 
 Kesh `[[yii\caching\CacheInterface]]` interfeysidagi barcha metodlardan foydalanish imkonini beradi.
 Interfeysga kiritilmagan Redis maxsus metodlaridan foydalanmoqchi bo'lsangiz, [[yii\redis\Cache::$redis]] orqali foydalanishingiz mumkin, 
-bu [[yii\redis\Connection]] holatidagi namuna:
+bu [[yii\redis\ConnectionInterface]] holatidagi namuna:
 
 ```php
 Yii::$app->cache->redis->hset('mykey', 'somefield', 'somevalue');

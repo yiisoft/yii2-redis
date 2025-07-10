@@ -16,6 +16,7 @@ class ConnectionTest extends TestCase
     protected function tearDown(): void
     {
         $this->getConnection(false)->configSet('timeout', 0);
+        $this->getConnection()->close();
         parent::tearDown();
     }
 

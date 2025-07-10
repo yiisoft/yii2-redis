@@ -4,8 +4,7 @@ Predis для Redis Cache, Session и ActiveRecord
 
 Чтобы использовать это расширение, вам необходимо настроить класс [[yii\redis\predis\PredisConnection]] в конфигурации вашего приложения:
 
-> [!WARNING]  
-> Класс yii\redis\predis\PredisConnection поддерживает подключение redis-cluster, но не даёт поддержки интерфейсов компонентов *cache*, *session*, *ActiveRecord*, *mutex*
+> Warning: Класс `yii\redis\predis\PredisConnection` поддерживает подключение redis-cluster, но не даёт поддержки интерфейсов компонентов *cache*, *session*, *ActiveRecord*, *mutex*
 
 ### standalone
 ```php

@@ -1,7 +1,8 @@
-Использование компонента Session в месте с predis
+Using the Session component with predis
 ===========================
 
-Чтобы использовать компонент `Session`, в дополнение к настройке соединения, как описано в разделе [predis](predis.md), вам также нужно настроить компонент `session` как [[yii\redis\Session]]:
+To use the `Session` component, in addition to configuring the connection as described in the [predis](predis.md) section,
+you also have to configure the `session` component to be [[yii\redis\Session]]:
 
 ```php
 return [
@@ -20,7 +21,8 @@ return [
 ];
 ```
 
-Если вы используете только redis сессии (т.е. не используете его ActiveRecord или Cache), вы также можете настроить параметры соединения в компоненте сеанса (в этом случае не нужно настраивать компонент приложения подключения):
+If you only use redis session (i.e., not using its ActiveRecord or Cache), you can also configure the parameters of the connection within the
+session component (no connection application component needs to be configured in this case):
 
 ```php
 return [

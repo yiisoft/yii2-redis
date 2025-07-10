@@ -10,7 +10,7 @@ Getting Started
 ---------------
 
 * [Installation](installation.md)
-* [Поддержка predis](predis.md)
+* [predis support](predis.md)
 
 Usage
 ----- 

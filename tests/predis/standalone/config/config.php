@@ -1,8 +1,6 @@
 <?php
 /**
  * This is the configuration file for the Yii2 unit tests.
- * You can override configuration values by creating a `config.local.php` file
- * and manipulate the `$config` variable.
  */
 
 $config = [

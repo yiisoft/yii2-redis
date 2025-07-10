@@ -3,7 +3,6 @@
 namespace yiiunit\extensions\redis\predis\sentinel;
 
 use yii\redis\Cache;
-use yii\redis\Connection;
 use yii\redis\predis\PredisConnection;
 use yiiunit\framework\caching\CacheTestCase;
 
