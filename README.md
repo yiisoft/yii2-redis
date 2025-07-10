@@ -104,4 +104,4 @@ return [
 Additional topics
 -----------------
 
-* [predis support](predis.md)
+* [predis support](/docs/guide/predis.md)
