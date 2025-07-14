@@ -177,7 +177,6 @@ class ConnectionTest extends TestCase
 
     /**
      * Retry connecting 2 times
-     * @skip fixme
      */
     public function testConnectionTimeoutRetryCount(): void
     {
