@@ -22,7 +22,7 @@ Documentation is at [docs/guide/README.md](docs/guide/README.md).
 Requirements
 ------------
 
-At least redis version 2.6.12 is required for all components to work properly.
+At least redis version is required for all components to work properly.
 
 Installation
 ------------
@@ -100,3 +100,8 @@ return [
     ]
 ];
 ```
+
+Additional topics
+-----------------
+
+* [predis support](/docs/guide/predis.md)

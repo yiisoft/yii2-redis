@@ -1,60 +1,48 @@
 on:
-  - pull_request
-  - push
+  pull_request:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - '.gitignore'
+      - '.gitattributes'
+
+  push:
+    paths-ignore:
+      - 'docs/**'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - '.gitignore'
+      - '.gitattributes'
 
 name: build
 
 jobs:
   tests:
-    name: PHP ${{ matrix.php }}-redis-4
+    name: PHP ${{ matrix.php }}-redis-${{ matrix.redis }}
 
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
+
       matrix:
         os:
           - ubuntu-latest
 
         php:
-          - "5.4"
-          - "5.5"
-          - "5.6"
-          - "7.0"
-          - "7.1"
-          - "7.2"
           - "7.3"
           - "7.4"
+          - "8.0"
+          - "8.1"
+          - "8.2"
+          - "8.3"
+          - "8.4"
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Start Redis v4
-        uses: superchargejs/redis-github-action@1.1.0
-        with:
-          redis-version: 4
-
-      - name: Install PHP with extensions
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: curl, intl, redis
-          ini-values: date.timezone='UTC'
-          tools: composer:v2, pecl
-
-      - name: Get Composer cache directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-      - name: Cache Composer dependencies
-        uses: actions/cache@v2.1.4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-          restore-keys: ${{ runner.os }}-composer-
-
-      - name: Install dependencies with Composer
-        run: composer update --prefer-dist --no-interaction --no-progress --optimize-autoloader
-
-      - name: Run Redis tests with PhpUnit
-        run: vendor/bin/phpunit --coverage-clover=coverage.clover
+      - name: PHP tests for PHP ${{ matrix.php }}
+        run: |
+          make test-sentinel v=${{ matrix.php }}

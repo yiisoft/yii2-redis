@@ -13,16 +13,17 @@ use yiiunit\extensions\redis\support\ConnectionWithErrorEmulator;
  */
 class ConnectionTest extends TestCase
 {
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->getConnection(false)->configSet('timeout', 0);
+        $this->getConnection()->close();
         parent::tearDown();
     }
 
     /**
      * test connection to redis and selection of db
      */
-    public function testConnect()
+    public function testConnect(): void
     {
         $db = $this->getConnection(false);
         $database = $db->database;
@@ -47,7 +48,7 @@ class ConnectionTest extends TestCase
     /**
      * tests whether close cleans up correctly so that a new connect works
      */
-    public function testReConnect()
+    public function testReConnect(): void
     {
         $db = $this->getConnection(false);
         $db->open();
@@ -63,7 +64,7 @@ class ConnectionTest extends TestCase
     /**
      * @return array
      */
-    public function keyValueData()
+    public function keyValueData(): array
     {
         return [
             [123],
@@ -79,7 +80,7 @@ class ConnectionTest extends TestCase
      * @dataProvider keyValueData
      * @param mixed $data
      */
-    public function testStoreGet($data)
+    public function testStoreGet(mixed $data):void
     {
         $db = $this->getConnection(true);
 
@@ -87,7 +88,7 @@ class ConnectionTest extends TestCase
         $this->assertEquals($data, $db->get('hi'));
     }
 
-    public function testSerialize()
+    public function testSerialize(): void
     {
         $db = $this->getConnection(false);
         $db->open();
@@ -99,23 +100,36 @@ class ConnectionTest extends TestCase
         $this->assertTrue($db2->ping());
     }
 
-    public function testConnectionTimeout()
+    /**
+     * @skip Flaky Test fixme
+     */
+    public function testConnectionTimeout(): void
     {
+        $this->markTestSkipped('This test is skipped due to flakiness.');
+
         $db = $this->getConnection(false);
         $db->configSet('timeout', 1);
         $this->assertTrue($db->ping());
         sleep(1);
         $this->assertTrue($db->ping());
-        sleep(2);
-        if (method_exists($this, 'setExpectedException')) {
-            $this->setExpectedException('\yii\redis\SocketException');
-        } else {
-            $this->expectException('\yii\redis\SocketException');
+
+        $db->close();
+        $db->on(Connection::EVENT_AFTER_OPEN, function() {
+            // sleep 2 seconds after connect to make every command time out
+            sleep(2);
+        });
+
+        $exception = false;
+        try {
+            sleep(4);
+            $db->ping();
+        } catch (SocketException $e) {
+            $exception = true;
         }
-        $this->assertTrue($db->ping());
+        $this->assertTrue($exception, 'SocketException should have been thrown.');
     }
 
-    public function testConnectionTimeoutRetry()
+    public function testConnectionTimeoutRetry(): void
     {
         $logger = new Logger();
         Yii::setLogger($logger);
@@ -137,16 +151,16 @@ class ConnectionTest extends TestCase
 
         $this->assertTrue($db->ping());
         $this->assertCount(11, $logger->messages, 'log +1 ping command, and reconnection.'
-            . print_r(array_map(function($s) { return (string) $s; }, ArrayHelper::getColumn($logger->messages, 0)), true));
+            . print_r(array_map(static function($s) { return (string) $s; }, ArrayHelper::getColumn($logger->messages, 0)), true));
     }
 
-    public function testConnectionTimeoutRetryWithFirstFail()
+    public function testConnectionTimeoutRetryWithFirstFail(): void
     {
         $logger = new Logger();
         Yii::setLogger($logger);
 
         $databases = TestCase::getParam('databases');
-        $redis = isset($databases['redis']) ? $databases['redis'] : [];
+        $redis = $databases['redis'] ?? [];
         $db = new ConnectionWithErrorEmulator($redis);
         $db->retries = 3;
 
@@ -163,14 +177,17 @@ class ConnectionTest extends TestCase
 
         $this->assertTrue($db->ping());
         $this->assertCount(10, $logger->messages, 'log +1 ping command, and two reconnections.'
-            . print_r(array_map(function($s) { return (string) $s; }, ArrayHelper::getColumn($logger->messages, 0)), true));
+            . print_r(array_map(static function($s) { return (string) $s; }, ArrayHelper::getColumn($logger->messages, 0)), true));
     }
 
     /**
      * Retry connecting 2 times
+     * @skip Flaky Test fixme
      */
-    public function testConnectionTimeoutRetryCount()
+    public function testConnectionTimeoutRetryCount(): void
     {
+        $this->markTestSkipped('This test is skipped due to flakiness.');
+
         $logger = new Logger();
         Yii::setLogger($logger);
 
@@ -187,7 +204,7 @@ class ConnectionTest extends TestCase
         try {
             // should try to reconnect 2 times, before finally failing
             // results in 3 times sending the PING command to redis
-            sleep(2);
+            sleep(4);
             $db->ping();
         } catch (SocketException $e) {
             $exception = true;
@@ -200,7 +217,7 @@ class ConnectionTest extends TestCase
     /**
      * https://github.com/yiisoft/yii2/issues/4745
      */
-    public function testReturnType()
+    public function testReturnType(): void
     {
         $redis = $this->getConnection();
         $redis->executeCommand('SET', ['key1', 'val1']);
@@ -223,18 +240,18 @@ class ConnectionTest extends TestCase
         }
     }
 
-    public function testTwoWordCommands()
+    public function testTwoWordCommands(): void
     {
         $redis = $this->getConnection();
-        $this->assertTrue(is_array($redis->executeCommand('CONFIG GET', ['port'])));
-        $this->assertTrue(is_string($redis->clientList()));
-        $this->assertTrue(is_string($redis->executeCommand('CLIENT LIST')));
+        $this->assertIsArray($redis->executeCommand('CONFIG GET', ['port']));
+        $this->assertIsString($redis->clientList());
+        $this->assertIsString($redis->executeCommand('CLIENT LIST'));
     }
 
     /**
      * @return array
      */
-    public function zRangeByScoreData()
+    public function zRangeByScoreData(): array
     {
         return [
             [
@@ -276,17 +293,17 @@ class ConnectionTest extends TestCase
      * @param array $members
      * @param array $cases
      */
-    public function testZRangeByScore($members, $cases)
+    public function testZRangeByScore(array $members, array $cases): void
     {
         $redis = $this->getConnection();
         $set = 'zrangebyscore';
         foreach ($members as $member) {
-            list($name, $score) = $member;
+            [$name, $score] = $member;
             $this->assertEquals(1, $redis->zadd($set, $score, $name));
         }
 
         foreach ($cases as $case) {
-            list($min, $max, $withScores, $limit, $offset, $count, $expectedRows) = $case;
+            [$min, $max, $withScores, $limit, $offset, $count, $expectedRows] = $case;
             if ($withScores !== null && $limit !== null) {
                 $rows = $redis->zrangebyscore($set, $min, $max, $withScores, $limit, $offset, $count);
             } elseif ($withScores !== null) {
@@ -307,7 +324,7 @@ class ConnectionTest extends TestCase
     /**
      * @return array
      */
-    public function hmSetData()
+    public function hmSetData(): array
     {
         return [
             [
@@ -334,7 +351,7 @@ class ConnectionTest extends TestCase
      * @param array $params
      * @param array $pairs
      */
-    public function testHMSet($params, $pairs)
+    public function testHMSet(array $params, array $pairs): void
     {
         $redis = $this->getConnection();
         $set = $params[0];

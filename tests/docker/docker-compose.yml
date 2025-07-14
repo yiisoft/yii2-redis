@@ -1,22 +1,60 @@
-version: '3.8'
 
 # NOTE: When using docker-compose for testing, make sure you set 'hostname' to 'redis' in tests/data/config.php
 
 services:
 
-  PHP:
-    image: "yiisoftware/yii2-php:7.4-apache"
+  yii2-redis-php:
+    image: "yiisoftware/yii2-php:${PHP_VERSION:-8.1}-apache"
     networks:
       - yii2-redis
     volumes:
       - ../..:/app # Mount source-code for development
 
-  Redis:
+  redis:
     image: "redis"
+    environment:
+      - REDIS_REPLICATION_MODE=master
     networks:
       - yii2-redis
     ports:
-      - "6379:6379"
+      - "6399:6379"
+
+  redis-sentinel-1:
+    image: bitnami/redis-sentinel:latest
+    environment:
+      - REDIS_MASTER_HOST=redis
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - REDIS_SENTINEL_QUORUM=1
+    networks:
+      - yii2-redis
+    ports:
+      - '26379:26379'
+    depends_on:
+      - redis
+  redis-sentinel-2:
+    image: bitnami/redis-sentinel:latest
+    environment:
+      - REDIS_MASTER_HOST=redis
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - REDIS_SENTINEL_QUORUM=3
+    networks:
+      - yii2-redis
+    ports:
+      - '26380:26379'
+    depends_on:
+      - redis
+  redis-sentinel-3:
+    image: bitnami/redis-sentinel:latest
+    environment:
+      - REDIS_MASTER_HOST=redis
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - REDIS_SENTINEL_QUORUM=3
+    networks:
+      - yii2-redis
+    ports:
+      - '26381:26379'
+    depends_on:
+      - redis
 
 networks:
   yii2-redis:

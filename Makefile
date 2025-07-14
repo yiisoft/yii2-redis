@@ -35,3 +35,15 @@ clean:
 	docker rm $(shell cat tests/dockerids/redis)
 	rm tests/dockerids/redis
 
+test-sentinel:
+	make build
+	PHP_VERSION=$(filter-out $@,$(MAKECMDGOALS)) docker compose -f tests/docker/docker-compose.yml build --pull yii2-redis-php
+	PHP_VERSION=$(filter-out $@,$(MAKECMDGOALS)) docker compose -f tests/docker/docker-compose.yml up -d
+	PHP_VERSION=$(filter-out $@,$(MAKECMDGOALS)) docker compose -f tests/docker/docker-compose.yml exec yii2-redis-php sh -c "composer update && vendor/bin/phpunit --coverage-clover=coverage.clover"
+
+build:			## Build an image from a docker-compose file. Params: {{ v=8.1 }}. Default latest PHP 8.1
+	PHP_VERSION=$(filter-out $@,$(v)) docker compose -f tests/docker/docker-compose.yml up -d --build
+
+down:			## Stop and remove containers, networks
+	docker compose -f tests/docker/docker-compose.yml down
+

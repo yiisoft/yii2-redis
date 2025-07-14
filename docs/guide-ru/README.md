@@ -9,6 +9,7 @@ Redis Cache, Session и ActiveRecord для Yii 2
 ---------------
 
 * [Установка](installation.md)
+* [Поддержка predis](predis.md)
 
 Использование
 ----- 
