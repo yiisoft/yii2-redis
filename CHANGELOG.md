@@ -7,7 +7,6 @@ Yii Framework 2 redis extension Change Log
 - New #276: Added support for predis (antonshevelev)
 - New #276: Changed default value of yii\redis\Cache::$forceClusterMode to false (antonshevelev)
 - New #276: Implemented yii\redis\ConnectionInterface in yii\redis\Connection (antonshevelev)
-- New #276: Updated minimum required PHP version to 8.1 (antonshevelev)
 
 
 2.0.20 June 05, 2025
