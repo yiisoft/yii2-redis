@@ -45,5 +45,4 @@ jobs:
 
       - name: PHP tests for PHP ${{ matrix.php }}
         run: |
-          ls -al
           make test-sentinel v=${{ matrix.php }}
