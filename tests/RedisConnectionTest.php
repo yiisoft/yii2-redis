@@ -116,7 +116,7 @@ class ConnectionTest extends TestCase
 
         $exception = false;
         try {
-            sleep(3);
+            sleep(4);
             $db->ping();
         } catch (SocketException $e) {
             $exception = true;
