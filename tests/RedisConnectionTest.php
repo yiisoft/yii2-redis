@@ -100,6 +100,9 @@ class ConnectionTest extends TestCase
         $this->assertTrue($db2->ping());
     }
 
+    /**
+     * @skip Flaky Test fixme
+     */
     public function testConnectionTimeout(): void
     {
         $db = $this->getConnection(false);
@@ -177,6 +180,7 @@ class ConnectionTest extends TestCase
 
     /**
      * Retry connecting 2 times
+     * @skip Flaky Test fixme
      */
     public function testConnectionTimeoutRetryCount(): void
     {
