@@ -545,7 +545,7 @@ class Connection extends Component implements ConnectionInterface
      * for details on the mentioned reply types.
      * @throws Exception for commands that return [error reply](https://redis.io/topics/protocol#error-reply).
      */
-    public function executeCommand($name, $params = []): mixed
+    public function executeCommand($name, $params = [])
     {
         $this->open();
 

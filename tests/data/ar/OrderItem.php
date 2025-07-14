@@ -46,5 +46,4 @@ class OrderItem extends ActiveRecord
     {
         return $this->hasOne(Item::className(), ['id' => 'item_id']);
     }
-
 }

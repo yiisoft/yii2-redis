@@ -8,7 +8,7 @@ use Predis\Command\Redis\COMMAND;
 
 class CommandDecorator extends COMMAND
 {
-    private CommandInterface $originalCommand;
+    private $originalCommand;
 
     public function __construct(CommandInterface $command)
     {
@@ -26,7 +26,7 @@ class CommandDecorator extends COMMAND
 
     // Calling methods of the original class
 
-    public function __call($method, $args): mixed { return call_user_func_array([$this->originalCommand, $method], $args); }
+    public function __call($method, $args) { return call_user_func_array([$this->originalCommand, $method], $args); }
 
     public function getId():string { return $this->originalCommand->getId(); }
 
@@ -40,9 +40,9 @@ class CommandDecorator extends COMMAND
 
     public function setRawArguments(array $arguments): void { $this->originalCommand->setRawArguments($arguments); }
 
-    public function getArgument($index): mixed { return $this->originalCommand->getArgument($index); }
+    public function getArgument($index) { return $this->originalCommand->getArgument($index); }
 
-    public function parseResp3Response($data): mixed { return $this->originalCommand->parseResp3Response($data); }
+    public function parseResp3Response($data) { return $this->originalCommand->parseResp3Response($data); }
 
     public function serializeCommand(): string { return $this->originalCommand->serializeCommand(); }
 }

@@ -54,7 +54,7 @@ class PredisConnection extends Component implements ConnectionInterface
      * @var array List of available redis commands.
      * @see https://redis.io/commands
      */
-    public array $redisCommands = [
+    public $redisCommands = [
         'APPEND', // Append a value to a key
         'AUTH', // Authenticate to the server
         'BGREWRITEAOF', // Asynchronously rewrite the append-only file
@@ -289,17 +289,17 @@ class PredisConnection extends Component implements ConnectionInterface
     /**
      * @var mixed Connection parameters for one or more servers.
      */
-    public mixed $parameters;
+    public $parameters;
 
     /**
      * @var mixed Options to configure some behaviours of the client.
      */
-    public mixed $options = [];
+    public $options = [];
 
     /**
      * @var Client|null redis connection
      */
-    protected Client|null $client = null;
+    protected $client;
 
     /**
      * Returns a value indicating whether the DB connection is established.
@@ -308,14 +308,17 @@ class PredisConnection extends Component implements ConnectionInterface
      */
     public function getIsActive(): bool
     {
-        return (bool)$this->client?->isConnected();
+        if($this->client === null) {
+            return false;
+        }
+        return $this->client->isConnected();
     }
 
     /**
      * @return mixed|ErrorInterface|ResponseInterface
      * @throws InvalidConfigException
      */
-    public function executeCommand($name, $params = []): mixed
+    public function executeCommand($name, $params = [])
     {
         $this->open();
 
@@ -359,7 +362,10 @@ class PredisConnection extends Component implements ConnectionInterface
      */
     public function close(): void
     {
-        $this->client?->disconnect();
+        if($this->client === null) {
+            return;
+        }
+        $this->client->disconnect();
     }
 
     /**
@@ -386,7 +392,7 @@ class PredisConnection extends Component implements ConnectionInterface
      * @return mixed
      * @throws InvalidConfigException
      */
-    public function __call($name, $params): mixed
+    public function __call($name, $params)
     {
         $redisCommand = strtoupper(Inflector::camel2words($name, false));
         if (in_array($redisCommand, $this->redisCommands, true)) {
