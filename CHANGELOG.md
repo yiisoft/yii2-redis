@@ -4,10 +4,10 @@ Yii Framework 2 redis extension Change Log
 2.0.21 under development
 ------------------------
 
-- Fix #278: Prevent null parameter on SocketException to avoid PHP 8.4 implicity nullable types deprecation (HenryVolkmer)
+- Fix #278: Prevent `null` parameter on `SocketException` to avoid PHP 8.4 implicity nullable types deprecation (HenryVolkmer)
 - New #276: Added support for predis (antonshevelev)
-- New #276: Changed default value of yii\redis\Cache::$forceClusterMode to false (antonshevelev)
-- New #276: Implemented yii\redis\ConnectionInterface in yii\redis\Connection (antonshevelev)
+- New #276: Changed default value of `yii\redis\Cache::$forceClusterMode` to `false` (antonshevelev)
+- New #276: Implemented `yii\redis\ConnectionInterface` in `yii\redis\Connection` (antonshevelev)
 
 
 2.0.20 June 05, 2025
