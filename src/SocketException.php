@@ -21,6 +21,7 @@ class SocketException extends Exception
         if (!YII_DEBUG) {
             $message = preg_replace('~AUTH \S+ \S+~', 'AUTH *** ***', $message);
         }
+
         parent::__construct($message, $code, $previous);
     }
 
