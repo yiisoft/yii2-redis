@@ -14,11 +14,11 @@ class UniqueValidatorTest extends TestCase
 {
     public function testValidationInsert()
     {
-        \yiiunit\extensions\redis\data\ar\ActiveRecord::$db = $this->getConnection(true);
+        ActiveRecord::$db = $this->getConnection();
 
         $validator = new UniqueValidator();
 
-        $customer = new \yiiunit\extensions\redis\data\ar\Customer();
+        $customer = new Customer();
         $customer->setAttributes(['email' => 'user1@example.com', 'name' => 'user1', 'address' => 'address1', 'status' => 1, 'profile_id' => 1], false);
 
         $this->assertFalse($customer->hasErrors('email'));
