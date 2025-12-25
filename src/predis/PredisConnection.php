@@ -308,7 +308,7 @@ class PredisConnection extends Component implements ConnectionInterface
      */
     public function getIsActive(): bool
     {
-        if($this->client === null) {
+        if ($this->client === null) {
             return false;
         }
         return $this->client->isConnected();
@@ -362,7 +362,7 @@ class PredisConnection extends Component implements ConnectionInterface
      */
     public function close(): void
     {
-        if($this->client === null) {
+        if ($this->client === null) {
             return;
         }
         $this->client->disconnect();
