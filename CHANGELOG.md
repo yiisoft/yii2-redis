@@ -7,7 +7,7 @@ Yii Framework 2 redis extension Change Log
 - no changes in this release.
 
 
-2.0.1 December 25, 2025
+2.1.0 December 25, 2025
 -----------------------
 
 - Fix #278: Prevent `null` parameter on `SocketException` to avoid PHP 8.4 implicity nullable types deprecation (HenryVolkmer)
