@@ -42,6 +42,11 @@ use yii\redis\predis\Command\CommandDecorator;
  *      ],
  * ];
  * ```
+ *
+ * @property-read Client|null $client
+ * @property-read bool $isActive Whether the DB connection is established.
+ * @property-read LuaScriptBuilder $luaScriptBuilder
+ *
  */
 class PredisConnection extends Component implements ConnectionInterface
 {
@@ -267,6 +272,7 @@ class PredisConnection extends Component implements ConnectionInterface
         'HSCAN', // Incrementally iterate hash fields and associated values
         'ZSCAN', // Incrementally iterate sorted sets elements and associated scores
     ];
+
 
     /**
      * @return LuaScriptBuilder
