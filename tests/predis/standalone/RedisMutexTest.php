@@ -102,6 +102,7 @@ class RedisMutexTest extends TestCase
         parent::setUp();
         $databases = TestCase::getParam('databases');
         $params = isset($databases['redis']) ? $databases['redis'] : null;
+
         if ($params === null) {
             $this->markTestSkipped('No redis server connection configured.');
 
