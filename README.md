@@ -27,18 +27,22 @@ At least redis version is required for all components to work properly.
 Installation
 ------------
 
+> [!IMPORTANT]
+> - The minimum required [PHP](https://www.php.net/) version of Yii is PHP `7.4`.
+> - It works best with PHP `8`.
+
 The preferred way to install this extension is through [composer](https://getcomposer.org/download/).
 
 Either run
 
-```
-php composer.phar require --prefer-dist yiisoft/yii2-redis:"~2.0.0"
+```shell
+php composer.phar require --prefer-dist yiisoft/yii2-redis:"~2.1.0"
 ```
 
 or add
 
 ```json
-"yiisoft/yii2-redis": "~2.0.0"
+"yiisoft/yii2-redis": "~2.1.0"
 ```
 
 to the require section of your composer.json.
