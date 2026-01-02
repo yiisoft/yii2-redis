@@ -21,5 +21,5 @@ sh:			## Enter the container with the application
 
 static-analysis:	## Run code static analyze. Params: {{ v=8.1 }}.
 	make build v=$(filter-out $@,$(v))
-	PHP_VERSION=$(filter-out $@,$(v)) docker compose -f tests/docker/docker-compose.yml exec yii2-redis-php sh -c "php -v && vendor/bin/phpstan analyse --memory-limit 512M"
+	PHP_VERSION=$(filter-out $@,$(v)) docker compose -f tests/docker/docker-compose.yml exec yii2-redis-php sh -c "php -v && composer update && vendor/bin/phpstan analyse --memory-limit 512M"
 	make down
