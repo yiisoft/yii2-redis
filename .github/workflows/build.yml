@@ -48,4 +48,4 @@ jobs:
 
       - name: PHP tests for PHP ${{ matrix.php }}
         run: |
-          make test-sentinel v=${{ matrix.php }}
+          make test v=${{ matrix.php }}
