@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-namespace yii\redis\predis;
+namespace yii\redis\Predis;
 
 use Predis\Client;
 use Predis\Response\ErrorInterface;
@@ -13,7 +14,7 @@ use yii\base\InvalidConfigException;
 use yii\helpers\Inflector;
 use yii\redis\ConnectionInterface;
 use yii\redis\LuaScriptBuilder;
-use yii\redis\predis\Command\CommandDecorator;
+use yii\redis\Predis\Command\CommandDecorator;
 
 /**
  * Class PredisConnection

@@ -15,7 +15,7 @@ use yii\db\Exception;
  */
 class SocketException extends Exception
 {
-    public function __construct($message = null, $code = 0, ?\Exception $previous = null)
+    public function __construct($message = null, $code = '', ?\Exception $previous = null)
     {
         if (!YII_DEBUG) {
             $message = preg_replace('~AUTH \S+ \S+~', 'AUTH *** ***', $message);

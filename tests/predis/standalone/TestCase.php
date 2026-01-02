@@ -1,12 +1,12 @@
 <?php
 
-namespace yiiunit\extensions\redis\predis\standalone;
+namespace yiiunit\extensions\predis\standalone;
 
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\di\Container;
 use yii\helpers\ArrayHelper;
-use yii\redis\predis\PredisConnection;
+use yii\redis\Predis\PredisConnection;
 
 /**
  * This is the base class for all yii framework unit tests.

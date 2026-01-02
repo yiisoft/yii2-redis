@@ -1,13 +1,13 @@
 <?php
 
-namespace yiiunit\extensions\redis\predis\sentinel;
+namespace yiiunit\extensions\predis\sentinel;
 
 use yii\base\InvalidConfigException;
 
 /**
  * @group redis
  */
-class ConnectionTest extends TestCase
+class RedisConnectionTest extends TestCase
 {
     protected function tearDown(): void
     {

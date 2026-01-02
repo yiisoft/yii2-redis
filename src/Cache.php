@@ -9,6 +9,7 @@ namespace yii\redis;
 
 use yii\db\Exception;
 use yii\di\Instance;
+use yii\redis\Predis\PredisConnection;
 
 /**
  * Redis Cache implements a cache application component based on [redis](https://redis.io/) key-value store.
@@ -376,7 +377,7 @@ class Cache extends \yii\caching\Cache
     protected function getReplica()
     {
         // @NOTE Predis uses its own implementation of balancing
-        if ($this->enableReplicas === false || $this->redis instanceof \yii\redis\Predis\PredisConnection) {
+        if ($this->enableReplicas === false || $this->redis instanceof PredisConnection) {
             return $this->redis;
         }
 

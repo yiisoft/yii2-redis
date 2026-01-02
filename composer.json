@@ -1,13 +1,6 @@
 {
     "name": "yiisoft/yii2-redis",
     "description": "Redis Cache, Session and ActiveRecord for the Yii framework",
-    "keywords": [
-        "yii2",
-        "redis",
-        "active-record",
-        "cache",
-        "session"
-    ],
     "keywords": ["yii2", "redis", "active-record", "cache", "session"],
     "type": "yii2-extension",
     "license": "BSD-3-Clause",
@@ -26,19 +19,24 @@
     ],
     "require": {
         "php": "^7.4 || ^8.0",
-        "yiisoft/yii2": "~2.0.39",
         "ext-openssl": "*",
+        "yiisoft/yii2": "~2.0.50",
         "predis/predis": "^v2.3.0|^3.0"
     },
     "require-dev": {
         "phpunit/phpunit": "9.*",
-        "yiisoft/yii2-dev": "~2.0.39"
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-phpunit": "^2.0",
+        "yiisoft/yii2-dev": "~2.0.50"
     },
     "autoload": {
         "psr-4": { "yii\\redis\\": "src" }
     },
     "autoload-dev": {
-        "psr-4": { "yiiunit\\extensions\\redis\\": "tests/"}
+        "psr-4": {
+            "yiiunit\\extensions\\redis\\": "tests/",
+            "yiiunit\\extensions\\predis\\": "tests/predis/"
+        }
     },
     "extra": {
         "branch-alias": {

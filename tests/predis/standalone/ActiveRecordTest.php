@@ -1,17 +1,17 @@
 <?php
 
-namespace yiiunit\extensions\redis\predis\standalone;
+namespace yiiunit\extensions\predis\standalone;
 
 use yii\redis\ActiveQuery;
 use yii\redis\LuaScriptBuilder;
 use yiiunit\extensions\redis\base\ActiveRecordTestTrait;
-use yiiunit\extensions\redis\predis\standalone\data\ar\ActiveRecord;
-use yiiunit\extensions\redis\predis\standalone\data\ar\Customer;
-use yiiunit\extensions\redis\predis\standalone\data\ar\Item;
-use yiiunit\extensions\redis\predis\standalone\data\ar\Order;
-use yiiunit\extensions\redis\predis\standalone\data\ar\OrderItem;
-use yiiunit\extensions\redis\predis\standalone\data\ar\OrderItemWithNullFK;
-use yiiunit\extensions\redis\predis\standalone\data\ar\OrderWithNullFK;
+use yiiunit\extensions\predis\standalone\data\ar\ActiveRecord;
+use yiiunit\extensions\predis\standalone\data\ar\Customer;
+use yiiunit\extensions\predis\standalone\data\ar\Item;
+use yiiunit\extensions\predis\standalone\data\ar\Order;
+use yiiunit\extensions\predis\standalone\data\ar\OrderItem;
+use yiiunit\extensions\predis\standalone\data\ar\OrderItemWithNullFK;
+use yiiunit\extensions\predis\standalone\data\ar\OrderWithNullFK;
 
 /**
  * @group redis

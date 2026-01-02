@@ -1,0 +1,18 @@
+includes:
+  - vendor/phpstan/phpstan-phpunit/extension.neon
+parameters:
+  phpVersion:
+    min: 70400
+    max: 80400
+  level: 2
+  bootstrapFiles:
+    - tests/bootstrap.php
+  scanFiles:
+    - support/ide-helper.php
+  excludePaths:
+    - vendor
+  paths:
+    - src
+    - tests
+  ignoreErrors:
+    - '#Anonymous function has an unused use#'

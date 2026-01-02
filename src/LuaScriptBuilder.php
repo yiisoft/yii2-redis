@@ -7,6 +7,7 @@
 
 namespace yii\redis;
 
+use yii\base\BaseObject;
 use yii\base\InvalidParamException;
 use yii\base\NotSupportedException;
 use yii\db\Exception;
@@ -18,7 +19,7 @@ use yii\db\Expression;
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
  */
-class LuaScriptBuilder extends \yii\base\BaseObject
+class LuaScriptBuilder extends BaseObject
 {
     /**
      * Builds a Lua script for finding a list of records
@@ -27,7 +28,10 @@ class LuaScriptBuilder extends \yii\base\BaseObject
      */
     public function buildAll($query)
     {
-        /* @var $modelClass ActiveRecord */
+        /**
+         * @var ActiveRecord $modelClass
+         * @phpstan-var ActiveRecord $modelClass
+         */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
@@ -41,7 +45,10 @@ class LuaScriptBuilder extends \yii\base\BaseObject
      */
     public function buildOne($query)
     {
-        /* @var $modelClass ActiveRecord */
+        /**
+         * @var ActiveRecord $modelClass
+         * @phpstan-var ActiveRecord $modelClass
+         */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
@@ -57,7 +64,10 @@ class LuaScriptBuilder extends \yii\base\BaseObject
     public function buildColumn($query, $column)
     {
         // TODO add support for indexBy
-        /* @var $modelClass ActiveRecord */
+        /**
+         * @var ActiveRecord $modelClass
+         * @phpstan-var ActiveRecord $modelClass
+         */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
@@ -82,7 +92,10 @@ class LuaScriptBuilder extends \yii\base\BaseObject
      */
     public function buildSum($query, $column)
     {
-        /* @var $modelClass ActiveRecord */
+        /**
+         * @var ActiveRecord $modelClass
+         * @phpstan-var ActiveRecord $modelClass
+         */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
@@ -97,7 +110,10 @@ class LuaScriptBuilder extends \yii\base\BaseObject
      */
     public function buildAverage($query, $column)
     {
-        /* @var $modelClass ActiveRecord */
+        /**
+         * @var ActiveRecord $modelClass
+         * @phpstan-var ActiveRecord $modelClass
+         */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
@@ -112,7 +128,10 @@ class LuaScriptBuilder extends \yii\base\BaseObject
      */
     public function buildMin($query, $column)
     {
-        /* @var $modelClass ActiveRecord */
+        /**
+         * @var ActiveRecord $modelClass
+         * @phpstan-var ActiveRecord $modelClass
+         */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
@@ -127,7 +146,10 @@ class LuaScriptBuilder extends \yii\base\BaseObject
      */
     public function buildMax($query, $column)
     {
-        /* @var $modelClass ActiveRecord */
+        /**
+         * @var ActiveRecord $modelClass
+         * @phpstan-var ActiveRecord $modelClass
+         */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
@@ -153,7 +175,10 @@ class LuaScriptBuilder extends \yii\base\BaseObject
         $start = ($query->offset === null || $query->offset < 0) ? 0 : $query->offset;
         $limitCondition = 'i>' . $start . (($query->limit === null || $query->limit < 0) ? '' : ' and i<=' . ($start + $query->limit));
 
-        /* @var $modelClass ActiveRecord */
+        /**
+         * @var ActiveRecord $modelClass
+         * @phpstan-var ActiveRecord $modelClass
+         */
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix());
         $loadColumnValues = '';

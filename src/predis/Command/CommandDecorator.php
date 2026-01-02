@@ -1,7 +1,8 @@
 <?php
+
 declare(strict_types=1);
 
-namespace yii\redis\predis\Command;
+namespace yii\redis\Predis\Command;
 
 use Predis\Command\CommandInterface;
 use Predis\Command\Redis\COMMAND;
