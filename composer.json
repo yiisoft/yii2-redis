@@ -25,7 +25,7 @@
         }
     ],
     "require": {
-        "php": "^7.3 || ^8.0",
+        "php": "^7.4 || ^8.0",
         "yiisoft/yii2": "~2.0.39",
         "ext-openssl": "*",
         "predis/predis": "^v2.3.0|^3.0"
