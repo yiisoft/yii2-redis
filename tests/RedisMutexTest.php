@@ -119,7 +119,7 @@ class RedisMutexTest extends TestCase
     protected function createMutex()
     {
         return Yii::createObject([
-            'class' => Mutex::className(),
+            'class' => Mutex::class,
             'expire' => 1.5,
             'keyPrefix' => static::$mutexPrefix
         ]);

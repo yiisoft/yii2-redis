@@ -41,7 +41,7 @@ class Customer extends ActiveRecord
      */
     public function getOrders()
     {
-        return $this->hasMany(Order::className(), ['customer_id' => 'id']);
+        return $this->hasMany(Order::class, ['customer_id' => 'id']);
     }
 
     /**
@@ -49,7 +49,7 @@ class Customer extends ActiveRecord
      */
     public function getExpensiveOrders()
     {
-        return $this->hasMany(Order::className(), ['customer_id' => 'id'])->andWhere("tonumber(redis.call('HGET','order' .. ':a:' .. pk, 'total')) > 50");
+        return $this->hasMany(Order::class, ['customer_id' => 'id'])->andWhere("tonumber(redis.call('HGET','order' .. ':a:' .. pk, 'total')) > 50");
     }
 
     /**
@@ -57,7 +57,7 @@ class Customer extends ActiveRecord
      */
     public function getExpensiveOrdersWithNullFK()
     {
-        return $this->hasMany(OrderWithNullFK::className(), ['customer_id' => 'id'])->andWhere("tonumber(redis.call('HGET','order' .. ':a:' .. pk, 'total')) > 50");
+        return $this->hasMany(OrderWithNullFK::class, ['customer_id' => 'id'])->andWhere("tonumber(redis.call('HGET','order' .. ':a:' .. pk, 'total')) > 50");
     }
 
     /**
@@ -65,7 +65,7 @@ class Customer extends ActiveRecord
      */
     public function getOrdersWithNullFK()
     {
-        return $this->hasMany(OrderWithNullFK::className(), ['customer_id' => 'id']);
+        return $this->hasMany(OrderWithNullFK::class, ['customer_id' => 'id']);
     }
 
     /**
@@ -73,7 +73,7 @@ class Customer extends ActiveRecord
      */
     public function getOrdersWithItems()
     {
-        return $this->hasMany(Order::className(), ['customer_id' => 'id'])->with('orderItems');
+        return $this->hasMany(Order::class, ['customer_id' => 'id'])->with('orderItems');
     }
 
     /**
@@ -81,7 +81,7 @@ class Customer extends ActiveRecord
      */
     public function getOrderItems()
     {
-        return $this->hasMany(Item::className(), ['id' => 'item_id'])->via('orders');
+        return $this->hasMany(Item::class, ['id' => 'item_id'])->via('orders');
     }
 
     /**

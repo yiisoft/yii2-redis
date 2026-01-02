@@ -25,7 +25,7 @@ class ActiveRecordTest extends TestCase
      */
     public function getCustomerClass()
     {
-        return Customer::className();
+        return Customer::class;
     }
 
     /**
@@ -33,7 +33,7 @@ class ActiveRecordTest extends TestCase
      */
     public function getItemClass()
     {
-        return Item::className();
+        return Item::class;
     }
 
     /**
@@ -41,7 +41,7 @@ class ActiveRecordTest extends TestCase
      */
     public function getOrderClass()
     {
-        return Order::className();
+        return Order::class;
     }
 
     /**
@@ -49,7 +49,7 @@ class ActiveRecordTest extends TestCase
      */
     public function getOrderItemClass()
     {
-        return OrderItem::className();
+        return OrderItem::class;
     }
 
     /**
@@ -57,7 +57,7 @@ class ActiveRecordTest extends TestCase
      */
     public function getOrderWithNullFKClass()
     {
-        return OrderWithNullFK::className();
+        return OrderWithNullFK::class;
     }
 
     /**
@@ -65,7 +65,7 @@ class ActiveRecordTest extends TestCase
      */
     public function getOrderItemWithNullFKmClass()
     {
-        return OrderItemWithNullFK::className();
+        return OrderItemWithNullFK::class;
     }
 
     public function setUp(): void
@@ -163,7 +163,6 @@ class ActiveRecordTest extends TestCase
         $orderItem = new OrderItemWithNullFK();
         $orderItem->setAttributes(['order_id' => 3, 'item_id' => 2, 'quantity' => 1, 'subtotal' => 40.0], false);
         $orderItem->save(false);
-
     }
 
     /**
@@ -453,7 +452,6 @@ class ActiveRecordTest extends TestCase
         $this->assertCount(1, $orders);
         $this->assertEquals(1, $orders[0]['customer_id']);
     }
-
 
     public function testBetweenCondition()
     {

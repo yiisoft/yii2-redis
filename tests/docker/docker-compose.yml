@@ -31,6 +31,7 @@ services:
       - '26379:26379'
     depends_on:
       - redis
+
   redis-sentinel-2:
     image: bitnami/redis-sentinel:latest
     environment:
@@ -43,6 +44,7 @@ services:
       - '26380:26379'
     depends_on:
       - redis
+
   redis-sentinel-3:
     image: bitnami/redis-sentinel:latest
     environment:

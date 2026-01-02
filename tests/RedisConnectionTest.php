@@ -61,7 +61,6 @@ class ConnectionTest extends TestCase
         $db->close();
     }
 
-
     /**
      * @return array
      */
@@ -81,7 +80,7 @@ class ConnectionTest extends TestCase
      * @dataProvider keyValueData
      * @param mixed $data
      */
-    public function testStoreGet(mixed $data):void
+    public function testStoreGet($data):void
     {
         $db = $this->getConnection(true);
 
