@@ -1,5 +1,5 @@
 on:
-  pull_request:
+  pull_request: &ignore-paths
     paths-ignore:
       - 'docs/**'
       - 'README.md'
@@ -9,15 +9,7 @@ on:
       - '.gitignore'
       - '.gitattributes'
 
-  push:
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - 'UPGRADE.md'
-      - 'LICENSE.md'
-      - '.gitignore'
-      - '.gitattributes'
+  push: *ignore-paths
 
 name: build
 
