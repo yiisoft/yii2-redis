@@ -1,10 +1,14 @@
 includes:
   - vendor/phpstan/phpstan-phpunit/extension.neon
+  - phpstan-baseline.neon
 parameters:
   phpVersion:
     min: 70400
     max: 80400
-  level: 2
+  level: 8
+  dynamicConstantNames:
+    - YII_ENABLE_ERROR_HANDLER
+    - YII_DEBUG
   bootstrapFiles:
     - tests/bootstrap.php
   scanFiles:
