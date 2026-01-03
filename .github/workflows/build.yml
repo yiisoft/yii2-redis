@@ -15,7 +15,7 @@ name: build
 
 jobs:
   tests:
-    name: PHP ${{ matrix.php }}-redis-${{ matrix.redis }}
+    name: PHP ${{ matrix.php }}
 
     runs-on: ${{ matrix.os }}
 
