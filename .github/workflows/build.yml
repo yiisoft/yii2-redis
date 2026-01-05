@@ -1,19 +1,15 @@
 on:
-  pull_request:
+  pull_request: &ignore-paths
     paths-ignore:
       - 'docs/**'
       - 'README.md'
       - 'CHANGELOG.md'
+      - 'UPGRADE.md'
+      - 'LICENSE.md'
       - '.gitignore'
       - '.gitattributes'
 
-  push:
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'CHANGELOG.md'
-      - '.gitignore'
-      - '.gitattributes'
+  push: *ignore-paths
 
 name: build
 
@@ -31,7 +27,6 @@ jobs:
           - ubuntu-latest
 
         php:
-          - "7.3"
           - "7.4"
           - "8.0"
           - "8.1"
@@ -45,4 +40,4 @@ jobs:
 
       - name: PHP tests for PHP ${{ matrix.php }}
         run: |
-          make test-sentinel v=${{ matrix.php }}
+          make test v=${{ matrix.php }}

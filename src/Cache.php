@@ -391,7 +391,7 @@ class Cache extends \yii\caching\Cache
         $replicas = $this->replicas;
         shuffle($replicas);
         $config = array_shift($replicas);
-        $this->_replica = Instance::ensure($config, Connection::className());
+        $this->_replica = Instance::ensure($config, Connection::class);
         return $this->_replica;
     }
 }

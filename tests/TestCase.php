@@ -14,7 +14,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     public static $params;
 
-
     /**
      * Returns a test configuration param from /data/config.php
      * @param string $name params name

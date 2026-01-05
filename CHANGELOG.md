@@ -1,11 +1,11 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
-2.1.1 under development
+2.2.0 under development
 -----------------------
 
-- no changes in this release.
-
+- Enh #281: PHP 7.3 support was removed to align with Yii2 minimum PHP version (@s1lver)
+- Fix #281: PHP 7.4 compatibility is now fixed (@s1lver)
 
 2.1.0 December 25, 2025
 -----------------------

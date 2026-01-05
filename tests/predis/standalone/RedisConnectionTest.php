@@ -53,7 +53,6 @@ class ConnectionTest extends TestCase
         $db->close();
     }
 
-
     /**
      * @return array
      */
@@ -74,7 +73,7 @@ class ConnectionTest extends TestCase
      * @param mixed $data
      * @throws InvalidConfigException
      */
-    public function testStoreGet(mixed $data): void
+    public function testStoreGet($data): void
     {
         $db = $this->getConnection(true);
 
@@ -107,7 +106,6 @@ class ConnectionTest extends TestCase
             $this->assertEquals($expected[$key], $redis->executeCommand('TYPE', [$key]));
         }
     }
-
 
     /**
      * @return array

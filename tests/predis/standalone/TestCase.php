@@ -15,7 +15,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     public static $params;
 
-
     /**
      * Returns a test configuration param from /data/config.php
      *
@@ -28,7 +27,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         if (static::$params === null) {
             static::$params = require(__DIR__ . '/config/config.php');
         }
-
 
         return isset(static::$params[$name]) ? static::$params[$name] : $default;
     }

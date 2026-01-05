@@ -74,7 +74,7 @@ class ConnectionTest extends TestCase
      * @param mixed $data
      * @throws InvalidConfigException
      */
-    public function testStoreGet(mixed $data): void
+    public function testStoreGet($data): void
     {
         $db = $this->getConnection(true);
 
