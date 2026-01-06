@@ -75,7 +75,6 @@ class Customer extends ActiveRecord
      */
     public function getOrdersWithItems()
     {
-        /** @phpstan-ignore arguments.count */
         return $this->hasMany(Order::class, ['customer_id' => 'id'])->with('orderItems');
     }
 
