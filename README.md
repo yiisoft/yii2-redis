@@ -18,6 +18,8 @@ Documentation is at [docs/guide/README.md](docs/guide/README.md).
 [![Total Downloads](https://poser.pugx.org/yiisoft/yii2-redis/downloads.png)](https://packagist.org/packages/yiisoft/yii2-redis)
 [![Build status](https://github.com/yiisoft/yii2-redis/workflows/build/badge.svg)](https://github.com/yiisoft/yii2-redis/actions?query=workflow%3Abuild)
 [![Static status](https://github.com/yiisoft/yii2-redis/workflows/static/badge.svg)](https://github.com/yiisoft/yii2-redis/actions?query=workflow%3Astatic)
+[![codecov](https://codecov.io/gh/yiisoft/yii2-redis/graph/badge.svg)](https://codecov.io/gh/yiisoft/yii2-redis)
+
 
 Requirements
 ------------

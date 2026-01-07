@@ -8,3 +8,4 @@
 /tests/data/config.local.php
 /tests/dockerids
 .phpunit.result.cache
+coverage.xml
