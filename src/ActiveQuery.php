@@ -70,6 +70,8 @@ use yii\db\QueryTrait;
  *
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
+ *
+ * @phpstan-property class-string<\yii\db\ActiveRecord> $modelClass
  */
 class ActiveQuery extends Component implements ActiveQueryInterface
 {
@@ -81,7 +83,6 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * @event Event an event that is triggered when the query is initialized via [[init()]].
      */
     const EVENT_INIT = 'init';
-
 
     /**
      * Constructor.
@@ -224,7 +225,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
         }
 
         if ($this->where === null) {
-            /* @var $modelClass ActiveRecord */
+            /**
+             * @var ActiveRecord $modelClass
+             * @phpstan-var ActiveRecord $modelClass
+             */
             $modelClass = $this->modelClass;
             if ($db === null) {
                 $db = $modelClass::getDb();
@@ -389,7 +393,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             }
         }
 
-        /* @var $modelClass ActiveRecord */
+        /**
+         * @var ActiveRecord $modelClass
+         * @phpstan-var ActiveRecord $modelClass
+         */
         $modelClass = $this->modelClass;
 
         if ($db === null) {
@@ -458,7 +465,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             $pks = [$this->where];
         }
 
-        /* @var $modelClass ActiveRecord */
+        /**
+         * @var ActiveRecord $modelClass
+         * @phpstan-var ActiveRecord $modelClass
+         */
         $modelClass = $this->modelClass;
 
         if ($type === 'Count') {

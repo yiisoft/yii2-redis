@@ -1,3 +1,4 @@
+---
 on:
   pull_request: &ignore-paths
     paths-ignore:
@@ -11,11 +12,11 @@ on:
 
   push: *ignore-paths
 
-name: build
+name: static analysis
 
 jobs:
-  tests:
-    name: PHP ${{ matrix.php }}
+  phpstan:
+    name: PHP ${{ matrix.php }}-PHPStan
 
     runs-on: ${{ matrix.os }}
 
@@ -38,13 +39,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: PHP tests for PHP ${{ matrix.php }}
+      - name: Static analysis PHP ${{ matrix.php }}
         run: |
-          make test v=${{ matrix.php }}
-
-      - name: Upload coverage to Codecov.
-        if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
-        with:
-          files: ./coverage.xml
-          token: ${{ secrets.CODECOV_TOKEN }}
+          make static-analysis v=${{ matrix.php }}

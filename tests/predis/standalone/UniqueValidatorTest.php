@@ -1,18 +1,18 @@
 <?php
 
-namespace yiiunit\extensions\redis\predis\standalone;
+namespace yiiunit\extensions\predis\standalone;
 
 use yii\validators\UniqueValidator;
-use yiiunit\extensions\redis\predis\standalone\data\ar\ActiveRecord;
-use yiiunit\extensions\redis\predis\standalone\data\ar\Customer;
-use yiiunit\extensions\redis\predis\standalone\data\ar\OrderItem;
+use yiiunit\extensions\predis\standalone\data\ar\ActiveRecord;
+use yiiunit\extensions\predis\standalone\data\ar\Customer;
+use yiiunit\extensions\predis\standalone\data\ar\OrderItem;
 
 /**
  * UniqueValidatorTest tests unique validator with Redis
  */
 class UniqueValidatorTest extends TestCase
 {
-    public function testValidationInsert()
+    public function testValidationInsert(): void
     {
         ActiveRecord::$db = $this->getConnection();
 
@@ -34,7 +34,7 @@ class UniqueValidatorTest extends TestCase
         $this->assertTrue($customer->hasErrors('email'));
     }
 
-    public function testValidationUpdate()
+    public function testValidationUpdate(): void
     {
         ActiveRecord::$db = $this->getConnection(true);
 
@@ -58,7 +58,7 @@ class UniqueValidatorTest extends TestCase
         $this->assertTrue($customer1->hasErrors('email'));
     }
 
-    public function testValidationInsertCompositePk()
+    public function testValidationInsertCompositePk(): void
     {
         ActiveRecord::$db = $this->getConnection(true);
 
@@ -81,7 +81,7 @@ class UniqueValidatorTest extends TestCase
         $this->assertTrue($model->hasErrors('item_id'));
     }
 
-    public function testValidationInsertCompositePkUniqueAttribute()
+    public function testValidationInsertCompositePkUniqueAttribute(): void
     {
         ActiveRecord::$db = $this->getConnection(true);
 
@@ -103,7 +103,7 @@ class UniqueValidatorTest extends TestCase
         $this->assertTrue($model->hasErrors('quantity'));
     }
 
-    public function testValidationUpdateCompositePk()
+    public function testValidationUpdateCompositePk(): void
     {
         ActiveRecord::$db = $this->getConnection(true);
 
@@ -128,7 +128,7 @@ class UniqueValidatorTest extends TestCase
         $this->assertTrue($model1->hasErrors('item_id'));
     }
 
-    public function testValidationUpdateCompositePkUniqueAttribute()
+    public function testValidationUpdateCompositePkUniqueAttribute(): void
     {
         ActiveRecord::$db = $this->getConnection(true);
 

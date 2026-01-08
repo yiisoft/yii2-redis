@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\extensions\redis\predis\standalone\data\ar;
+namespace yiiunit\extensions\predis\standalone\data\ar;
 
-use yiiunit\extensions\redis\predis\standalone\ActiveRecordTest;
+use yiiunit\extensions\predis\standalone\ActiveRecordTest;
 
 /**
  * Customer
@@ -49,7 +49,8 @@ class Customer extends ActiveRecord
      */
     public function getExpensiveOrders()
     {
-        return $this->hasMany(Order::class, ['customer_id' => 'id'])->andWhere("tonumber(redis.call('HGET','order' .. ':a:' .. pk, 'total')) > 50");
+        return $this->hasMany(Order::class, ['customer_id' => 'id'])
+            ->andWhere("tonumber(redis.call('HGET','order' .. ':a:' .. pk, 'total')) > 50");
     }
 
     /**
@@ -57,7 +58,8 @@ class Customer extends ActiveRecord
      */
     public function getExpensiveOrdersWithNullFK()
     {
-        return $this->hasMany(OrderWithNullFK::class, ['customer_id' => 'id'])->andWhere("tonumber(redis.call('HGET','order' .. ':a:' .. pk, 'total')) > 50");
+        return $this->hasMany(OrderWithNullFK::class, ['customer_id' => 'id'])
+            ->andWhere("tonumber(redis.call('HGET','order' .. ':a:' .. pk, 'total')) > 50");
     }
 
     /**

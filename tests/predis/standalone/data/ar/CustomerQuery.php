@@ -1,6 +1,6 @@
 <?php
 
-namespace yiiunit\extensions\redis\predis\standalone\data\ar;
+namespace yiiunit\extensions\predis\standalone\data\ar;
 
 use yii\redis\ActiveQuery;
 

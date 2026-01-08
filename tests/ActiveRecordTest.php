@@ -168,7 +168,7 @@ class ActiveRecordTest extends TestCase
     /**
      * overridden because null values are not part of the asArray result in redis
      */
-    public function testFindAsArray()
+    public function testFindAsArray(): void
     {
         /* @var $customerClass \yii\db\ActiveRecordInterface */
         $customerClass = $this->getCustomerClass();
@@ -203,7 +203,7 @@ class ActiveRecordTest extends TestCase
         $this->assertArrayHasKey('status', $customers[2]);
     }
 
-    public function testStatisticalFind()
+    public function testStatisticalFind(): void
     {
         // find count, sum, average, min, max, scalar
         $this->assertEquals(3, Customer::find()->count());
@@ -218,7 +218,7 @@ class ActiveRecordTest extends TestCase
 
     // TODO test serial column incr
 
-    public function testUpdatePk()
+    public function testUpdatePk(): void
     {
         // updateCounters
         $pk = ['order_id' => 2, 'item_id' => 4];
@@ -235,7 +235,7 @@ class ActiveRecordTest extends TestCase
         $this->assertNotNull(OrderItem::findOne(['order_id' => 2, 'item_id' => 10]));
     }
 
-    public function testFilterWhere()
+    public function testFilterWhere(): void
     {
         // should work with hash format
         $query = new ActiveQuery('dummy');
@@ -298,14 +298,14 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals($condition, $query->where);
     }
 
-    public function testFilterWhereRecursively()
+    public function testFilterWhereRecursively(): void
     {
         $query = new ActiveQuery('dummy');
         $query->filterWhere(['and', ['like', 'name', ''], ['like', 'title', ''], ['id' => 1], ['not', ['like', 'name', '']]]);
         $this->assertEquals(['and', ['id' => 1]], $query->where);
     }
 
-    public function testAutoIncrement()
+    public function testAutoIncrement(): void
     {
         Customer::getDb()->executeCommand('FLUSHDB');
 
@@ -346,7 +346,7 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals('user6', $customer->name);
     }
 
-    public function testEscapeData()
+    public function testEscapeData(): void
     {
         $customer = new Customer();
         $customer->email = "the People's Republic of China";
@@ -357,7 +357,7 @@ class ActiveRecordTest extends TestCase
         $this->assertSame("the People's Republic of China", $c->email);
     }
 
-    public function testFindEmptyWith()
+    public function testFindEmptyWith(): void
     {
         Order::getDb()->flushdb();
         $orders = Order::find()
@@ -368,7 +368,7 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals([], $orders);
     }
 
-    public function testEmulateExecution()
+    public function testEmulateExecution(): void
     {
         $rows = Order::find()
             ->emulateExecution()
@@ -424,13 +424,13 @@ class ActiveRecordTest extends TestCase
     /**
      * @see https://github.com/yiisoft/yii2-redis/issues/93
      */
-    public function testDeleteAllWithCondition()
+    public function testDeleteAllWithCondition(): void
     {
         $deletedCount = Order::deleteAll(['in', 'id', [1, 2, 3]]);
         $this->assertEquals(3, $deletedCount);
     }
 
-    public function testBuildKey()
+    public function testBuildKey(): void
     {
         $pk = ['order_id' => 3, 'item_id' => 'nostr'];
         $key = OrderItem::buildKey($pk);
@@ -442,7 +442,7 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals($key, OrderItem::buildKey($pk));
     }
 
-    public function testNotCondition()
+    public function testNotCondition(): void
     {
         /* @var $orderClass \yii\db\ActiveRecordInterface */
         $orderClass = $this->getOrderClass();
@@ -453,7 +453,7 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals(1, $orders[0]['customer_id']);
     }
 
-    public function testBetweenCondition()
+    public function testBetweenCondition(): void
     {
         /* @var $orderClass \yii\db\ActiveRecordInterface */
         $orderClass = $this->getOrderClass();
@@ -469,7 +469,7 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals(1, $orders[0]['customer_id']);
     }
 
-    public function testInCondition()
+    public function testInCondition(): void
     {
         /* @var $orderClass \yii\db\ActiveRecordInterface */
         $orderClass = $this->getOrderClass();
@@ -491,7 +491,7 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals(2, $orders[1]['customer_id']);
     }
 
-    public function testCountQuery()
+    public function testCountQuery(): void
     {
         /* @var $itemClass \yii\db\ActiveRecordInterface */
         $itemClass = $this->getItemClass();
@@ -507,7 +507,7 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals(2, $query->count());
     }
 
-    public function illegalValuesForWhere()
+    public function illegalValuesForWhere(): array
     {
         return [
             [['id' => ["' .. redis.call('FLUSHALL') .. '" => 1]], ["'\\' .. redis.call(\\'FLUSHALL\\') .. \\'", 'rediscallFLUSHALL']],
@@ -527,7 +527,7 @@ class ActiveRecordTest extends TestCase
     /**
      * @dataProvider illegalValuesForWhere
      */
-    public function testValueEscapingInWhere($filterWithInjection, $expectedStrings, $unexpectedStrings = [])
+    public function testValueEscapingInWhere($filterWithInjection, $expectedStrings, $unexpectedStrings = []): void
     {
         /* @var $itemClass \yii\db\ActiveRecordInterface */
         $itemClass = $this->getItemClass();
@@ -544,7 +544,7 @@ class ActiveRecordTest extends TestCase
         }
     }
 
-    public function illegalValuesForFindByCondition()
+    public function illegalValuesForFindByCondition(): array
     {
         return [
             // code injection
@@ -582,7 +582,7 @@ class ActiveRecordTest extends TestCase
     /**
      * @dataProvider illegalValuesForFindByCondition
      */
-    public function testValueEscapingInFindByCondition($filterWithInjection, $expectedStrings, $unexpectedStrings = [])
+    public function testValueEscapingInFindByCondition($filterWithInjection, $expectedStrings, $unexpectedStrings = []): void
     {
         /* @var $itemClass \yii\db\ActiveRecordInterface */
         $itemClass = $this->getItemClass();
@@ -602,7 +602,7 @@ class ActiveRecordTest extends TestCase
         $this->assertGreaterThan(3, $itemClass::find()->count());
     }
 
-    public function testCompareCondition()
+    public function testCompareCondition(): void
     {
         /* @var $orderClass \yii\db\ActiveRecordInterface */
         $orderClass = $this->getOrderClass();
@@ -630,7 +630,7 @@ class ActiveRecordTest extends TestCase
         $this->assertEquals(2, $orders[1]['customer_id']);
     }
 
-    public function testStringCompareCondition()
+    public function testStringCompareCondition(): void
     {
         /* @var $itemClass \yii\db\ActiveRecordInterface */
         $itemClass = $this->getItemClass();
@@ -653,7 +653,7 @@ class ActiveRecordTest extends TestCase
         $this->assertCount(2, $items);
     }
 
-    public function testFind()
+    public function testFind(): void
     {
         /* @var $customerClass \yii\db\ActiveRecordInterface|string */
         $customerClass = $this->getCustomerClass();

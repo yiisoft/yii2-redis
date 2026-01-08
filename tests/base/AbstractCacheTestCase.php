@@ -28,6 +28,7 @@ function microtime($float = false)
 
 namespace yiiunit\extensions\redis\base;
 
+use yii\caching\Cache;
 use yii\caching\CacheInterface;
 use yii\caching\TagDependency;
 use yiiunit\extensions\redis\TestCase;
@@ -193,6 +194,7 @@ abstract class AbstractCacheTestCase extends TestCase
 
     public function testDefaultTtl()
     {
+        /** @var Cache $cache */
         $cache = $this->getCacheInstance();
 
         $this->assertSame(0, $cache->defaultDuration);

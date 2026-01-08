@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\extensions\redis\predis\sentinel\data\ar;
+namespace yiiunit\extensions\predis\sentinel\data\ar;
 
-use yii\redis\predis\PredisConnection;
+use yii\redis\Predis\PredisConnection;
 
 /**
  * ActiveRecord is ...

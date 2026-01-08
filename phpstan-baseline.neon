@@ -1,0 +1,3187 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Argument of an invalid type array\|string\|true supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Argument of an invalid type array\|string\|yii\\db\\ExpressionInterface\|null supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Binary operation "\+" between int\<0, max\>\|yii\\db\\ExpressionInterface and int\<0, max\>\|yii\\db\\ExpressionInterface results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Cannot access offset 0 on array\|string\|yii\\db\\ExpressionInterface\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Cannot access offset 0\|int\<2, max\> on non\-empty\-array\|non\-falsy\-string\|true\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Cannot access offset 1\|int\<3, max\> on non\-empty\-array\|non\-falsy\-string\|true\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Cannot access offset int\<1, max\> on non\-empty\-array\|non\-falsy\-string\|true\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 4
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Cannot access offset int\<2, max\> on non\-empty\-array\|non\-falsy\-string\|true\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 6
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Cannot call method afterFind\(\) on array\|yii\\db\\ActiveRecord\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Cannot call method hasAttribute\(\) on array\|yii\\db\\ActiveRecordInterface\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:__construct\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:all\(\) should return array\<yii\\redis\\ActiveRecord\> but returns array\<yii\\db\\ActiveRecord\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:average\(\) should return int but returns array\|bool\|string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:column\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:column\(\) should return array but returns array\|bool\|string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:count\(\) should return int but returns array\|bool\|string\|null\.$#'
+			identifier: return.type
+			count: 2
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:executeScript\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:findByPk\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:findByPk\(\) should return array\|bool\|string\|null but returns \(float\|int\)\.$#'
+			identifier: return.type
+			count: 2
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:findByPk\(\) should return array\|bool\|string\|null but returns int\<0, max\>\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:init\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:max\(\) should return int but returns array\|bool\|string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:max\(\) should return int but returns null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:min\(\) should return int but returns array\|bool\|string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:min\(\) should return int but returns null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:one\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:one\(\) should return array\|yii\\redis\\ActiveRecord\|null but returns array\|yii\\db\\ActiveRecord\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:scalar\(\) should return string but returns null\.$#'
+			identifier: return.type
+			count: 2
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveQuery\:\:sum\(\) should return int but returns array\|bool\|string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Parameter \#1 \$array of function reset expects array\|object, array\|string\|yii\\db\\ExpressionInterface\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Parameter \#1 \$array_arg of function arsort expects an array of values castable to string, list\<array\|bool\|string\|null\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Parameter \#1 \$array_arg of function asort expects an array of values castable to string, list\<array\|bool\|string\|null\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Parameter \#1 \$db \(yii\\redis\\Connection\) of method yii\\redis\\ActiveQuery\:\:all\(\) should be compatible with parameter \$db \(yii\\db\\Connection\|null\) of method yii\\db\\QueryInterface\:\:all\(\)$#'
+			identifier: method.childParameterType
+			count: 2
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Parameter \#1 \$db \(yii\\redis\\Connection\) of method yii\\redis\\ActiveQuery\:\:exists\(\) should be compatible with parameter \$db \(yii\\db\\Connection\|null\) of method yii\\db\\QueryInterface\:\:exists\(\)$#'
+			identifier: method.childParameterType
+			count: 2
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Parameter \#1 \$db \(yii\\redis\\Connection\) of method yii\\redis\\ActiveQuery\:\:one\(\) should be compatible with parameter \$db \(yii\\db\\Connection\|null\) of method yii\\db\\ActiveQueryInterface\:\:one\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Parameter \#1 \$db \(yii\\redis\\Connection\) of method yii\\redis\\ActiveQuery\:\:one\(\) should be compatible with parameter \$db \(yii\\db\\Connection\|null\) of method yii\\db\\QueryInterface\:\:one\(\)$#'
+			identifier: method.childParameterType
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Parameter \#1 \$var of function count expects array\|Countable, array\|string\|true given\.$#'
+			identifier: argument.type
+			count: 6
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Parameter \#1 \$var of function count expects array\|Countable, array\|string\|yii\\db\\ExpressionInterface\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Parameter \#2 \$db \(yii\\redis\\Connection\) of method yii\\redis\\ActiveQuery\:\:count\(\) should be compatible with parameter \$db \(yii\\db\\Connection\|null\) of method yii\\db\\QueryInterface\:\:count\(\)$#'
+			identifier: method.childParameterType
+			count: 2
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Parameter \#2 \$models of method yii\\redis\\ActiveQuery\:\:findWith\(\) expects array\<yii\\db\\ActiveRecord\>, array\<int, array\|yii\\db\\ActiveRecord\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Property yii\\redis\\ActiveQuery\:\:\$modelClass \(class\-string\<yii\\db\\ActiveRecord\>\) does not accept string\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Cannot access offset string on yii\\db\\ActiveRecordInterface\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/ActiveRecord.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveRecord\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ActiveRecord.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveRecord\:\:buildKey\(\) should return string but returns float\|int\|string\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ActiveRecord.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveRecord\:\:deleteAll\(\) has parameter \$condition with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ActiveRecord.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveRecord\:\:fetchPks\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/ActiveRecord.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveRecord\:\:fetchPks\(\) has parameter \$condition with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/ActiveRecord.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveRecord\:\:getDb\(\) should return yii\\redis\\Connection but returns object\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ActiveRecord.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveRecord\:\:insert\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ActiveRecord.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveRecord\:\:updateAll\(\) has parameter \$attributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ActiveRecord.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveRecord\:\:updateAll\(\) has parameter \$condition with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ActiveRecord.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveRecord\:\:updateAllCounters\(\) has parameter \$condition with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ActiveRecord.php
+
+		-
+			message: '#^Method yii\\redis\\ActiveRecord\:\:updateAllCounters\(\) has parameter \$counters with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ActiveRecord.php
+
+		-
+			message: '#^Parameter \#1 \$array_arg of function end expects array\|object, array\|bool\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ActiveRecord.php
+
+		-
+			message: '#^Parameter \#1 \$str of function md5 expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ActiveRecord.php
+
+		-
+			message: '#^Cannot call method executeCommand\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 16
+			path: src/Cache.php
+
+		-
+			message: '#^Cannot call method scan\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Cache.php
+
+		-
+			message: '#^Method yii\\redis\\Cache\:\:getReplica\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Cache.php
+
+		-
+			message: '#^Method yii\\redis\\Cache\:\:getValues\(\) has parameter \$keys with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Cache.php
+
+		-
+			message: '#^Method yii\\redis\\Cache\:\:getValues\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Cache.php
+
+		-
+			message: '#^Method yii\\redis\\Cache\:\:init\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Cache.php
+
+		-
+			message: '#^Method yii\\redis\\Cache\:\:setValues\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Cache.php
+
+		-
+			message: '#^Method yii\\redis\\Cache\:\:setValues\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Cache.php
+
+		-
+			message: '#^Property yii\\redis\\Cache\:\:\$_replica \(yii\\redis\\ConnectionInterface\) does not accept array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Cache.php
+
+		-
+			message: '#^Property yii\\redis\\Cache\:\:\$redis type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Cache.php
+
+		-
+			message: '#^Property yii\\redis\\Cache\:\:\$replicas type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Cache.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Method yii\\redis\\Connection\:\:__call\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Method yii\\redis\\Connection\:\:executeCommand\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Method yii\\redis\\Connection\:\:executeCommand\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Method yii\\redis\\Connection\:\:initConnection\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Method yii\\redis\\Connection\:\:parseResponse\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Method yii\\redis\\Connection\:\:redirect\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Method yii\\redis\\Connection\:\:sendRawCommand\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Method yii\\redis\\Connection\:\:sendRawCommand\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Parameter \#1 \$array of static method yii\\helpers\\BaseArrayHelper\:\:getValue\(\) expects array\|object, list\<string\>\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Parameter \#1 \$fp of function fgets expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Parameter \#1 \$fp of function fread expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Parameter \#1 \$fp of function fwrite expects resource, resource\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Parameter \#2 \$command of method yii\\redis\\Connection\:\:redirect\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Parameter \#2 \$errorInfo of class yii\\db\\Exception constructor expects array, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Parameter \#2 \$key of static method yii\\helpers\\BaseArrayHelper\:\:getValue\(\) expects array\|Closure\|string, 2 given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Parameter \#3 \$code of class yii\\db\\Exception constructor expects string, int\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Parameter \#4 \$timeout of function stream_socket_client expects float, float\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Parameter \#5 \$flags of function stream_socket_client expects int\<0, 7\>, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Property yii\\redis\\Connection\:\:\$_pool type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Property yii\\redis\\Connection\:\:\$contextOptions type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Property yii\\redis\\Connection\:\:\$redisCommands type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Connection.php
+
+		-
+			message: '#^Method yii\\redis\\ConnectionInterface\:\:executeCommand\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/ConnectionInterface.php
+
+		-
+			message: '#^Method yii\\redis\\ConnectionInterface\:\:executeCommand\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/ConnectionInterface.php
+
+		-
+			message: '#^Binary operation "\+" between int\<0, max\>\|yii\\db\\ExpressionInterface and int\<0, max\>\|yii\\db\\ExpressionInterface results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Binary operation "\." between ''i\>'' and int\<0, max\>\|yii\\db\\ExpressionInterface results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Call to function is_int\(\) with \*NEVER\* will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:addColumn\(\) has parameter \$columns with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildAndCondition\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildAndCondition\(\) has parameter \$columns with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildAndCondition\(\) has parameter \$operands with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildAndCondition\(\) has parameter \$operator with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildBetweenCondition\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildBetweenCondition\(\) has parameter \$columns with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildBetweenCondition\(\) has parameter \$operands with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildBetweenCondition\(\) has parameter \$operator with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildCompareCondition\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildCompareCondition\(\) has parameter \$columns with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildCompareCondition\(\) has parameter \$operands with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildCompareCondition\(\) has parameter \$operator with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildCompositeInCondition\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildCompositeInCondition\(\) has parameter \$columns with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildCompositeInCondition\(\) has parameter \$inColumns with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildCompositeInCondition\(\) has parameter \$operator with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildCompositeInCondition\(\) has parameter \$values with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildCondition\(\) has parameter \$columns with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildCondition\(\) has parameter \$condition with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildHashCondition\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildHashCondition\(\) has parameter \$columns with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildHashCondition\(\) has parameter \$condition with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildInCondition\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildInCondition\(\) has parameter \$columns with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildInCondition\(\) has parameter \$operands with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildInCondition\(\) has parameter \$operator with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildLikeCondition\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildLikeCondition\(\) has parameter \$columns with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildLikeCondition\(\) has parameter \$operands with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildLikeCondition\(\) has parameter \$operator with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildNotCondition\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildNotCondition\(\) has parameter \$operands with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildNotCondition\(\) has parameter \$operator with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Method yii\\redis\\LuaScriptBuilder\:\:buildNotCondition\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Parameter \#1 \$condition of method yii\\redis\\LuaScriptBuilder\:\:buildCondition\(\) expects array\|string, array\|string\|yii\\db\\ExpressionInterface given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 1
+			path: src/LuaScriptBuilder.php
+
+		-
+			message: '#^Cannot call method executeCommand\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Mutex.php
+
+		-
+			message: '#^Method yii\\redis\\Mutex\:\:init\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Mutex.php
+
+		-
+			message: '#^Parameter \#1 \$str of function md5 expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Mutex.php
+
+		-
+			message: '#^Property yii\\redis\\Mutex\:\:\$_lockValues type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Mutex.php
+
+		-
+			message: '#^Property yii\\redis\\Mutex\:\:\$redis type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Mutex.php
+
+		-
+			message: '#^Method yii\\redis\\Predis\\Command\\CommandDecorator\:\:__call\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Predis/Command/CommandDecorator.php
+
+		-
+			message: '#^Method yii\\redis\\Predis\\Command\\CommandDecorator\:\:__call\(\) has parameter \$args with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Predis/Command/CommandDecorator.php
+
+		-
+			message: '#^Method yii\\redis\\Predis\\Command\\CommandDecorator\:\:__call\(\) has parameter \$method with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Predis/Command/CommandDecorator.php
+
+		-
+			message: '#^Method yii\\redis\\Predis\\Command\\CommandDecorator\:\:getArguments\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Predis/Command/CommandDecorator.php
+
+		-
+			message: '#^Method yii\\redis\\Predis\\Command\\CommandDecorator\:\:parseResponse\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Predis/Command/CommandDecorator.php
+
+		-
+			message: '#^Method yii\\redis\\Predis\\Command\\CommandDecorator\:\:setArguments\(\) has parameter \$arguments with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Predis/Command/CommandDecorator.php
+
+		-
+			message: '#^Method yii\\redis\\Predis\\Command\\CommandDecorator\:\:setRawArguments\(\) has parameter \$arguments with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Predis/Command/CommandDecorator.php
+
+		-
+			message: '#^Parameter \#1 \$function of function call_user_func_array expects callable\(\)\: mixed, array\{mixed, mixed\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Predis/Command/CommandDecorator.php
+
+		-
+			message: '#^Property yii\\redis\\Predis\\Command\\CommandDecorator\:\:\$originalCommand has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: src/Predis/Command/CommandDecorator.php
+
+		-
+			message: '#^Cannot call method createCommand\(\) on Predis\\Client\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Predis/PredisConnection.php
+
+		-
+			message: '#^Cannot call method executeCommand\(\) on Predis\\Client\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Predis/PredisConnection.php
+
+		-
+			message: '#^Method yii\\redis\\Predis\\PredisConnection\:\:__call\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Predis/PredisConnection.php
+
+		-
+			message: '#^Method yii\\redis\\Predis\\PredisConnection\:\:executeCommand\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Predis/PredisConnection.php
+
+		-
+			message: '#^Method yii\\redis\\Predis\\PredisConnection\:\:executeCommand\(\) has parameter \$params with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Predis/PredisConnection.php
+
+		-
+			message: '#^Property yii\\redis\\Predis\\PredisConnection\:\:\$redisCommands type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Predis/PredisConnection.php
+
+		-
+			message: '#^Cannot call method executeCommand\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: src/Session.php
+
+		-
+			message: '#^Cannot call method exists\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Session.php
+
+		-
+			message: '#^Method yii\\redis\\Session\:\:init\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Session.php
+
+		-
+			message: '#^Parameter \#1 \$str of function md5 expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Session.php
+
+		-
+			message: '#^Property yii\\redis\\Session\:\:\$redis type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Session.php
+
+		-
+			message: '#^Parameter \#1 \$message of method yii\\db\\Exception\:\:__construct\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SocketException.php
+
+		-
+			message: '#^Parameter \#2 \$errorInfo of method yii\\db\\Exception\:\:__construct\(\) expects array, string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SocketException.php
+
+		-
+			message: '#^Parameter \#3 \$code of method yii\\db\\Exception\:\:__construct\(\) expects string, Exception\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SocketException.php
+
+		-
+			message: '#^Parameter \#3 \$subject of function preg_replace expects array\<float\|int\|string\>\|string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SocketException.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$address\.$#'
+			identifier: property.notFound
+			count: 2
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$customer\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$customer_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$dirtyAttributes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 3
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 4
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$isNewRecord\.$#'
+			identifier: property.notFound
+			count: 6
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 11
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$orderItems\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$quantity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$subtotal\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$total\.$#'
+			identifier: property.notFound
+			count: 2
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property yiiunit\\data\\ar\\Order\|yiiunit\\extensions\\redis\\data\\ar\\Order\:\:\$orderItems\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:canGetProperty\(\)\.$#'
+			identifier: method.notFound
+			count: 5
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:canSetProperty\(\)\.$#'
+			identifier: method.notFound
+			count: 6
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:delete\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:equals\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:hasAttribute\(\)\.$#'
+			identifier: method.notFound
+			count: 5
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:hasProperty\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:link\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:refresh\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:save\(\)\.$#'
+			identifier: method.notFound
+			count: 5
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:updateAttributes\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with yiiunit\\extensions\\redis\\data\\ar\\Customer will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertSame\(\) with null and int will always evaluate to false\.$#'
+			identifier: method.impossibleType
+			count: 2
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertSame\(\) with null and string will always evaluate to false\.$#'
+			identifier: method.impossibleType
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\ActiveRecordTest\:\:illegalValuesForFindByCondition\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\ActiveRecordTest\:\:illegalValuesForWhere\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\ActiveRecordTest\:\:testValueEscapingInFindByCondition\(\) has parameter \$expectedStrings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\ActiveRecordTest\:\:testValueEscapingInFindByCondition\(\) has parameter \$filterWithInjection with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\ActiveRecordTest\:\:testValueEscapingInFindByCondition\(\) has parameter \$unexpectedStrings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\ActiveRecordTest\:\:testValueEscapingInWhere\(\) has parameter \$expectedStrings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\ActiveRecordTest\:\:testValueEscapingInWhere\(\) has parameter \$filterWithInjection with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\ActiveRecordTest\:\:testValueEscapingInWhere\(\) has parameter \$unexpectedStrings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Parameter \#1 \$expected of method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) expects class\-string\<object\>, string given\.$#'
+			identifier: argument.type
+			count: 19
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\redis\\ActiveRecordTest\:\:\$afterSaveInsert has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\redis\\ActiveRecordTest\:\:\$afterSaveNewRecord has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/ActiveRecordTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertSame\(\) with mixed and \*NEVER\* will always evaluate to false\.$#'
+			identifier: method.impossibleType
+			count: 1
+			path: tests/RedisCacheTest.php
+
+		-
+			message: '#^Cannot call method flushdb\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/RedisCacheTest.php
+
+		-
+			message: '#^Cannot call method keys\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/RedisCacheTest.php
+
+		-
+			message: '#^Cannot call method set\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/RedisCacheTest.php
+
+		-
+			message: '#^Parameter \#1 \$str of function sha1 expects string, int\<0, 999\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/RedisCacheTest.php
+
+		-
+			message: '#^Parameter \#3 \$duration of method yii\\caching\\Cache\:\:add\(\) expects int, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/RedisCacheTest.php
+
+		-
+			message: '#^Parameter \#3 \$duration of method yii\\caching\\Cache\:\:set\(\) expects int\|null, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/RedisCacheTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\redis\\RedisCacheTest\:\:\$_cacheInstance has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/RedisCacheTest.php
+
+		-
+			message: '#^Argument of an invalid type bool\|list\|string\|null supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: tests/RedisConnectionTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true and ''Reconnection…'' will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\RedisConnectionTest\:\:hmSetData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\RedisConnectionTest\:\:keyValueData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\RedisConnectionTest\:\:testHMSet\(\) has parameter \$pairs with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\RedisConnectionTest\:\:testHMSet\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\RedisConnectionTest\:\:testZRangeByScore\(\) has parameter \$cases with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\RedisConnectionTest\:\:testZRangeByScore\(\) has parameter \$members with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\RedisConnectionTest\:\:zRangeByScoreData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/RedisConnectionTest.php
+
+		-
+			message: '#^Parameter \#1 \$array_arg of function sort expects TArray of array, array\|bool\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/RedisConnectionTest.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 2
+			path: tests/RedisConnectionTest.php
+
+		-
+			message: '#^Cannot call method executeCommand\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\RedisMutexTest\:\:acquireTimeoutProvider\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\RedisMutexTest\:\:getKey\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\RedisMutexTest\:\:getKey\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\RedisMutexTest\:\:testConcurentMutexAcquireAndRelease\(\) has parameter \$canAcquireAfterTimeout with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\RedisMutexTest\:\:testConcurentMutexAcquireAndRelease\(\) has parameter \$lockIsReleased with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\RedisMutexTest\:\:testConcurentMutexAcquireAndRelease\(\) has parameter \$timeout with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/RedisMutexTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\redis\\RedisMutexTest\:\:\$_keys has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/RedisMutexTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\redis\\RedisMutexTest\:\:\$mutexName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/RedisMutexTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\redis\\RedisMutexTest\:\:\$mutexPrefix has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/RedisMutexTest.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: tests/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\TestCase\:\:invokeMethod\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\TestCase\:\:invokeMethod\(\) has parameter \$method with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\TestCase\:\:invokeMethod\(\) has parameter \$object with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\TestCase\:\:mockApplication\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\TestCase\:\:mockWebApplication\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\TestCase\:\:mockWebApplication\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/TestCase.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\redis\\TestCase\:\:\$params has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/TestCase.php
+
+		-
+			message: '#^Static property Yii\:\:\$app \(BaseApplication\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/TestCase.php
+
+		-
+			message: '#^Cannot access property \$email on yiiunit\\extensions\\redis\\data\\ar\\Customer\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/UniqueValidatorTest.php
+
+		-
+			message: '#^Cannot access property \$item_id on yiiunit\\extensions\\redis\\data\\ar\\OrderItem\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/UniqueValidatorTest.php
+
+		-
+			message: '#^Cannot access property \$quantity on yiiunit\\extensions\\redis\\data\\ar\\OrderItem\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/UniqueValidatorTest.php
+
+		-
+			message: '#^Cannot call method hasErrors\(\) on yiiunit\\extensions\\redis\\data\\ar\\Customer\|null\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: tests/UniqueValidatorTest.php
+
+		-
+			message: '#^Cannot call method hasErrors\(\) on yiiunit\\extensions\\redis\\data\\ar\\OrderItem\|null\.$#'
+			identifier: method.nonObject
+			count: 6
+			path: tests/UniqueValidatorTest.php
+
+		-
+			message: '#^Parameter \#1 \$model of method yii\\validators\\UniqueValidator\:\:validateAttribute\(\) expects yii\\base\\Model, yiiunit\\extensions\\redis\\data\\ar\\Customer\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/UniqueValidatorTest.php
+
+		-
+			message: '#^Parameter \#1 \$model of method yii\\validators\\UniqueValidator\:\:validateAttribute\(\) expects yii\\base\\Model, yiiunit\\extensions\\redis\\data\\ar\\OrderItem\|null given\.$#'
+			identifier: argument.type
+			count: 4
+			path: tests/UniqueValidatorTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''stdClass'' and stdClass will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Function yiiunit\\extensions\\redis\\base\\microtime\(\) should return float but returns float\|string\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:getOrSetCallable\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:getOrSetCallable\(\) has parameter \$cache with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:multiSetExpiry\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testAdd\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testArrayAccess\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testDefaultTtl\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testDelete\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testExists\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testExpire\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testExpireAdd\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testFlush\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testGet\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testGetNonExistent\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testGetOrSet\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testGetOrSetWithDependencies\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testGetValueNonExistent\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testMultiAdd\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testMultiGet\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testMultiset\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testSet\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:testStoreSpecialValues\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Parameter \#2 \$callable of method yii\\caching\\CacheInterface\:\:getOrSet\(\) expects callable\(\)\: ''SamDark'', Closure\(mixed\)\: ''SamDark'' given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Parameter \#2 \$callable of method yii\\caching\\CacheInterface\:\:getOrSet\(\) expects callable\(\)\: ''SilverFire'', Closure\(mixed\)\: ''SilverFire'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Parameter \#2 \$callable of method yii\\caching\\CacheInterface\:\:getOrSet\(\) expects callable\(\)\: mixed, array\{\$this\(yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\), ''getOrSetCallable''\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Static property yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:\$microtime \(float\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Static property yiiunit\\extensions\\redis\\base\\AbstractCacheTestCase\:\:\$time \(int\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/base/AbstractCacheTestCase.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\redis\\data\\ar\\ActiveRecord\:\:\$db has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/data/ar/ActiveRecord.php
+
+		-
+			message: '#^Method yii\\db\\ActiveQueryInterface\:\:with\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: tests/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Customer\:\:afterSave\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Customer\:\:afterSave\(\) has parameter \$changedAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Customer\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Customer\:\:getExpensiveOrders\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Customer\:\:getExpensiveOrdersWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Customer\:\:getOrderItems\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Customer\:\:getOrders\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Customer\:\:getOrdersWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Customer.php
+
+		-
+			message: '#^Parameter \#1 \$condition of method yii\\db\\QueryInterface\:\:andWhere\(\) expects array, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/data/ar/Customer.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\redis\\data\\ar\\Customer\:\:\$status2 has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Item\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/data/ar/Item.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Order\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Order\:\:getBooks\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Order\:\:getBooksWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Order\:\:getCheapItemsUsingViaWithCallable\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Order\:\:getCustomer\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Order\:\:getExpensiveItemsUsingViaWithCallable\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Order\:\:getItems\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Order\:\:getItemsInOrder1\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Order\:\:getItemsInOrder2\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Order\:\:getItemsIndexed\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Order\:\:getItemsWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Order\:\:getOrderItems\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\Order\:\:getOrderItemsWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\OrderItem\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/data/ar/OrderItem.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\OrderItem\:\:getItem\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/OrderItem.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\OrderItem\:\:getOrder\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/data/ar/OrderItem.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\OrderItemWithNullFK\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/data/ar/OrderItemWithNullFK.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\data\\ar\\OrderWithNullFK\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/data/ar/OrderWithNullFK.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$address\.$#'
+			identifier: property.notFound
+			count: 2
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$customer\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$customer_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$dirtyAttributes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 3
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 4
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$isNewRecord\.$#'
+			identifier: property.notFound
+			count: 6
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 11
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$orderItems\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$quantity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$subtotal\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$total\.$#'
+			identifier: property.notFound
+			count: 2
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property yiiunit\\data\\ar\\Order\|yiiunit\\extensions\\redis\\data\\ar\\Order\:\:\$orderItems\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:canGetProperty\(\)\.$#'
+			identifier: method.notFound
+			count: 5
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:canSetProperty\(\)\.$#'
+			identifier: method.notFound
+			count: 6
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:delete\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:equals\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:hasAttribute\(\)\.$#'
+			identifier: method.notFound
+			count: 5
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:hasProperty\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:link\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:refresh\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:save\(\)\.$#'
+			identifier: method.notFound
+			count: 5
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:updateAttributes\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Customer will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertSame\(\) with null and int will always evaluate to false\.$#'
+			identifier: method.impossibleType
+			count: 2
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertSame\(\) with null and string will always evaluate to false\.$#'
+			identifier: method.impossibleType
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\ActiveRecordTest\:\:illegalValuesForFindByCondition\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\ActiveRecordTest\:\:illegalValuesForWhere\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\ActiveRecordTest\:\:testValueEscapingInFindByCondition\(\) has parameter \$expectedStrings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\ActiveRecordTest\:\:testValueEscapingInFindByCondition\(\) has parameter \$filterWithInjection with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\ActiveRecordTest\:\:testValueEscapingInFindByCondition\(\) has parameter \$unexpectedStrings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\ActiveRecordTest\:\:testValueEscapingInWhere\(\) has parameter \$expectedStrings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\ActiveRecordTest\:\:testValueEscapingInWhere\(\) has parameter \$filterWithInjection with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\ActiveRecordTest\:\:testValueEscapingInWhere\(\) has parameter \$unexpectedStrings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Parameter \#1 \$expected of method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) expects class\-string\<object\>, string given\.$#'
+			identifier: argument.type
+			count: 19
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\sentinel\\ActiveRecordTest\:\:\$afterSaveInsert has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\sentinel\\ActiveRecordTest\:\:\$afterSaveNewRecord has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/sentinel/ActiveRecordTest.php
+
+		-
+			message: '#^Cannot call method flushdb\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/predis/sentinel/RedisCacheTest.php
+
+		-
+			message: '#^Cannot call method keys\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/predis/sentinel/RedisCacheTest.php
+
+		-
+			message: '#^Cannot call method set\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/predis/sentinel/RedisCacheTest.php
+
+		-
+			message: '#^Parameter \#1 \$str of function sha1 expects string, int\<0, 999\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/predis/sentinel/RedisCacheTest.php
+
+		-
+			message: '#^Parameter \#3 \$duration of method yii\\caching\\Cache\:\:add\(\) expects int, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/predis/sentinel/RedisCacheTest.php
+
+		-
+			message: '#^Parameter \#3 \$duration of method yii\\caching\\Cache\:\:set\(\) expects int\|null, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/predis/sentinel/RedisCacheTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\sentinel\\RedisCacheTest\:\:\$_cacheInstance has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/sentinel/RedisCacheTest.php
+
+		-
+			message: '#^Cannot call method select\(\) on Predis\\Client\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/predis/sentinel/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\RedisConnectionTest\:\:hmSetData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\RedisConnectionTest\:\:keyValueData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\RedisConnectionTest\:\:testHMSet\(\) has parameter \$pairs with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\RedisConnectionTest\:\:testHMSet\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\RedisConnectionTest\:\:testZRangeByScore\(\) has parameter \$cases with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\RedisConnectionTest\:\:testZRangeByScore\(\) has parameter \$members with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\RedisConnectionTest\:\:zRangeByScoreData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/RedisConnectionTest.php
+
+		-
+			message: '#^Cannot call method executeCommand\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/predis/sentinel/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\RedisMutexTest\:\:acquireTimeoutProvider\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\RedisMutexTest\:\:getKey\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/predis/sentinel/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\RedisMutexTest\:\:getKey\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/sentinel/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\RedisMutexTest\:\:testConcurentMutexAcquireAndRelease\(\) has parameter \$canAcquireAfterTimeout with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/sentinel/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\RedisMutexTest\:\:testConcurentMutexAcquireAndRelease\(\) has parameter \$lockIsReleased with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/sentinel/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\RedisMutexTest\:\:testConcurentMutexAcquireAndRelease\(\) has parameter \$timeout with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/sentinel/RedisMutexTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\sentinel\\RedisMutexTest\:\:\$_keys has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/sentinel/RedisMutexTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\sentinel\\RedisMutexTest\:\:\$mutexName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/sentinel/RedisMutexTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\sentinel\\RedisMutexTest\:\:\$mutexPrefix has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/sentinel/RedisMutexTest.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: tests/predis/sentinel/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\TestCase\:\:destroyApplication\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/predis/sentinel/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\TestCase\:\:invokeMethod\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\TestCase\:\:invokeMethod\(\) has parameter \$method with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/sentinel/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\TestCase\:\:invokeMethod\(\) has parameter \$object with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/sentinel/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\TestCase\:\:mockApplication\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/predis/sentinel/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\TestCase\:\:mockApplication\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\TestCase\:\:mockWebApplication\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/predis/sentinel/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\TestCase\:\:mockWebApplication\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/TestCase.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\sentinel\\TestCase\:\:\$params has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/sentinel/TestCase.php
+
+		-
+			message: '#^Static property Yii\:\:\$app \(BaseApplication\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/predis/sentinel/TestCase.php
+
+		-
+			message: '#^Cannot access property \$email on yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Customer\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/predis/sentinel/UniqueValidatorTest.php
+
+		-
+			message: '#^Cannot access property \$item_id on yiiunit\\extensions\\predis\\sentinel\\data\\ar\\OrderItem\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/predis/sentinel/UniqueValidatorTest.php
+
+		-
+			message: '#^Cannot access property \$quantity on yiiunit\\extensions\\predis\\sentinel\\data\\ar\\OrderItem\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/predis/sentinel/UniqueValidatorTest.php
+
+		-
+			message: '#^Cannot call method hasErrors\(\) on yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Customer\|null\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: tests/predis/sentinel/UniqueValidatorTest.php
+
+		-
+			message: '#^Cannot call method hasErrors\(\) on yiiunit\\extensions\\predis\\sentinel\\data\\ar\\OrderItem\|null\.$#'
+			identifier: method.nonObject
+			count: 6
+			path: tests/predis/sentinel/UniqueValidatorTest.php
+
+		-
+			message: '#^Parameter \#1 \$model of method yii\\validators\\UniqueValidator\:\:validateAttribute\(\) expects yii\\base\\Model, yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Customer\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/predis/sentinel/UniqueValidatorTest.php
+
+		-
+			message: '#^Parameter \#1 \$model of method yii\\validators\\UniqueValidator\:\:validateAttribute\(\) expects yii\\base\\Model, yiiunit\\extensions\\predis\\sentinel\\data\\ar\\OrderItem\|null given\.$#'
+			identifier: argument.type
+			count: 4
+			path: tests/predis/sentinel/UniqueValidatorTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\sentinel\\data\\ar\\ActiveRecord\:\:\$db has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/sentinel/data/ar/ActiveRecord.php
+
+		-
+			message: '#^Method yii\\db\\ActiveQueryInterface\:\:with\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: tests/predis/sentinel/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Customer\:\:afterSave\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/predis/sentinel/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Customer\:\:afterSave\(\) has parameter \$changedAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Customer\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Customer\:\:getExpensiveOrders\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Customer\:\:getExpensiveOrdersWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Customer\:\:getOrderItems\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Customer\:\:getOrders\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Customer\:\:getOrdersWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Customer.php
+
+		-
+			message: '#^Parameter \#1 \$condition of method yii\\db\\QueryInterface\:\:andWhere\(\) expects array, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/predis/sentinel/data/ar/Customer.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Customer\:\:\$status2 has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/sentinel/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Item\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/data/ar/Item.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Order\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Order\:\:getBooks\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Order\:\:getBooksWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Order\:\:getCheapItemsUsingViaWithCallable\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/predis/sentinel/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Order\:\:getCustomer\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Order\:\:getExpensiveItemsUsingViaWithCallable\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/predis/sentinel/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Order\:\:getItems\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Order\:\:getItemsInOrder1\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Order\:\:getItemsInOrder2\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Order\:\:getItemsIndexed\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Order\:\:getItemsWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Order\:\:getOrderItems\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\Order\:\:getOrderItemsWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\OrderItem\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/data/ar/OrderItem.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\OrderItem\:\:getItem\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/OrderItem.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\OrderItem\:\:getOrder\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/sentinel/data/ar/OrderItem.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\OrderItemWithNullFK\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/data/ar/OrderItemWithNullFK.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\sentinel\\data\\ar\\OrderWithNullFK\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/sentinel/data/ar/OrderWithNullFK.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$address\.$#'
+			identifier: property.notFound
+			count: 2
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$customer\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$customer_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$dirtyAttributes\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$email\.$#'
+			identifier: property.notFound
+			count: 3
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 4
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$isNewRecord\.$#'
+			identifier: property.notFound
+			count: 6
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 11
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$orderItems\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$quantity\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$status\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$subtotal\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$total\.$#'
+			identifier: property.notFound
+			count: 2
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Access to an undefined property yiiunit\\data\\ar\\Order\|yiiunit\\extensions\\redis\\data\\ar\\Order\:\:\$orderItems\.$#'
+			identifier: property.notFound
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:canGetProperty\(\)\.$#'
+			identifier: method.notFound
+			count: 5
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:canSetProperty\(\)\.$#'
+			identifier: method.notFound
+			count: 6
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:delete\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:equals\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:hasAttribute\(\)\.$#'
+			identifier: method.notFound
+			count: 5
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:hasProperty\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:link\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:refresh\(\)\.$#'
+			identifier: method.notFound
+			count: 3
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:save\(\)\.$#'
+			identifier: method.notFound
+			count: 5
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Call to an undefined method object\:\:updateAttributes\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertNotNull\(\) with yiiunit\\extensions\\predis\\standalone\\data\\ar\\Customer will always evaluate to true\.$#'
+			identifier: method.alreadyNarrowedType
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertSame\(\) with null and int will always evaluate to false\.$#'
+			identifier: method.impossibleType
+			count: 2
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertSame\(\) with null and string will always evaluate to false\.$#'
+			identifier: method.impossibleType
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\ActiveRecordTest\:\:illegalValuesForFindByCondition\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\ActiveRecordTest\:\:illegalValuesForWhere\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\ActiveRecordTest\:\:testValueEscapingInFindByCondition\(\) has parameter \$expectedStrings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\ActiveRecordTest\:\:testValueEscapingInFindByCondition\(\) has parameter \$filterWithInjection with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\ActiveRecordTest\:\:testValueEscapingInFindByCondition\(\) has parameter \$unexpectedStrings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\ActiveRecordTest\:\:testValueEscapingInWhere\(\) has parameter \$expectedStrings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\ActiveRecordTest\:\:testValueEscapingInWhere\(\) has parameter \$filterWithInjection with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\ActiveRecordTest\:\:testValueEscapingInWhere\(\) has parameter \$unexpectedStrings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Parameter \#1 \$expected of method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) expects class\-string\<object\>, string given\.$#'
+			identifier: argument.type
+			count: 19
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\standalone\\ActiveRecordTest\:\:\$afterSaveInsert has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\standalone\\ActiveRecordTest\:\:\$afterSaveNewRecord has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/standalone/ActiveRecordTest.php
+
+		-
+			message: '#^Cannot call method flushdb\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/predis/standalone/RedisCacheTest.php
+
+		-
+			message: '#^Cannot call method keys\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/predis/standalone/RedisCacheTest.php
+
+		-
+			message: '#^Cannot call method set\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/predis/standalone/RedisCacheTest.php
+
+		-
+			message: '#^Parameter \#1 \$str of function sha1 expects string, int\<0, 999\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/predis/standalone/RedisCacheTest.php
+
+		-
+			message: '#^Parameter \#3 \$duration of method yii\\caching\\Cache\:\:add\(\) expects int, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/predis/standalone/RedisCacheTest.php
+
+		-
+			message: '#^Parameter \#3 \$duration of method yii\\caching\\Cache\:\:set\(\) expects int\|null, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/predis/standalone/RedisCacheTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\standalone\\RedisCacheTest\:\:\$_cacheInstance has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/standalone/RedisCacheTest.php
+
+		-
+			message: '#^Cannot call method select\(\) on Predis\\Client\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/predis/standalone/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\RedisConnectionTest\:\:hmSetData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\RedisConnectionTest\:\:keyValueData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\RedisConnectionTest\:\:testHMSet\(\) has parameter \$pairs with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\RedisConnectionTest\:\:testHMSet\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\RedisConnectionTest\:\:testZRangeByScore\(\) has parameter \$cases with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\RedisConnectionTest\:\:testZRangeByScore\(\) has parameter \$members with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/RedisConnectionTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\RedisConnectionTest\:\:zRangeByScoreData\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/RedisConnectionTest.php
+
+		-
+			message: '#^Cannot call method executeCommand\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/predis/standalone/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\RedisMutexTest\:\:acquireTimeoutProvider\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\RedisMutexTest\:\:getKey\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/predis/standalone/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\RedisMutexTest\:\:getKey\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/standalone/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\RedisMutexTest\:\:testConcurentMutexAcquireAndRelease\(\) has parameter \$canAcquireAfterTimeout with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/standalone/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\RedisMutexTest\:\:testConcurentMutexAcquireAndRelease\(\) has parameter \$lockIsReleased with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/standalone/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\RedisMutexTest\:\:testConcurentMutexAcquireAndRelease\(\) has parameter \$timeout with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/standalone/RedisMutexTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\standalone\\RedisMutexTest\:\:\$_keys has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/standalone/RedisMutexTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\standalone\\RedisMutexTest\:\:\$mutexName has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/standalone/RedisMutexTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\standalone\\RedisMutexTest\:\:\$mutexPrefix has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/standalone/RedisMutexTest.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: tests/predis/standalone/RedisMutexTest.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\TestCase\:\:destroyApplication\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/predis/standalone/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\TestCase\:\:invokeMethod\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\TestCase\:\:invokeMethod\(\) has parameter \$method with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/standalone/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\TestCase\:\:invokeMethod\(\) has parameter \$object with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: tests/predis/standalone/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\TestCase\:\:mockApplication\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/predis/standalone/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\TestCase\:\:mockApplication\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\TestCase\:\:mockWebApplication\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/predis/standalone/TestCase.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\TestCase\:\:mockWebApplication\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/TestCase.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\standalone\\TestCase\:\:\$params has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/standalone/TestCase.php
+
+		-
+			message: '#^Static property Yii\:\:\$app \(BaseApplication\) does not accept null\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/predis/standalone/TestCase.php
+
+		-
+			message: '#^Cannot access property \$email on yiiunit\\extensions\\predis\\standalone\\data\\ar\\Customer\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/predis/standalone/UniqueValidatorTest.php
+
+		-
+			message: '#^Cannot access property \$item_id on yiiunit\\extensions\\predis\\standalone\\data\\ar\\OrderItem\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/predis/standalone/UniqueValidatorTest.php
+
+		-
+			message: '#^Cannot access property \$quantity on yiiunit\\extensions\\predis\\standalone\\data\\ar\\OrderItem\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: tests/predis/standalone/UniqueValidatorTest.php
+
+		-
+			message: '#^Cannot call method hasErrors\(\) on yiiunit\\extensions\\predis\\standalone\\data\\ar\\Customer\|null\.$#'
+			identifier: method.nonObject
+			count: 3
+			path: tests/predis/standalone/UniqueValidatorTest.php
+
+		-
+			message: '#^Cannot call method hasErrors\(\) on yiiunit\\extensions\\predis\\standalone\\data\\ar\\OrderItem\|null\.$#'
+			identifier: method.nonObject
+			count: 6
+			path: tests/predis/standalone/UniqueValidatorTest.php
+
+		-
+			message: '#^Parameter \#1 \$model of method yii\\validators\\UniqueValidator\:\:validateAttribute\(\) expects yii\\base\\Model, yiiunit\\extensions\\predis\\standalone\\data\\ar\\Customer\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/predis/standalone/UniqueValidatorTest.php
+
+		-
+			message: '#^Parameter \#1 \$model of method yii\\validators\\UniqueValidator\:\:validateAttribute\(\) expects yii\\base\\Model, yiiunit\\extensions\\predis\\standalone\\data\\ar\\OrderItem\|null given\.$#'
+			identifier: argument.type
+			count: 4
+			path: tests/predis/standalone/UniqueValidatorTest.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\standalone\\data\\ar\\ActiveRecord\:\:\$db has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/standalone/data/ar/ActiveRecord.php
+
+		-
+			message: '#^Method yii\\db\\ActiveQueryInterface\:\:with\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: tests/predis/standalone/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Customer\:\:afterSave\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/predis/standalone/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Customer\:\:afterSave\(\) has parameter \$changedAttributes with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Customer\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Customer\:\:getExpensiveOrders\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Customer\:\:getExpensiveOrdersWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Customer\:\:getOrderItems\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Customer\:\:getOrders\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Customer\:\:getOrdersWithItems\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Customer\:\:getOrdersWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Customer.php
+
+		-
+			message: '#^Parameter \#1 \$condition of method yii\\db\\QueryInterface\:\:andWhere\(\) expects array, string given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/predis/standalone/data/ar/Customer.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\predis\\standalone\\data\\ar\\Customer\:\:\$status2 has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/predis/standalone/data/ar/Customer.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Item\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/data/ar/Item.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Order\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Order\:\:getBooks\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Order\:\:getBooksWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Order\:\:getCheapItemsUsingViaWithCallable\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/predis/standalone/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Order\:\:getCustomer\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Order\:\:getExpensiveItemsUsingViaWithCallable\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: tests/predis/standalone/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Order\:\:getItems\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Order\:\:getItemsInOrder1\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Order\:\:getItemsInOrder2\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Order\:\:getItemsIndexed\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Order\:\:getItemsWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Order\:\:getOrderItems\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\Order\:\:getOrderItemsWithNullFK\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/Order.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\OrderItem\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/data/ar/OrderItem.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\OrderItem\:\:getItem\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/OrderItem.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\OrderItem\:\:getOrder\(\) should return yii\\redis\\ActiveQuery but returns yii\\db\\ActiveQueryInterface\.$#'
+			identifier: return.type
+			count: 1
+			path: tests/predis/standalone/data/ar/OrderItem.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\OrderItemWithNullFK\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/data/ar/OrderItemWithNullFK.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\predis\\standalone\\data\\ar\\OrderWithNullFK\:\:attributes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/predis/standalone/data/ar/OrderWithNullFK.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\support\\ConnectionWithErrorEmulator\:\:sendRawCommand\(\) has parameter \$params with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/support/ConnectionWithErrorEmulator.php
+
+		-
+			message: '#^Method yiiunit\\extensions\\redis\\support\\ConnectionWithErrorEmulator\:\:sendRawCommand\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: tests/support/ConnectionWithErrorEmulator.php
+
+		-
+			message: '#^Property yiiunit\\extensions\\redis\\support\\ConnectionWithErrorEmulator\:\:\$isTemporaryBroken has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: tests/support/ConnectionWithErrorEmulator.php

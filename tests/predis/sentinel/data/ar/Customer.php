@@ -1,8 +1,8 @@
 <?php
 
-namespace yiiunit\extensions\redis\predis\sentinel\data\ar;
+namespace yiiunit\extensions\predis\sentinel\data\ar;
 
-use yiiunit\extensions\redis\predis\sentinel\ActiveRecordTest;
+use yiiunit\extensions\predis\sentinel\ActiveRecordTest;
 
 /**
  * Customer
@@ -69,7 +69,7 @@ class Customer extends ActiveRecord
     }
 
     /**
-     * @return \yii\redis\ActiveQuery
+     * @return \yii\db\ActiveQuery|\yii\db\ActiveQueryInterface
      */
     public function getOrdersWithItems()
     {

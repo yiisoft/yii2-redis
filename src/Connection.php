@@ -51,7 +51,7 @@ class Connection extends Component implements ConnectionInterface
      */
     public $scheme = 'tcp';
     /**
-     * @var string if the query gets redirected, use this as the temporary new hostname
+     * @var string|null $redirectConnectionString if the query gets redirected, use this as the temporary new hostname
      * @since 2.0.11
      */
     public $redirectConnectionString;

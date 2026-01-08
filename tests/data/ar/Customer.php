@@ -49,7 +49,8 @@ class Customer extends ActiveRecord
      */
     public function getExpensiveOrders()
     {
-        return $this->hasMany(Order::class, ['customer_id' => 'id'])->andWhere("tonumber(redis.call('HGET','order' .. ':a:' .. pk, 'total')) > 50");
+        return $this->hasMany(Order::class, ['customer_id' => 'id'])
+            ->andWhere("tonumber(redis.call('HGET','order' .. ':a:' .. pk, 'total')) > 50");
     }
 
     /**
@@ -57,7 +58,8 @@ class Customer extends ActiveRecord
      */
     public function getExpensiveOrdersWithNullFK()
     {
-        return $this->hasMany(OrderWithNullFK::class, ['customer_id' => 'id'])->andWhere("tonumber(redis.call('HGET','order' .. ':a:' .. pk, 'total')) > 50");
+        return $this->hasMany(OrderWithNullFK::class, ['customer_id' => 'id'])
+            ->andWhere("tonumber(redis.call('HGET','order' .. ':a:' .. pk, 'total')) > 50");
     }
 
     /**
@@ -69,7 +71,7 @@ class Customer extends ActiveRecord
     }
 
     /**
-     * @return \yii\redis\ActiveQuery
+     * @return \yii\db\ActiveQuery|\yii\db\ActiveQueryInterface
      */
     public function getOrdersWithItems()
     {
