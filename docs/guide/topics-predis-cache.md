@@ -10,12 +10,12 @@ return [
     'components' => [
         // ...
         'redis' => [
-            'class' => 'yii\redis\predis\PredisConnection',
+            'class' => yii\redis\predis\PredisConnection::class,
             'parameters' => 'tcp://redis:6379',
             // ...
         ],
         'cache' => [
-            'class' => 'yii\redis\Cache',
+            'class' => yii\redis\Cache::class,
         ],
     ]
 ];

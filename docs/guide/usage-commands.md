@@ -1,23 +1,22 @@
 Using commands directly
 =======================
 
-Redis has lots of useful commands which could be used directly from connection. After configuring application as
-shown in [installation](installation.md), connection could be obtained like the following:
+Redis has many useful commands, which can be used directly from a connection object. After configuring the component in your application (as shown in [installation](installation.md)), you can get a reference to it like this:
 
 ```php
 $redis = Yii::$app->redis;
 ```
 
-After it's done one can execute commands. The most generic way to do it is using `executeCommand` method:
+Run arbitrary commands using the `executeCommand` method:
 
 ```php
 $result = $redis->executeCommand('hmset', ['test_collection', 'key1', 'val1', 'key2', 'val2']);
 ```
 
-There are shortcuts available for each command supported so insted of the above it can be used as follows:
+There are shortcuts available for many common commands. Instead of the above, you can explicitly call the `hmset()` method:
 
 ```php
 $result = $redis->hmset('test_collection', 'key1', 'val1', 'key2', 'val2');
 ```
 
-For a list of available commands and their parameters see <https://redis.io/commands>.
+For a list of available commands and their parameters, see <https://redis.io/commands>.

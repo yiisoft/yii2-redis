@@ -1,23 +1,23 @@
 Using the Cache component
 =========================
 
-To use the `Cache` component, in addition to configuring the connection as described in the [Installation](installation.md) section,
-you also have to configure the `cache` component to be [[yii\redis\Cache]]:
+To use redis for your application’s cache, you must configure the `cache` component to be an instance of [[yii\redis\Cache]], in addition to configuring the connection (as described in the [Installation](installation.md) section):
 
 ```php
 return [
-    //....
+    // ...
     'components' => [
-        // ...
+        // ...base `redis` component definition...
         'cache' => [
-            'class' => 'yii\redis\Cache',
+            'class' => yii\redis\Cache::class,
         ],
     ]
 ];
 ```
 
-If you only use the redis cache (i.e., not using its ActiveRecord or Session), you can also configure the parameters of the connection within the
-cache component (no connection application component needs to be configured in this case):
+By default, `yii\redis\Cache` uses the globally-configured `redis` connection component.
+
+If you plan on using redis for more than one component, configure your connection directly on the `cache` component:
 
 ```php
 return [
@@ -25,8 +25,9 @@ return [
     'components' => [
         // ...
         'cache' => [
-            'class' => 'yii\redis\Cache',
+            'class' => yii\redis\Cache::class,
             'redis' => [
+                'class' => yii\redis\Connection::class,
                 'hostname' => 'localhost',
                 'port' => 6379,
                 'database' => 0,
@@ -36,7 +37,11 @@ return [
 ];
 ```
 
-The cache provides all methods of the [[yii\caching\CacheInterface]]. If you want to access redis specific methods that are not
+Note that the connection explicitly designates database `0` for the cache. To avoid inadvertent flushing of [sessions](topics-session.md) or [mutex locks](topics-mutex.md), each component should be configured with a different `database`.
+
+As a last resort, the [[yii\redis\Cache::$shareDatabase]] can be set to `true` to replace indiscriminate flushing (via the `FLUSHDB` command) with a combination of `SCAN` and sequential `DEL` commands. For applications with many cache keys, this can cause “flushes” to consume huge amounts of resources; the required time also scales linearly—if deleting one key takes 1ms, 100,000 keys takes 100 seconds.
+
+The cache provides all methods of the [[yii\caching\CacheInterface]]. If you want to access redis-specific methods that are _not_
 included in the interface, you can use them via [[yii\redis\Cache::$redis]], which is an instance of [[yii\redis\ConnectionInterface]]:
 
 ```php
