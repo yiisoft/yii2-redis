@@ -39,7 +39,7 @@ return [
 
 Note that the connection explicitly designates database `0` for the cache. To avoid inadvertent flushing of [sessions](topics-session.md) or [mutex locks](topics-mutex.md), each component should be configured with a different `database`.
 
-As a last resort, the [[yii\redis\Cache::$shareDatabase]] can be set to `true` to replace indiscriminate flushing (via the `FLUSHDB` command) with a combination of `SCAN` and sequential `DEL` commands. For applications with many cache keys, this can cause “flushes” to consume huge amounts of resources; the required time also scales linearly—if deleting one key takes 1ms, 100,000 keys takes 100 seconds.
+As a last resort, the [[yii\redis\Cache::$shareDatabase]] can be set to `true` to replace indiscriminate flushing (via the `FLUSHDB` command) with a combination of `SCAN` and sequential `DEL` commands. For applications with many cache keys, this can cause “flushes” to consume huge amounts of resources; the required time also scales linearly—if a single deletion typically takes 1ms, 100,000 keys would take at least 10 seconds (`SCAN` returns batches of 10, by default, and those are grouped into a single `DEL` command).
 
 The cache provides all methods of the [[yii\caching\CacheInterface]]. If you want to access redis-specific methods that are _not_
 included in the interface, you can use them via [[yii\redis\Cache::$redis]], which is an instance of [[yii\redis\ConnectionInterface]]:
