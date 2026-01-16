@@ -6,11 +6,11 @@
     <br>
 </p>
 
-This extension provides the [redis](https://redis.io/) key-value store support for the [Yii framework 2.0](https://www.yiiframework.com).
-It includes a `Cache` and `Session` storage handler and implements the `ActiveRecord` pattern that allows
-you to store active records in redis.
+This extension provides [redis](https://redis.io/) key-value store support for the [Yii framework 2.0](https://www.yiiframework.com).
+It provides `Cache`, `Mutex`, and `Session` handlers, as well as an `ActiveRecord` implementation that allows
+you to store and query structured data in a familiar way.
 
-For license information check the [LICENSE](LICENSE.md)-file.
+For license information, see the [LICENSE](LICENSE.md) file.
 
 Documentation is at [docs/guide/README.md](docs/guide/README.md).
 
@@ -24,7 +24,7 @@ Documentation is at [docs/guide/README.md](docs/guide/README.md).
 Requirements
 ------------
 
-At least redis version is required for all components to work properly.
+Redis version 2.6.12 or later is required for all components to work properly.
 
 Installation
 ------------
