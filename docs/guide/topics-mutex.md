@@ -1,7 +1,7 @@
 Using the Mutex component
 =========================
 
-To use redis for your application’s mutex locks, you must configure the `mutex` component to be an instance of [[yii\redis\Mutex]], in addition to configuring the connection (as described in the [Installation](installation.md) section):
+To use Redis for your application’s mutex locks, you must configure the `mutex` component to be an instance of [[yii\redis\Mutex]], in addition to configuring the connection (as described in the [Installation](installation.md) section):
 
 ```php
 return [
@@ -17,7 +17,7 @@ return [
 
 By default, `yii\redis\Mutex` uses the globally-configured `redis` connection component.
 
-If you plan on using redis for more than one component, configure your connection directly on the `mutex` component:
+If you plan on using Redis for more than one component, configure your connection directly on the `mutex` component:
 
 ```php
 return [

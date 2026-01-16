@@ -19,5 +19,5 @@ There are shortcuts available for many common commands. Instead of the above, yo
 $result = $redis->hmset('test_collection', 'key1', 'val1', 'key2', 'val2');
 ```
 
-For a list of commands and their parameters available in your version of redis, see <https://redis.io/commands>.
+For a list of commands and their parameters available in your version of Redis, see <https://redis.io/commands>.
 You may need to use the raw `executeCommand()` method for commands added after the minimum required version (2.6.12).

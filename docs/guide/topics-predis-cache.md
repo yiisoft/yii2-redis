@@ -1,7 +1,7 @@
-Using the Cache component with predis
+Using the Cache component with Predis
 =========================
 
-To use the `Cache` component, in addition to configuring the connection as described in the [predis](predis.md) section,
+To use the `Cache` component, in addition to configuring the connection as described in the [Predis](predis.md) section,
 you also have to configure the `cache` component to be [[yii\redis\Cache]]:
 
 ```php
@@ -21,7 +21,7 @@ return [
 ];
 ```
 
-If you only use the redis cache (i.e., not using its ActiveRecord or Session), you can also configure the parameters of the connection within the
+If you only use the Redis cache (i.e., not using its ActiveRecord or Session), you can also configure the parameters of the connection within the
 cache component (no connection application component needs to be configured in this case):
 
 ```php
@@ -41,7 +41,7 @@ return [
 ];
 ```
 
-The cache provides all methods of the [[yii\caching\CacheInterface]]. If you want to access redis specific methods that are not
+The cache provides all methods of the [[yii\caching\CacheInterface]]. If you want to access Redis specific methods that are not
 included in the interface, you can use them via [[yii\redis\Cache::$redis]], which is an instance of [[yii\redis\ConnectionInterface]]:
 
 ```php

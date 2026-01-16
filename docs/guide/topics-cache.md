@@ -1,7 +1,7 @@
 Using the Cache component
 =========================
 
-To use redis for your application’s cache, you must configure the `cache` component to be an instance of [[yii\redis\Cache]], in addition to configuring the connection (as described in the [Installation](installation.md) section):
+To use Redis for your application’s cache, you must configure the `cache` component to be an instance of [[yii\redis\Cache]], in addition to configuring the connection (as described in the [installation](installation.md) section):
 
 ```php
 return [
@@ -17,7 +17,7 @@ return [
 
 By default, `yii\redis\Cache` uses the globally-configured `redis` connection component.
 
-If you plan on using redis for more than one component, configure your connection directly on the `cache` component:
+If you plan on using Redis for more than one component, configure your connection directly on the `cache` component:
 
 ```php
 return [
