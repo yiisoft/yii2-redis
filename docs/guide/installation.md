@@ -3,27 +3,26 @@ Installation
 
 ## Requirements
 
-At least redis version 2.6.12 is required for all components to work properly.
+This extension works on PHP 7.4 and later.
+Redis version 2.6.12 or later is required for all components to work properly.
 
-## Getting Composer package
+## Composer
 
-The preferred way to install this extension is with [Composer](https://getcomposer.org/download/).
-
-Either run
+The preferred way to install this extension is with [Composer](https://getcomposer.org/download/):
 
 ```
 php composer.phar require --prefer-dist yiisoft/yii2-redis
 ```
 
-or add
+Alternatively, you may directly add this package to the `require` section of your `composer.json`…
 
 ```json
-"yiisoft/yii2-redis": "~2.0.0"
+"yiisoft/yii2-redis": "~2.1.0"
 ```
 
-to the `require` section of your `composer.json`.
+…and then run `php composer.phar update`.
 
-## Configuring application
+## Configuration
 
 The most basic usage involves defining a [[yii\redis\Connection|Connection]] component in your application configuration:
 
