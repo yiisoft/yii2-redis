@@ -37,13 +37,13 @@ parameters:
 			path: src/ActiveQuery.php
 
 		-
-			message: '#^Cannot access offset int\<1, max\> on non\-empty\-array\|non\-falsy\-string\|true\.$#'
+			message: '#^Cannot access offset int\<0, max\> on non\-empty\-array\|non\-falsy\-string\|true\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 4
 			path: src/ActiveQuery.php
 
 		-
-			message: '#^Cannot access offset int\<2, max\> on non\-empty\-array\|non\-falsy\-string\|true\.$#'
+			message: '#^Cannot access offset int\<1, max\> on non\-empty\-array\|non\-falsy\-string\|true\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 6
 			path: src/ActiveQuery.php
@@ -283,7 +283,7 @@ parameters:
 			path: src/ActiveRecord.php
 
 		-
-			message: '#^Method yii\\redis\\ActiveRecord\:\:getDb\(\) should return yii\\redis\\Connection but returns object\|null\.$#'
+			message: '#^Method yii\\redis\\ActiveRecord\:\:getDb\(\) should return yii\\redis\\Connection but returns object\.$#'
 			identifier: return.type
 			count: 1
 			path: src/ActiveRecord.php
