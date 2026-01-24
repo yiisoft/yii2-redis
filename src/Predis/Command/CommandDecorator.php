@@ -9,6 +9,8 @@ use Predis\Command\Redis\COMMAND;
 
 class CommandDecorator extends COMMAND
 {
+    // Temporary inspection suppression
+    // phpcs:disable Squiz.NamingConventions.ValidVariableName.PrivateNoUnderscore
     private $originalCommand;
 
     public function __construct(CommandInterface $command)
@@ -27,23 +29,53 @@ class CommandDecorator extends COMMAND
 
     // Calling methods of the original class
 
-    public function __call($method, $args) { return call_user_func_array([$this->originalCommand, $method], $args); }
+    public function __call($method, $args)
+    {
+        return call_user_func_array([$this->originalCommand, $method], $args);
+    }
 
-    public function getId():string { return $this->originalCommand->getId(); }
+    public function getId(): string
+    {
+        return $this->originalCommand->getId();
+    }
 
-    public function setArguments(array $arguments): void { $this->originalCommand->setArguments($arguments); }
+    public function setArguments(array $arguments): void
+    {
+        $this->originalCommand->setArguments($arguments);
+    }
 
-    public function getArguments(): array { return $this->originalCommand->getArguments(); }
+    public function getArguments(): array
+    {
+        return $this->originalCommand->getArguments();
+    }
 
-    public function setSlot($slot): void { $this->originalCommand->setSlot($slot); }
+    public function setSlot($slot): void
+    {
+        $this->originalCommand->setSlot($slot);
+    }
 
-    public function getSlot(): ?int { return $this->originalCommand->getSlot(); }
+    public function getSlot(): ?int
+    {
+        return $this->originalCommand->getSlot();
+    }
 
-    public function setRawArguments(array $arguments): void { $this->originalCommand->setRawArguments($arguments); }
+    public function setRawArguments(array $arguments): void
+    {
+        $this->originalCommand->setRawArguments($arguments);
+    }
 
-    public function getArgument($index) { return $this->originalCommand->getArgument($index); }
+    public function getArgument($index)
+    {
+        return $this->originalCommand->getArgument($index);
+    }
 
-    public function parseResp3Response($data) { return $this->originalCommand->parseResp3Response($data); }
+    public function parseResp3Response($data)
+    {
+        return $this->originalCommand->parseResp3Response($data);
+    }
 
-    public function serializeCommand(): string { return $this->originalCommand->serializeCommand(); }
+    public function serializeCommand(): string
+    {
+        return $this->originalCommand->serializeCommand();
+    }
 }

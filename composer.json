@@ -27,7 +27,8 @@
         "phpunit/phpunit": "9.*",
         "phpstan/phpstan": "^2.1",
         "phpstan/phpstan-phpunit": "^2.0",
-        "yiisoft/yii2-dev": "~2.0.50"
+        "yiisoft/yii2-dev": "~2.0.50",
+        "yiisoft/yii2-coding-standards": "^3.0"
     },
     "autoload": {
         "psr-4": { "yii\\redis\\": "src" }
@@ -53,5 +54,9 @@
         "allow-plugins": {
             "yiisoft/yii2-composer": true
         }
+    },
+    "scripts": {
+        "phpcbf": "./vendor/bin/phpcbf -q src/ tests/",
+        "phpcs": "./vendor/bin/phpcs -q src/ tests/"
     }
 }

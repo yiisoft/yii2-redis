@@ -66,15 +66,15 @@ class Order extends ActiveRecord
         return $this->hasMany(Item::class, ['id' => 'item_id'])
             ->via('orderItems', function (\yii\redis\ActiveQuery $q) {
                 $q->where(['>=', 'subtotal', 10]);
-        });
-     }
+            });
+    }
 
     public function getCheapItemsUsingViaWithCallable()
     {
         return $this->hasMany(Item::class, ['id' => 'item_id'])
             ->via('orderItems', function (\yii\redis\ActiveQuery $q) {
-            $q->where(['<', 'subtotal', 10]);
-        });
+                $q->where(['<', 'subtotal', 10]);
+            });
     }
 
     /**

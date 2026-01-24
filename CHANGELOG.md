@@ -6,6 +6,7 @@ Yii Framework 2 redis extension Change Log
 
 - Enh #282: Static analysis with PHPStan has been added (@s1lver)
 - Enh #281: PHP 7.3 support was removed to align with Yii2 minimum PHP version (@s1lver)
+- Enh #287: Applying Yii2 coding standards (@s1lver)
 - Fix #281: PHP 7.4 compatibility is now fixed (@s1lver)
 
 2.1.0 December 25, 2025

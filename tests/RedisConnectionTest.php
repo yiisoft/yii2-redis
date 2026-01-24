@@ -80,7 +80,7 @@ class RedisConnectionTest extends TestCase
      * @dataProvider keyValueData
      * @param mixed $data
      */
-    public function testStoreGet($data):void
+    public function testStoreGet($data): void
     {
         $db = $this->getConnection(true);
 
@@ -114,7 +114,7 @@ class RedisConnectionTest extends TestCase
         $this->assertTrue($db->ping());
 
         $db->close();
-        $db->on(Connection::EVENT_AFTER_OPEN, function() {
+        $db->on(Connection::EVENT_AFTER_OPEN, function () {
             // sleep 2 seconds after connect to make every command time out
             sleep(2);
         });
@@ -143,7 +143,7 @@ class RedisConnectionTest extends TestCase
         $this->assertTrue($db->ping());
         sleep(2);
 
-        $logMessages = array_map(static function($entry) {
+        $logMessages = array_map(static function ($entry) {
             return (string) $entry[0];
         }, $logger->messages);
 
@@ -184,7 +184,15 @@ class RedisConnectionTest extends TestCase
 
         $this->assertTrue($db->ping());
         $this->assertCount(10, $logger->messages, 'log +1 ping command, and two reconnections.'
-            . print_r(array_map(static function($s) { return (string) $s; }, ArrayHelper::getColumn($logger->messages, 0)), true));
+            . print_r(
+                array_map(
+                    static function ($s) {
+                        return (string) $s;
+                    },
+                    ArrayHelper::getColumn($logger->messages, 0)
+                ),
+                true
+            ));
     }
 
     /**
@@ -201,7 +209,7 @@ class RedisConnectionTest extends TestCase
         $db = $this->getConnection(false);
         $db->retries = 2;
         $db->configSet('timeout', 1);
-        $db->on(Connection::EVENT_AFTER_OPEN, function() {
+        $db->on(Connection::EVENT_AFTER_OPEN, function () {
             // sleep 2 seconds after connect to make every command time out
             sleep(2);
         });
@@ -218,7 +226,15 @@ class RedisConnectionTest extends TestCase
         }
         $this->assertTrue($exception, 'SocketException should have been thrown.');
         $this->assertCount(14, $logger->messages, 'log +1 ping command, and reconnection.'
-            . print_r(array_map(function($s) { return (string) $s; }, ArrayHelper::getColumn($logger->messages, 0)), true));
+            . print_r(
+                array_map(
+                    function ($s) {
+                        return (string) $s;
+                    },
+                    ArrayHelper::getColumn($logger->messages, 0)
+                ),
+                true
+            ));
     }
 
     /**
@@ -363,7 +379,7 @@ class RedisConnectionTest extends TestCase
         $redis = $this->getConnection();
         $set = $params[0];
         call_user_func_array([$redis,'hmset'], $params);
-        foreach($pairs as $field => $expected) {
+        foreach ($pairs as $field => $expected) {
             $actual = $redis->hget($set, $field);
             $this->assertEquals($expected, $actual);
         }
