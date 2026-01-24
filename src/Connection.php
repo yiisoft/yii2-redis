@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -38,7 +39,7 @@ class Connection extends Component implements ConnectionInterface
     /**
      * @event Event an event that is triggered after a DB connection is established
      */
-    const EVENT_AFTER_OPEN = 'afterOpen';
+    public const EVENT_AFTER_OPEN = 'afterOpen';
 
     /**
      * @var string the hostname or ip address to use for connecting to the redis server. Defaults to 'localhost'.
@@ -648,7 +649,7 @@ class Connection extends Component implements ConnectionInterface
                     return $this->redirect($line, $command, $params);
                 }
 
-                throw new Exception("Redis error: " . $line . "\nRedis command was: " . implode(' ', $params));
+                throw new Exception('Redis error: ' . $line . "\nRedis command was: " . implode(' ', $params));
             case ':': // Integer reply
                 // no cast to int as it is in the range of a signed 64 bit integer
                 return $line;

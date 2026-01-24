@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -229,8 +230,8 @@ class Cache extends \yii\caching\Cache
         if (
             is_string($key)
             && $this->isCluster
-            && preg_match('/^(.*)({.+})(.*)$/', $key, $matches) === 1) {
-
+            && preg_match('/^(.*)({.+})(.*)$/', $key, $matches) === 1
+        ) {
             $this->_hashTagAvailable = true;
 
             return parent::buildKey($matches[1] . $matches[3]) . $matches[2];
