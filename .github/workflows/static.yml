@@ -1,45 +1,25 @@
----
+name: static analysis
+
+permissions:
+  contents: read
+
 on:
   pull_request: &ignore-paths
     paths-ignore:
       - 'docs/**'
+      - '.github/CONTRIBUTING.md'
+      - '.github/FUNDING.yml'
+      - '.github/SECURITY.md'
       - 'README.md'
       - 'CHANGELOG.md'
-      - 'UPGRADE.md'
       - 'LICENSE.md'
+      - 'UPGRADE.md'
       - '.gitignore'
       - '.gitattributes'
+      - '.editorconfig'
 
   push: *ignore-paths
 
-name: static analysis
-
 jobs:
   phpstan:
-    name: PHP ${{ matrix.php }}-PHPStan
-
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-
-      matrix:
-        os:
-          - ubuntu-latest
-
-        php:
-          - "7.4"
-          - "8.0"
-          - "8.1"
-          - "8.2"
-          - "8.3"
-          - "8.4"
-          - "8.5"
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Static analysis PHP ${{ matrix.php }}
-        run: |
-          make static-analysis v=${{ matrix.php }}
+    uses: yiisoft/yii2-actions/.github/workflows/phpstan.yml@master
