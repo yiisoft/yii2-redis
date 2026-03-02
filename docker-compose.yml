@@ -3,12 +3,12 @@
 
 services:
 
-  yii2-redis-php:
+  php:
     image: "yiisoftware/yii2-php:${PHP_VERSION:-8.1}-apache"
     networks:
       - yii2-redis
     volumes:
-      - ../..:/app # Mount source-code for development
+      - .:/app # Mount source-code for development
     environment:
       XDEBUG_MODE: ${XDEBUG_MODE:-coverage} # Setup "debug" to enable debugging
       XDEBUG_CONFIG: "client_host=host.docker.internal"

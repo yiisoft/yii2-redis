@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -71,7 +72,7 @@ class LuaScriptBuilder extends BaseObject
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
-        return $this->build($query, "n=n+1 pks[n]=redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ")", 'pks');
+        return $this->build($query, "n=n+1 pks[n]=redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ')', 'pks');
     }
 
     /**
@@ -99,7 +100,7 @@ class LuaScriptBuilder extends BaseObject
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
-        return $this->build($query, "n=n+redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ")", 'n');
+        return $this->build($query, "n=n+redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ')', 'n');
     }
 
     /**
@@ -117,7 +118,7 @@ class LuaScriptBuilder extends BaseObject
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
-        return $this->build($query, "n=n+1 if v==nil then v=0 end v=v+redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ")", 'v/n');
+        return $this->build($query, "n=n+1 if v==nil then v=0 end v=v+redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ')', 'v/n');
     }
 
     /**
@@ -135,7 +136,7 @@ class LuaScriptBuilder extends BaseObject
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
-        return $this->build($query, "n=redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ") if v==nil or n<v then v=n end", 'v');
+        return $this->build($query, "n=redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ') if v==nil or n<v then v=n end', 'v');
     }
 
     /**
@@ -153,7 +154,7 @@ class LuaScriptBuilder extends BaseObject
         $modelClass = $query->modelClass;
         $key = $this->quoteValue($modelClass::keyPrefix() . ':a:');
 
-        return $this->build($query, "n=redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ") if v==nil or n>v then v=n end", 'v');
+        return $this->build($query, "n=redis.call('HGET',$key .. pk," . $this->quoteValue($column) . ') if v==nil or n>v then v=n end', 'v');
     }
 
     /**
@@ -245,7 +246,7 @@ EOF;
         if (isset($columns[$column])) {
             return $columns[$column];
         }
-        $name = 'c' . preg_replace("/[^a-z]+/i", "", $column) . count($columns);
+        $name = 'c' . preg_replace('/[^a-z]+/i', '', $column) . count($columns);
 
         return $columns[$column] = $name;
     }
@@ -324,7 +325,7 @@ EOF;
                     $value = (int) $value;
                 }
                 if ($value === null) {
-                    $parts[] = "redis.call('HEXISTS',key .. ':a:' .. pk, ".$this->quoteValue($column).")==0";
+                    $parts[] = "redis.call('HEXISTS',key .. ':a:' .. pk, " . $this->quoteValue($column) . ')==0';
                 } elseif ($value instanceof Expression) {
                     $column = $this->addColumn($column, $columns);
                     $parts[] = "$column==" . $value->expression;
@@ -415,7 +416,7 @@ EOF;
                 $value = isset($value[$column]) ? $value[$column] : null;
             }
             if ($value === null) {
-                $parts[] = "redis.call('HEXISTS',key .. ':a:' .. pk, ".$this->quoteValue($column).")==0";
+                $parts[] = "redis.call('HEXISTS',key .. ':a:' .. pk, " . $this->quoteValue($column) . ')==0';
             } elseif ($value instanceof Expression) {
                 $parts[] = "$columnAlias==" . $value->expression;
             } else {
@@ -438,7 +439,7 @@ EOF;
                     $columnAlias = $this->addColumn($column, $columns);
                     $vs[] = "$columnAlias==" . $this->quoteValue($value[$column]);
                 } else {
-                    $vs[] = "redis.call('HEXISTS',key .. ':a:' .. pk, ".$this->quoteValue($column).")==0";
+                    $vs[] = "redis.call('HEXISTS',key .. ':a:' .. pk, " . $this->quoteValue($column) . ')==0';
                 }
             }
             $vss[] = '(' . implode(' and ', $vs) . ')';
@@ -457,7 +458,7 @@ EOF;
         list($column, $value) = $operands;
 
         $column = $this->addColumn($column, $columns);
-        if (is_numeric($value)){
+        if (is_numeric($value)) {
             return "tonumber($column) $operator $value";
         }
         $value = $this->quoteValue($value);
