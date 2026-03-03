@@ -130,8 +130,13 @@ class RedisMutexTest extends TestCase
     {
         if (!isset(self::$_keys[$name])) {
             $mutex = $this->createMutex();
+
             $method = new \ReflectionMethod($mutex, 'calculateKey');
-            $method->setAccessible(true);
+
+            if (\PHP_VERSION_ID < 80100) {
+                $method->setAccessible(true);
+            }
+
             self::$_keys[$name] = $method->invoke($mutex, $name);
         }
 

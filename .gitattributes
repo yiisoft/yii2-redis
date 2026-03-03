@@ -7,3 +7,4 @@
 .*                  export-ignore
 *.dist              export-ignore
 *.neon              export-ignore
+*.yml               export-ignore

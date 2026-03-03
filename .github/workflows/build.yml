@@ -2,12 +2,16 @@ on:
   pull_request: &ignore-paths
     paths-ignore:
       - 'docs/**'
+      - '.github/CONTRIBUTING.md'
+      - '.github/FUNDING.yml'
+      - '.github/SECURITY.md'
       - 'README.md'
       - 'CHANGELOG.md'
-      - 'UPGRADE.md'
       - 'LICENSE.md'
+      - 'UPGRADE.md'
       - '.gitignore'
       - '.gitattributes'
+      - '.editorconfig'
 
   push: *ignore-paths
 
@@ -33,6 +37,7 @@ jobs:
           - "8.2"
           - "8.3"
           - "8.4"
+          - "8.5"
 
     steps:
       - name: Checkout
