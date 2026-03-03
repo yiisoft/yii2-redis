@@ -37,4 +37,4 @@ return [
 ];
 ```
 
-Note that the connection explicitly designates database `1` for the cache. To avoid inadvertent flushing of the [cache](topics-cache.md) or [sessions](topics-session.md), each component should be configured with a different `database`.
+Note that the connection explicitly designates database `1` for mutex locks. To avoid inadvertent flushing of the [cache](topics-cache.md) or [sessions](topics-session.md), each component should be configured with a different `database`.
