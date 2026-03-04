@@ -12,10 +12,6 @@ This extension provides [redis](https://redis.io/) key-value store support for t
 It provides `Cache`, `Mutex`, and `Session` handlers, as well as an `ActiveRecord` implementation that allows
 you to store and query structured data in a familiar way.
 
-For license information, see the [LICENSE](LICENSE.md) file.
-
-Documentation is at [docs/guide/README.md](docs/guide/README.md).
-
 [![Latest Stable Version](https://img.shields.io/packagist/v/yiisoft/yii2-redis.svg?style=for-the-badge&label=Stable&logo=packagist)](https://packagist.org/packages/yiisoft/yii2-redis)
 [![Total Downloads](https://img.shields.io/packagist/dt/yiisoft/yii2-redis.svg?style=for-the-badge&label=Downloads)](https://packagist.org/packages/yiisoft/yii2-redis)
 [![build](https://img.shields.io/github/actions/workflow/status/yiisoft/yii2-redis/build.yml?style=for-the-badge&logo=github&label=Build)](https://github.com/yiisoft/yii2-redis/actions?query=workflow%3Abuild)
