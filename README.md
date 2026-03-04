@@ -12,8 +12,6 @@ This extension provides [redis](https://redis.io/) key-value store support for t
 It provides `Cache`, `Mutex`, and `Session` handlers, as well as an `ActiveRecord` implementation that allows
 you to store and query structured data in a familiar way.
 
-For license information, see the [LICENSE](LICENSE.md) file.
-
 [![Latest Stable Version](https://img.shields.io/packagist/v/yiisoft/yii2-redis.svg?style=for-the-badge&label=Stable&logo=packagist)](https://packagist.org/packages/yiisoft/yii2-redis)
 [![Total Downloads](https://img.shields.io/packagist/dt/yiisoft/yii2-redis.svg?style=for-the-badge&label=Downloads)](https://packagist.org/packages/yiisoft/yii2-redis)
 [![build](https://img.shields.io/github/actions/workflow/status/yiisoft/yii2-redis/build.yml?style=for-the-badge&logo=github&label=Build)](https://github.com/yiisoft/yii2-redis/actions?query=workflow%3Abuild)
@@ -121,3 +119,7 @@ return [
 [![Follow on X](https://img.shields.io/badge/-Follow%20on%20X-1DA1F2.svg?style=for-the-badge&logo=x&logoColor=white&labelColor=000000)](https://x.com/yiiframework)
 [![Telegram](https://img.shields.io/badge/telegram-join-1DA1F2?style=for-the-badge&logo=telegram)](https://t.me/yii_framework_in_english)
 [![Slack](https://img.shields.io/badge/slack-join-1DA1F2?style=for-the-badge&logo=slack)](https://yiiframework.com/go/slack)
+
+## License
+
+[![License](https://img.shields.io/badge/License-BSD--3--Clause-brightgreen.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=555555)](LICENSE.md)
