@@ -21,7 +21,7 @@
         "php": "^7.4 || ^8.0",
         "ext-openssl": "*",
         "yiisoft/yii2": "~2.0.50",
-        "predis/predis": "^v2.3.0|^3.0"
+        "predis/predis": "^v2.3.0|3.3.*"
     },
     "require-dev": {
         "phpunit/phpunit": "9.*",
