@@ -175,6 +175,12 @@ parameters:
 			path: src/ActiveQuery.php
 
 		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
 			message: '#^Parameter \#1 \$array of function reset expects array\|object, array\|string\|yii\\db\\ExpressionInterface\|null given\.$#'
 			identifier: argument.type
 			count: 1
