@@ -402,9 +402,11 @@ class RedisConnectionTest extends TestCase
         [$client, $server] = $pair;
         stream_set_timeout($client, 1);
 
-        // Simulate: Redis sends bulk reply header, then the node dies before sending the body
+        // Simulate: Redis sends bulk reply header, then the node dies before sending the body.
+        // Use stream_socket_shutdown to close only the write side of the server,
+        // so fwrite() on the client still succeeds but fread() gets EOF after the header.
         fwrite($server, "\$200\r\n");
-        fclose($server);
+        stream_socket_shutdown($server, STREAM_SHUT_WR);
 
         // Inject the fake socket into a Connection instance
         $db = new Connection();
