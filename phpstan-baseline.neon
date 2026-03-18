@@ -1303,7 +1303,7 @@ parameters:
 			path: tests/RedisConnectionTest.php
 
 		-
-			message: '#^Parameter \#1 \$array_arg of function sort expects TArray of array, array\|bool\|string\|null given\.$#'
+			message: '#^Parameter \#1 \$array_arg of function sort expects (TArray of )?array, array\|bool\|string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/RedisConnectionTest.php

@@ -391,12 +391,10 @@ class RedisConnectionTest extends TestCase
      *
      * This simulates a Redis node dying mid-response during cluster failover/node replacement:
      * the bulk reply header ($200\r\n) is received, but the body never arrives.
-     *
-     * @see https://github.com/yiisoft/yii2-redis/issues/XXX
      */
     public function testParseResponseBulkReplyBrokenSocket(): void
     {
-        $pair = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, STREAM_IPPROTO_IP);
+        $pair = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, 0);
         $this->assertNotFalse($pair, 'Failed to create socket pair');
 
         [$client, $server] = $pair;
@@ -418,7 +416,7 @@ class RedisConnectionTest extends TestCase
         $db->port = 6379;
 
         $this->expectException(SocketException::class);
-        $this->expectExceptionMessage('Failed to read from socket');
+        $this->expectExceptionMessageMatches('/Failed to read from socket/');
 
         $this->invokeMethod($db, 'sendRawCommand', ["*2\r\n\$3\r\nGET\r\n\$3\r\nfoo\r\n", ['GET', 'foo']]);
     }
