@@ -418,6 +418,6 @@ class RedisConnectionTest extends TestCase
         $this->expectException(SocketException::class);
         $this->expectExceptionMessage('Failed to read from socket');
 
-        $db->sendRawCommand("*2\r\n\$3\r\nGET\r\n\$3\r\nfoo\r\n", ['GET', 'foo']);
+        $this->invokeMethod($db, 'sendRawCommand', ["*2\r\n\$3\r\nGET\r\n\$3\r\nfoo\r\n", ['GET', 'foo']]);
     }
 }
