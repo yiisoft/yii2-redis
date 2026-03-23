@@ -384,4 +384,40 @@ class RedisConnectionTest extends TestCase
             $this->assertEquals($expected, $actual);
         }
     }
+
+    /**
+     * Test that parseResponse throws SocketException when fread() returns empty string
+     * on a broken socket, instead of looping forever in the bulk reply while($length > 0) loop.
+     *
+     * This simulates a Redis node dying mid-response during cluster failover/node replacement:
+     * the bulk reply header ($200\r\n) is received, but the body never arrives.
+     */
+    public function testParseResponseBulkReplyBrokenSocket(): void
+    {
+        $pair = stream_socket_pair(STREAM_PF_UNIX, STREAM_SOCK_STREAM, 0);
+        $this->assertNotFalse($pair, 'Failed to create socket pair');
+
+        [$client, $server] = $pair;
+        stream_set_timeout($client, 1);
+
+        // Simulate: Redis sends bulk reply header, then the node dies before sending the body.
+        // Use stream_socket_shutdown to close only the write side of the server,
+        // so fwrite() on the client still succeeds but fread() gets EOF after the header.
+        fwrite($server, "\$200\r\n");
+        stream_socket_shutdown($server, STREAM_SHUT_WR);
+
+        // Inject the fake socket into a Connection instance
+        $db = new Connection();
+        $pool = new \ReflectionProperty(Connection::class, '_pool');
+        $pool->setAccessible(true);
+        $pool->setValue($db, ['tcp://fake:6379' => $client]);
+
+        $db->hostname = 'fake';
+        $db->port = 6379;
+
+        $this->expectException(SocketException::class);
+        $this->expectExceptionMessageMatches('/Failed to read from socket/');
+
+        $this->invokeMethod($db, 'sendRawCommand', ["*2\r\n\$3\r\nGET\r\n\$3\r\nfoo\r\n", ['GET', 'foo']]);
+    }
 }
