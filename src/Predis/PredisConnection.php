@@ -6,6 +6,7 @@ namespace yii\redis\Predis;
 
 use Predis\Client;
 use Predis\Connection\ConnectionException as PredisConnectionException;
+use Predis\Connection\Resource\Exception\StreamInitException;
 use Predis\Response\ErrorInterface;
 use Predis\Response\ResponseInterface;
 use Predis\Response\Status;
@@ -341,6 +342,7 @@ class PredisConnection extends Component implements ConnectionInterface
      * @return mixed|ErrorInterface|ResponseInterface
      * @throws InvalidConfigException
      * @throws PredisConnectionException
+     * @throws StreamInitException
      */
     public function executeCommand($name, $params = [])
     {
@@ -360,7 +362,7 @@ class PredisConnection extends Component implements ConnectionInterface
             for ($attempt = 0; $attempt <= $savedRetries; $attempt++) {
                 try {
                     return $this->executeCommandInternal($name, $params);
-                } catch (PredisConnectionException $e) {
+                } catch (PredisConnectionException | StreamInitException $e) {
                     $lastException = $e;
                     Yii::error($e, __METHOD__);
 
