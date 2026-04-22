@@ -10,6 +10,7 @@ Yii Framework 2 redis extension Change Log
 - Fix #281: PHP 7.4 compatibility is now fixed (@s1lver)
 - Fix #291: Prevent infinite loop in `parseResponse()` when `fread()` returns empty string on broken socket (@dkostik)
 - Fix #292: Fixed `fwrite()` supplied resource is not a valid stream (@s1lver)
+- Enh #292: Bump version `predis/predis` to `3.4` 
 
 2.1.0 December 25, 2025
 -----------------------
