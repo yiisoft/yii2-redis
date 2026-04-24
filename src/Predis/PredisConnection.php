@@ -66,7 +66,7 @@ class PredisConnection extends Component implements ConnectionInterface
     public const EVENT_AFTER_OPEN = 'afterOpen';
 
     /**
-     * @var array List of available redis commands.
+     * @var string[] List of available redis commands.
      * @see https://redis.io/commands
      */
     public $redisCommands = [
@@ -320,7 +320,7 @@ class PredisConnection extends Component implements ConnectionInterface
     public int $retries = 0;
 
     /**
-     * @var int The retry interval in microseconds to wait between retry.
+     * @var int The retry interval in microseconds to wait between retries.
      * Defaults to 0 meaning no wait.
      * @since 2.2.0
      */
@@ -345,12 +345,15 @@ class PredisConnection extends Component implements ConnectionInterface
     }
 
     /**
+     * @param string $name
+     * @param array<mixed> $params
      * @return mixed|ErrorInterface|ResponseInterface
      * @throws InvalidConfigException
      * @throws PredisConnectionException
      * @throws StreamInitException
+     * @throws Throwable
      */
-    public function executeCommand($name, $params = [])
+    public function executeCommand(string $name, array $params = [])
     {
         $this->open();
 
@@ -461,7 +464,7 @@ class PredisConnection extends Component implements ConnectionInterface
      * ```
      *
      * @param string $name name of the missing method to execute
-     * @param array $params method call arguments
+     * @param array<mixed> $params method call arguments
      * @return mixed
      * @throws InvalidConfigException
      */

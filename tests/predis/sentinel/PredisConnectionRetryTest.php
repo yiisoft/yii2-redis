@@ -108,6 +108,7 @@ class PredisConnectionRetryTest extends TestCase
     {
         $db = $this->getConnection(true);
         $db->close();
+        $db->close();
         $this->assertFalse($db->getIsActive());
     }
 
