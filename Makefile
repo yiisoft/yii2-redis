@@ -16,7 +16,7 @@ down:			## Stop and remove containers, networks
 	docker compose down
 
 sh:			## Enter the container with the application
-	docker exec -it docker-yii2-redis-php-1 bash
+	docker exec -it yii2-redis-php-1 bash
 
 static-analysis:	## Run code static analyze. Params: {{ v=8.1 }}.
 	make build v=$(filter-out $@,$(v))

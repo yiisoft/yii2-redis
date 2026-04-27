@@ -1,13 +1,22 @@
 <?php
 
+/**
+ * @link https://www.yiiframework.com/
+ * @copyright Copyright (c) 2008 Yii Software LLC
+ * @license https://www.yiiframework.com/license/
+ */
+
 declare(strict_types=1);
 
 namespace yii\redis\Predis;
 
 use Predis\Client;
+use Predis\Connection\ConnectionException as PredisConnectionException;
+use Predis\Connection\Resource\Exception\StreamInitException;
 use Predis\Response\ErrorInterface;
 use Predis\Response\ResponseInterface;
 use Predis\Response\Status;
+use Throwable;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
@@ -57,7 +66,7 @@ class PredisConnection extends Component implements ConnectionInterface
     public const EVENT_AFTER_OPEN = 'afterOpen';
 
     /**
-     * @var array List of available redis commands.
+     * @var string[] List of available redis commands.
      * @see https://redis.io/commands
      */
     public $redisCommands = [
@@ -304,9 +313,23 @@ class PredisConnection extends Component implements ConnectionInterface
     public $options = [];
 
     /**
+     * @var int The number of times a command execution should be retried when a connection failure occurs.
+     * Defaults to 0 meaning no retries on failure.
+     * @since 2.2.0
+     */
+    public int $retries = 0;
+
+    /**
+     * @var int The retry interval in microseconds to wait between retries.
+     * Defaults to 0 meaning no wait.
+     * @since 2.2.0
+     */
+    public int $retryInterval = 0;
+
+    /**
      * @var Client|null redis connection
      */
-    protected $client;
+    protected ?Client $client = null;
 
     /**
      * Returns a value indicating whether the DB connection is established.
@@ -322,15 +345,60 @@ class PredisConnection extends Component implements ConnectionInterface
     }
 
     /**
+     * @param string $name
+     * @param array<mixed> $params
      * @return mixed|ErrorInterface|ResponseInterface
      * @throws InvalidConfigException
+     * @throws PredisConnectionException
+     * @throws StreamInitException
+     * @throws Throwable
      */
-    public function executeCommand($name, $params = [])
+    public function executeCommand(string $name, array $params = [])
     {
         $this->open();
 
         Yii::debug("Executing Redis Command: $name " . implode(' ', $params), __METHOD__);
 
+        if ($this->retries <= 0) {
+            return $this->executeCommandInternal($name, $params);
+        }
+
+        $lastException = null;
+        $savedRetries = $this->retries;
+        $this->retries = 0;
+
+        try {
+            for ($attempt = 0; $attempt <= $savedRetries; $attempt++) {
+                try {
+                    return $this->executeCommandInternal($name, $params);
+                } catch (PredisConnectionException | StreamInitException $e) {
+                    $lastException = $e;
+                    Yii::error($e, __METHOD__);
+
+                    if ($attempt < $savedRetries) {
+                        $this->close();
+                        if ($this->retryInterval > 0) {
+                            usleep($this->retryInterval);
+                        }
+                        $this->open();
+                    }
+                }
+            }
+        } finally {
+            $this->retries = $savedRetries;
+        }
+
+        throw $lastException;
+    }
+
+    /**
+     * @param string $name
+     * @param array<mixed> $params
+     * @return mixed|ErrorInterface|ResponseInterface
+     * @throws Throwable
+     */
+    private function executeCommandInternal(string $name, array $params)
+    {
         $command = $this->client->createCommand($name, $params);
         $response = $this->client->executeCommand(new CommandDecorator($command));
         if ($response instanceof Status) {
@@ -373,6 +441,7 @@ class PredisConnection extends Component implements ConnectionInterface
             return;
         }
         $this->client->disconnect();
+        $this->client = null;
     }
 
     /**
@@ -395,7 +464,7 @@ class PredisConnection extends Component implements ConnectionInterface
      * ```
      *
      * @param string $name name of the missing method to execute
-     * @param array $params method call arguments
+     * @param array<mixed> $params method call arguments
      * @return mixed
      * @throws InvalidConfigException
      */
