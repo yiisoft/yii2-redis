@@ -75,14 +75,8 @@ class PredisConnectionRetryTest extends TestCase
         $db->retries = 2;
         $db->retryInterval = 1000;
 
-        $thrown = null;
-        try {
-            $db->executeCommand('GET', ['nonexistent_key']);
-        } catch (PredisConnectionException | StreamInitException $e) {
-            $thrown = $e;
-        }
-
-        $this->assertNotNull($thrown);
+        $this->expectException(StreamInitException::class);
+        $db->executeCommand('GET', ['nonexistent_key']);
     }
 
     public function testRetriesPropertyPreservedAfterException(): void
@@ -94,10 +88,13 @@ class PredisConnectionRetryTest extends TestCase
         $db->retries = 5;
         $db->retryInterval = 500;
 
+        $thrown = null;
         try {
             $db->executeCommand('GET', ['test']);
         } catch (PredisConnectionException | StreamInitException $e) {
+            $thrown = $e;
         }
+        $this->assertNotNull($thrown);
 
         $this->assertSame(5, $db->retries);
     }
@@ -138,7 +135,7 @@ class PredisConnectionRetryTest extends TestCase
         $db->close();
     }
 
-    public function testCloseResetsClientToNull(): void
+    public function testCloseDeactivatesConnection(): void
     {
         $db = $this->getConnection(true);
         $this->assertNotNull($db->getClient());

@@ -393,7 +393,7 @@ class PredisConnection extends Component implements ConnectionInterface
 
     /**
      * @param string $name
-     * @param array<string, mixed> $params
+     * @param array<mixed> $params
      * @return mixed|ErrorInterface|ResponseInterface
      * @throws Throwable
      */

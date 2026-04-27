@@ -81,7 +81,7 @@ class PredisConnectionRetryTest extends TestCase
         $db->close();
     }
 
-    public function testCloseResetsClientToNull(): void
+    public function testCloseDeactivatesConnection(): void
     {
         $db = $this->getConnection(true);
         $this->assertNotNull($db->getClient());
