@@ -1,16 +1,17 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
-2.2.0 under development
+2.1.1 under development
 -----------------------
 
-- Enh #282: Static analysis with PHPStan has been added (@s1lver)
+- Bug #281: PHP 7.4 compatibility is now fixed (@s1lver)
+- Bug #291: Prevent infinite loop in `parseResponse()` when `fread()` returns empty string on broken socket (@dkostik)
+- Bug #292: Fixed `fwrite()` supplied resource is not a valid stream (@s1lver)
 - Enh #281: PHP 7.3 support was removed to align with Yii2 minimum PHP version (@s1lver)
+- Enh #282: Static analysis with PHPStan has been added (@s1lver)
 - Enh #287: Applying Yii2 coding standards (@s1lver)
-- Fix #281: PHP 7.4 compatibility is now fixed (@s1lver)
-- Fix #291: Prevent infinite loop in `parseResponse()` when `fread()` returns empty string on broken socket (@dkostik)
-- Fix #292: Fixed `fwrite()` supplied resource is not a valid stream (@s1lver)
-- Enh #292: Bump version `predis/predis` to `3.4` (@s1lver)
+- Chg #292: Bump version `predis/predis` to `3.4` (@s1lver)
+- Chg #293: Update PHP, Yii2 dependency in `composer.json`, and update `CHANGELOG.md` (@terabytesoftw)
 
 2.1.0 December 25, 2025
 -----------------------
