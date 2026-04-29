@@ -1,8 +1,8 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
-2.1.1 under development
------------------------
+2.1.1 April 29, 2026
+--------------------
 
 - Bug #281: PHP 7.4 compatibility is now fixed (@s1lver)
 - Bug #291: Prevent infinite loop in `parseResponse()` when `fread()` returns empty string on broken socket (@dkostik)
