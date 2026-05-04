@@ -3,7 +3,7 @@ Yii Framework 2 redis extension Change Log
 
 2.1.2 under development
 -----------------------
-- Chg : Revert custom retry in `PredisConnection` after update `predis` package (@s1lver)
+- Chg #294: Revert custom retry in `PredisConnection` after update `predis` package (@s1lver)
 
 2.1.1 April 29, 2026
 --------------------
