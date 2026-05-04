@@ -12,6 +12,10 @@ if you want to upgrade from version A to version C and there is
 version B between A and C, you need to follow the instructions
 for both A and B.
 
+Upgrade from 2.1.0
+------------------
+* If you used a custom retry implementation in `PredisConnection`, note that `predis` now provides built-in retry policies. [See documentation for details](https://github.com/predis/predis/tree/main#retry-exceptions).
+
 Upgrade from 2.0.17
 ------------------
 

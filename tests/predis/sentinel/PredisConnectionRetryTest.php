@@ -10,6 +10,12 @@ declare(strict_types=1);
 
 namespace yiiunit\extensions\predis\sentinel;
 
+use Predis\Connection\ConnectionException as PredisConnectionException;
+use Predis\Connection\Resource\Exception\StreamInitException;
+use Predis\Retry\Retry;
+use Predis\Retry\Strategy\EqualBackoff;
+use Predis\Retry\Strategy\ExponentialBackoff;
+use Predis\Retry\Strategy\NoBackoff;
 use yii\base\InvalidConfigException;
 use yii\redis\LuaScriptBuilder;
 use yii\redis\Predis\PredisConnection;
@@ -22,59 +28,149 @@ class PredisConnectionRetryTest extends TestCase
         parent::tearDown();
     }
 
-    public function testDefaultRetriesIsZero(): void
-    {
-        $db = $this->getConnection(false);
-        $this->assertSame(0, $db->retries);
-    }
-
-    public function testDefaultRetryIntervalIsZero(): void
-    {
-        $db = $this->getConnection(false);
-        $this->assertSame(0, $db->retryInterval);
-    }
-
-    public function testExecuteCommandWithoutRetries(): void
+    public function testExecuteCommandWithoutRetry(): void
     {
         $db = $this->getConnection(true);
         $db->set('sentinel_retry_test_key', 'value1');
         $this->assertEquals('value1', $db->get('sentinel_retry_test_key'));
     }
 
-    public function testExecuteCommandWithRetriesSuccessOnFirstAttempt(): void
+    public function testExecuteCommandWithRetryEqualBackoff(): void
     {
-        $db = $this->getConnection(true);
-        $db->retries = 3;
+        $databases = self::getParam('databases');
+        $params = $databases['redis'] ?? [];
+        $params['options']['parameters']['retry'] = new Retry(
+            new EqualBackoff(1000),
+            3
+        );
+
+        $db = new PredisConnection($params);
+        $db->open();
+        $db->flushdb();
 
         $db->set('sentinel_retry_test_key2', 'value2');
         $this->assertEquals('value2', $db->get('sentinel_retry_test_key2'));
+        $db->close();
     }
 
-    public function testRetryOnClosedConnection(): void
+    public function testExecuteCommandWithRetryExponentialBackoff(): void
     {
-        $db = $this->getConnection(true);
-        $db->set('sentinel_retry_persistent_key', 'persistent_value');
+        $databases = self::getParam('databases');
+        $params = $databases['redis'] ?? [];
+        $params['options']['parameters']['retry'] = new Retry(
+            new ExponentialBackoff(1000, 10000),
+            3
+        );
 
+        $db = new PredisConnection($params);
+        $db->open();
+        $db->flushdb();
+
+        $db->set('sentinel_retry_exp_key', 'exp_value');
+        $this->assertEquals('exp_value', $db->get('sentinel_retry_exp_key'));
+        $db->close();
+    }
+
+    public function testExecuteCommandWithRetryNoBackoff(): void
+    {
+        $databases = self::getParam('databases');
+        $params = $databases['redis'] ?? [];
+        $params['options']['parameters']['retry'] = new Retry(
+            new NoBackoff(),
+            3
+        );
+
+        $db = new PredisConnection($params);
+        $db->open();
+        $db->flushdb();
+
+        $db->set('sentinel_retry_nobackoff_key', 'nobackoff_value');
+        $this->assertEquals('nobackoff_value', $db->get('sentinel_retry_nobackoff_key'));
+        $db->close();
+    }
+
+    public function testRetryWithDefaultCatchableExceptions(): void
+    {
+        $retry = new Retry(new NoBackoff(), 3);
+        $this->assertSame(3, $retry->getRetries());
+    }
+
+    public function testRetryWithCustomCatchableExceptions(): void
+    {
+        $retry = new Retry(
+            new NoBackoff(),
+            3,
+            [PredisConnectionException::class, StreamInitException::class]
+        );
+        $this->assertSame(3, $retry->getRetries());
+    }
+
+    public function testRetryUpdateCatchableExceptions(): void
+    {
+        $retry = new Retry(new NoBackoff(), 3);
+        $retry->updateCatchableExceptions([\Predis\Response\ServerException::class]);
+
+        $this->assertSame(3, $retry->getRetries());
+    }
+
+    public function testRetryUpdateRetriesCount(): void
+    {
+        $retry = new Retry(new NoBackoff(), 3);
+        $this->assertSame(3, $retry->getRetries());
+
+        $retry->updateRetriesCount(5);
+        $this->assertSame(5, $retry->getRetries());
+    }
+
+    public function testRetryGetStrategy(): void
+    {
+        $strategy = new ExponentialBackoff(1000, 10000);
+        $retry = new Retry($strategy, 3);
+
+        $this->assertSame($strategy, $retry->getStrategy());
+    }
+
+    public function testRetryOnClosedConnectionWithRetryConfigured(): void
+    {
+        $databases = self::getParam('databases');
+        $params = $databases['redis'] ?? [];
+        $params['options']['parameters']['retry'] = new Retry(
+            new EqualBackoff(1000),
+            3
+        );
+
+        $db = new PredisConnection($params);
+        $db->open();
+        $db->flushdb();
+
+        $db->set('sentinel_retry_persistent_key', 'persistent_value');
         $db->close();
         $this->assertFalse($db->getIsActive());
 
-        $db->retries = 2;
-        $db->retryInterval = 1000;
+        $db->open();
         $result = $db->get('sentinel_retry_persistent_key');
         $this->assertEquals('persistent_value', $result);
+        $db->close();
     }
 
     public function testRetryWithWorkingReconnect(): void
     {
-        $db = $this->getConnection(true);
+        $databases = self::getParam('databases');
+        $params = $databases['redis'] ?? [];
+        $params['options']['parameters']['retry'] = new Retry(
+            new EqualBackoff(1000),
+            3
+        );
+
+        $db = new PredisConnection($params);
+        $db->open();
+        $db->flushdb();
+
         $db->set('sentinel_retry_reconnect_key', 'before');
-
-        $db->retries = 3;
-        $db->retryInterval = 1000;
-
         $db->close();
         $this->assertFalse($db->getIsActive());
 
+        $db->open();
         $result = $db->get('sentinel_retry_reconnect_key');
         $this->assertEquals('before', $result);
         $this->assertTrue($db->getIsActive());

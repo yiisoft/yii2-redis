@@ -12,6 +12,10 @@ namespace yiiunit\extensions\predis\standalone;
 
 use Predis\Connection\ConnectionException as PredisConnectionException;
 use Predis\Connection\Resource\Exception\StreamInitException;
+use Predis\Retry\Retry;
+use Predis\Retry\Strategy\EqualBackoff;
+use Predis\Retry\Strategy\ExponentialBackoff;
+use Predis\Retry\Strategy\NoBackoff;
 use yii\base\InvalidConfigException;
 use yii\redis\LuaScriptBuilder;
 use yii\redis\Predis\PredisConnection;
@@ -24,89 +28,133 @@ class PredisConnectionRetryTest extends TestCase
         parent::tearDown();
     }
 
-    public function testDefaultRetriesIsZero(): void
-    {
-        $db = $this->getConnection(false);
-        $this->assertSame(0, $db->retries);
-    }
-
-    public function testDefaultRetryIntervalIsZero(): void
-    {
-        $db = $this->getConnection(false);
-        $this->assertSame(0, $db->retryInterval);
-    }
-
-    public function testExecuteCommandWithoutRetries(): void
+    public function testExecuteCommandWithoutRetry(): void
     {
         $db = $this->getConnection(true);
         $db->set('retry_test_key', 'value1');
         $this->assertEquals('value1', $db->get('retry_test_key'));
     }
 
-    public function testExecuteCommandWithRetriesSuccessOnFirstAttempt(): void
+    public function testExecuteCommandWithRetryEqualBackoff(): void
     {
-        $db = $this->getConnection(true);
-        $db->retries = 3;
+        $databases = self::getParam('databases');
+        $params = $databases['redis'] ?? [];
+        $params['options']['parameters']['retry'] = new Retry(
+            new EqualBackoff(1000),
+            3
+        );
+
+        $db = new PredisConnection($params);
+        $db->open();
+        $db->flushdb();
 
         $db->set('retry_test_key2', 'value2');
         $this->assertEquals('value2', $db->get('retry_test_key2'));
+        $db->close();
     }
 
-    public function testRetryOnClosedConnection(): void
+    public function testExecuteCommandWithRetryExponentialBackoff(): void
     {
-        $db = $this->getConnection(true);
-        $db->set('retry_persistent_key', 'persistent_value');
+        $databases = self::getParam('databases');
+        $params = $databases['redis'] ?? [];
+        $params['options']['parameters']['retry'] = new Retry(
+            new ExponentialBackoff(1000, 10000),
+            3
+        );
 
+        $db = new PredisConnection($params);
+        $db->open();
+        $db->flushdb();
+
+        $db->set('retry_exp_key', 'exp_value');
+        $this->assertEquals('exp_value', $db->get('retry_exp_key'));
         $db->close();
-        $this->assertFalse($db->getIsActive());
+    }
 
-        $db->retries = 2;
-        $db->retryInterval = 1000;
-        $result = $db->get('retry_persistent_key');
-        $this->assertEquals('persistent_value', $result);
+    public function testExecuteCommandWithRetryNoBackoff(): void
+    {
+        $databases = self::getParam('databases');
+        $params = $databases['redis'] ?? [];
+        $params['options']['parameters']['retry'] = new Retry(
+            new NoBackoff(),
+            3
+        );
+
+        $db = new PredisConnection($params);
+        $db->open();
+        $db->flushdb();
+
+        $db->set('retry_nobackoff_key', 'nobackoff_value');
+        $this->assertEquals('nobackoff_value', $db->get('retry_nobackoff_key'));
+        $db->close();
+    }
+
+    public function testRetryWithDefaultCatchableExceptions(): void
+    {
+        $retry = new Retry(new NoBackoff(), 3);
+        $this->assertSame(3, $retry->getRetries());
+    }
+
+    public function testRetryWithCustomCatchableExceptions(): void
+    {
+        $retry = new Retry(
+            new NoBackoff(),
+            3,
+            [PredisConnectionException::class, StreamInitException::class]
+        );
+        $this->assertSame(3, $retry->getRetries());
+    }
+
+    public function testRetryUpdateCatchableExceptions(): void
+    {
+        $retry = new Retry(new NoBackoff(), 3);
+        $retry->updateCatchableExceptions([\Predis\Response\ServerException::class]);
+
+        $this->assertSame(3, $retry->getRetries());
+    }
+
+    public function testRetryUpdateRetriesCount(): void
+    {
+        $retry = new Retry(new NoBackoff(), 3);
+        $this->assertSame(3, $retry->getRetries());
+
+        $retry->updateRetriesCount(5);
+        $this->assertSame(5, $retry->getRetries());
+    }
+
+    public function testRetryGetStrategy(): void
+    {
+        $strategy = new ExponentialBackoff(1000, 10000);
+        $retry = new Retry($strategy, 3);
+
+        $this->assertSame($strategy, $retry->getStrategy());
     }
 
     public function testRetryThrowsAfterAllAttemptsExhausted(): void
     {
         $db = new PredisConnection([
             'parameters' => 'tcp://redis:1?timeout=0.001',
-            'options' => [],
+            'options' => [
+                'parameters' => [
+                    'retry' => new Retry(new EqualBackoff(1000), 2),
+                ],
+            ],
         ]);
-        $db->retries = 2;
-        $db->retryInterval = 1000;
 
         $this->expectException(StreamInitException::class);
         $db->executeCommand('GET', ['nonexistent_key']);
     }
 
-    public function testRetriesPropertyPreservedAfterException(): void
+    public function testRetryDelayWithEqualBackoff(): void
     {
         $db = new PredisConnection([
             'parameters' => 'tcp://redis:1?timeout=0.001',
-            'options' => [],
+            'options' => [
+                'parameters' => [
+                    'retry' => new Retry(new EqualBackoff(50000), 1),
+                ],
+            ],
         ]);
-        $db->retries = 5;
-        $db->retryInterval = 500;
-
-        $thrown = null;
-        try {
-            $db->executeCommand('GET', ['test']);
-        } catch (PredisConnectionException | StreamInitException $e) {
-            $thrown = $e;
-        }
-        $this->assertNotNull($thrown);
-
-        $this->assertSame(5, $db->retries);
-    }
-
-    public function testRetryIntervalCausesDelay(): void
-    {
-        $db = new PredisConnection([
-            'parameters' => 'tcp://redis:1?timeout=0.001',
-            'options' => [],
-        ]);
-        $db->retries = 1;
-        $db->retryInterval = 50000;
 
         $start = microtime(true);
         try {
@@ -118,17 +166,100 @@ class PredisConnectionRetryTest extends TestCase
         $this->assertGreaterThanOrEqual(40, $elapsed);
     }
 
-    public function testRetryWithWorkingReconnect(): void
+    public function testRetryDelayWithExponentialBackoff(): void
     {
-        $db = $this->getConnection(true);
-        $db->set('retry_reconnect_key', 'before');
+        $db = new PredisConnection([
+            'parameters' => 'tcp://redis:1?timeout=0.001',
+            'options' => [
+                'parameters' => [
+                    'retry' => new Retry(new ExponentialBackoff(50000, 100000), 2),
+                ],
+            ],
+        ]);
 
-        $db->retries = 3;
-        $db->retryInterval = 1000;
+        $start = microtime(true);
+        try {
+            $db->executeCommand('GET', ['test']);
+        } catch (PredisConnectionException | StreamInitException $e) {
+        }
+        $elapsed = (microtime(true) - $start) * 1000;
 
+        $this->assertGreaterThanOrEqual(80, $elapsed);
+    }
+
+    public function testExponentialBackoffComputeStrategy(): void
+    {
+        $strategy = new ExponentialBackoff(1000, 10000);
+        $this->assertSame(1000, $strategy->compute(0));
+        $this->assertSame(2000, $strategy->compute(1));
+        $this->assertSame(4000, $strategy->compute(2));
+        $this->assertSame(8000, $strategy->compute(3));
+        $this->assertSame(10000, $strategy->compute(4));
+    }
+
+    public function testEqualBackoffComputeStrategy(): void
+    {
+        $strategy = new EqualBackoff(5000);
+        $this->assertSame(5000, $strategy->compute(0));
+        $this->assertSame(5000, $strategy->compute(1));
+        $this->assertSame(5000, $strategy->compute(5));
+    }
+
+    public function testNoBackoffComputeStrategy(): void
+    {
+        $strategy = new NoBackoff();
+        $this->assertSame(0, $strategy->compute(0));
+        $this->assertSame(0, $strategy->compute(1));
+    }
+
+    public function testExponentialBackoffGetBaseAndGetCap(): void
+    {
+        $strategy = new ExponentialBackoff(2000, 20000);
+        $this->assertSame(2000, $strategy->getBase());
+        $this->assertSame(20000, $strategy->getCap());
+    }
+
+    public function testRetryOnClosedConnectionWithRetryConfigured(): void
+    {
+        $databases = self::getParam('databases');
+        $params = $databases['redis'] ?? [];
+        $params['options']['parameters']['retry'] = new Retry(
+            new EqualBackoff(1000),
+            3
+        );
+
+        $db = new PredisConnection($params);
+        $db->open();
+        $db->flushdb();
+
+        $db->set('retry_persistent_key', 'persistent_value');
         $db->close();
         $this->assertFalse($db->getIsActive());
 
+        $db->open();
+        $result = $db->get('retry_persistent_key');
+        $this->assertEquals('persistent_value', $result);
+        $db->close();
+    }
+
+    public function testRetryWithWorkingReconnect(): void
+    {
+        $databases = self::getParam('databases');
+        $params = $databases['redis'] ?? [];
+        $params['options']['parameters']['retry'] = new Retry(
+            new EqualBackoff(1000),
+            3
+        );
+
+        $db = new PredisConnection($params);
+        $db->open();
+        $db->flushdb();
+
+        $db->set('retry_reconnect_key', 'before');
+        $db->close();
+        $this->assertFalse($db->getIsActive());
+
+        $db->open();
         $result = $db->get('retry_reconnect_key');
         $this->assertEquals('before', $result);
         $this->assertTrue($db->getIsActive());
