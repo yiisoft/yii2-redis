@@ -11,9 +11,6 @@ declare(strict_types=1);
 namespace yii\redis\Predis;
 
 use Predis\Client;
-use Predis\Response\ErrorInterface;
-use Predis\Response\ResponseInterface;
-use Predis\Response\ServerException;
 use Predis\Response\Status;
 use Throwable;
 use Yii;
@@ -331,7 +328,7 @@ class PredisConnection extends Component implements ConnectionInterface
     /**
      * @param string $name
      * @param array<mixed> $params
-     * @return mixed|ErrorInterface|ResponseInterface|ServerException
+     * @return mixed
      * @throws InvalidConfigException
      * @throws Throwable
      */

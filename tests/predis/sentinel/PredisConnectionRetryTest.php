@@ -12,6 +12,7 @@ namespace yiiunit\extensions\predis\sentinel;
 
 use Predis\Connection\ConnectionException as PredisConnectionException;
 use Predis\Connection\Resource\Exception\StreamInitException;
+use Predis\Response\ServerException;
 use Predis\Retry\Retry;
 use Predis\Retry\Strategy\EqualBackoff;
 use Predis\Retry\Strategy\ExponentialBackoff;
@@ -35,13 +36,13 @@ class PredisConnectionRetryTest extends TestCase
         $this->assertEquals('value1', $db->get('sentinel_retry_test_key'));
     }
 
-    public function testExecuteCommandWithRetryEqualBackoff(): void
+    public function testExecuteCommandWithRetryEqualBackoffDoesNotBreakNormalOperation(): void
     {
         $databases = self::getParam('databases');
         $params = $databases['redis'] ?? [];
         $params['options']['parameters']['retry'] = new Retry(
-            new EqualBackoff(1000),
-            3
+            new EqualBackoff(100),
+            1
         );
 
         $db = new PredisConnection($params);
@@ -53,13 +54,13 @@ class PredisConnectionRetryTest extends TestCase
         $db->close();
     }
 
-    public function testExecuteCommandWithRetryExponentialBackoff(): void
+    public function testExecuteCommandWithRetryExponentialBackoffDoesNotBreakNormalOperation(): void
     {
         $databases = self::getParam('databases');
         $params = $databases['redis'] ?? [];
         $params['options']['parameters']['retry'] = new Retry(
-            new ExponentialBackoff(1000, 10000),
-            3
+            new ExponentialBackoff(100, 1000),
+            1
         );
 
         $db = new PredisConnection($params);
@@ -71,13 +72,13 @@ class PredisConnectionRetryTest extends TestCase
         $db->close();
     }
 
-    public function testExecuteCommandWithRetryNoBackoff(): void
+    public function testExecuteCommandWithRetryNoBackoffDoesNotBreakNormalOperation(): void
     {
         $databases = self::getParam('databases');
         $params = $databases['redis'] ?? [];
         $params['options']['parameters']['retry'] = new Retry(
             new NoBackoff(),
-            3
+            1
         );
 
         $db = new PredisConnection($params);
@@ -86,6 +87,27 @@ class PredisConnectionRetryTest extends TestCase
 
         $db->set('sentinel_retry_nobackoff_key', 'nobackoff_value');
         $this->assertEquals('nobackoff_value', $db->get('sentinel_retry_nobackoff_key'));
+        $db->close();
+    }
+
+    public function testRetryOptionIsWiredIntoSentinelClient(): void
+    {
+        $retry = new Retry(new EqualBackoff(100), 1);
+
+        $databases = self::getParam('databases');
+        $params = $databases['redis'] ?? [];
+        $params['options']['parameters']['retry'] = $retry;
+
+        $db = new PredisConnection($params);
+        $db->open();
+        $db->ping();
+
+        $client = $db->getClient();
+        $this->assertNotNull($client);
+        $connectionParameters = $client->getConnection()->getParameters();
+
+        $this->assertFalse($connectionParameters->isDisabledRetry());
+        $this->assertSame($retry, $connectionParameters->retry);
         $db->close();
     }
 
@@ -108,7 +130,7 @@ class PredisConnectionRetryTest extends TestCase
     public function testRetryUpdateCatchableExceptions(): void
     {
         $retry = new Retry(new NoBackoff(), 3);
-        $retry->updateCatchableExceptions([\Predis\Response\ServerException::class]);
+        $retry->updateCatchableExceptions([ServerException::class]);
 
         $this->assertSame(3, $retry->getRetries());
     }
@@ -135,8 +157,8 @@ class PredisConnectionRetryTest extends TestCase
         $databases = self::getParam('databases');
         $params = $databases['redis'] ?? [];
         $params['options']['parameters']['retry'] = new Retry(
-            new EqualBackoff(1000),
-            3
+            new EqualBackoff(100),
+            1
         );
 
         $db = new PredisConnection($params);
@@ -147,9 +169,9 @@ class PredisConnectionRetryTest extends TestCase
         $db->close();
         $this->assertFalse($db->getIsActive());
 
-        $db->open();
         $result = $db->get('sentinel_retry_persistent_key');
         $this->assertEquals('persistent_value', $result);
+        $this->assertTrue($db->getIsActive());
         $db->close();
     }
 
@@ -158,8 +180,8 @@ class PredisConnectionRetryTest extends TestCase
         $databases = self::getParam('databases');
         $params = $databases['redis'] ?? [];
         $params['options']['parameters']['retry'] = new Retry(
-            new EqualBackoff(1000),
-            3
+            new EqualBackoff(100),
+            1
         );
 
         $db = new PredisConnection($params);
@@ -170,7 +192,6 @@ class PredisConnectionRetryTest extends TestCase
         $db->close();
         $this->assertFalse($db->getIsActive());
 
-        $db->open();
         $result = $db->get('sentinel_retry_reconnect_key');
         $this->assertEquals('before', $result);
         $this->assertTrue($db->getIsActive());

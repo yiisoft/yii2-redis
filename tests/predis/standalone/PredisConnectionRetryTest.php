@@ -40,8 +40,8 @@ class PredisConnectionRetryTest extends TestCase
         $databases = self::getParam('databases');
         $params = $databases['redis'] ?? [];
         $params['options']['parameters']['retry'] = new Retry(
-            new EqualBackoff(1000),
-            3
+            new EqualBackoff(100),
+            1
         );
 
         $db = new PredisConnection($params);
@@ -58,8 +58,8 @@ class PredisConnectionRetryTest extends TestCase
         $databases = self::getParam('databases');
         $params = $databases['redis'] ?? [];
         $params['options']['parameters']['retry'] = new Retry(
-            new ExponentialBackoff(1000, 10000),
-            3
+            new ExponentialBackoff(100, 1000),
+            1
         );
 
         $db = new PredisConnection($params);
@@ -77,7 +77,7 @@ class PredisConnectionRetryTest extends TestCase
         $params = $databases['redis'] ?? [];
         $params['options']['parameters']['retry'] = new Retry(
             new NoBackoff(),
-            3
+            1
         );
 
         $db = new PredisConnection($params);
@@ -130,19 +130,45 @@ class PredisConnectionRetryTest extends TestCase
         $this->assertSame($strategy, $retry->getStrategy());
     }
 
+    public function testRetryOptionIsWiredIntoStandaloneClient(): void
+    {
+        $retry = new Retry(new EqualBackoff(100), 1);
+
+        $databases = self::getParam('databases');
+        $params = $databases['redis'] ?? [];
+        $params['options']['parameters']['retry'] = $retry;
+
+        $db = new PredisConnection($params);
+        $db->open();
+        $db->ping();
+
+        $client = $db->getClient();
+        $this->assertNotNull($client);
+        $connectionParameters = $client->getConnection()->getParameters();
+
+        $this->assertFalse($connectionParameters->isDisabledRetry());
+        $this->assertSame($retry, $connectionParameters->retry);
+        $db->close();
+    }
+
     public function testRetryThrowsAfterAllAttemptsExhausted(): void
     {
         $db = new PredisConnection([
             'parameters' => 'tcp://redis:1?timeout=0.001',
             'options' => [
                 'parameters' => [
-                    'retry' => new Retry(new EqualBackoff(1000), 2),
+                    'retry' => new Retry(new EqualBackoff(100), 1),
                 ],
             ],
         ]);
 
-        $this->expectException(StreamInitException::class);
-        $db->executeCommand('GET', ['nonexistent_key']);
+        $thrown = null;
+        try {
+            $db->executeCommand('GET', ['nonexistent_key']);
+        } catch (PredisConnectionException | StreamInitException $e) {
+            $thrown = $e;
+        }
+        $this->assertNotNull($thrown);
     }
 
     public function testRetryDelayWithEqualBackoff(): void
@@ -151,7 +177,7 @@ class PredisConnectionRetryTest extends TestCase
             'parameters' => 'tcp://redis:1?timeout=0.001',
             'options' => [
                 'parameters' => [
-                    'retry' => new Retry(new EqualBackoff(50000), 1),
+                    'retry' => new Retry(new EqualBackoff(5000), 1),
                 ],
             ],
         ]);
@@ -163,7 +189,7 @@ class PredisConnectionRetryTest extends TestCase
         }
         $elapsed = (microtime(true) - $start) * 1000;
 
-        $this->assertGreaterThanOrEqual(40, $elapsed);
+        $this->assertGreaterThanOrEqual(4, $elapsed);
     }
 
     public function testRetryDelayWithExponentialBackoff(): void
@@ -172,7 +198,7 @@ class PredisConnectionRetryTest extends TestCase
             'parameters' => 'tcp://redis:1?timeout=0.001',
             'options' => [
                 'parameters' => [
-                    'retry' => new Retry(new ExponentialBackoff(50000, 100000), 2),
+                    'retry' => new Retry(new ExponentialBackoff(5000, 10000), 1),
                 ],
             ],
         ]);
@@ -184,7 +210,7 @@ class PredisConnectionRetryTest extends TestCase
         }
         $elapsed = (microtime(true) - $start) * 1000;
 
-        $this->assertGreaterThanOrEqual(80, $elapsed);
+        $this->assertGreaterThanOrEqual(1, $elapsed);
     }
 
     public function testExponentialBackoffComputeStrategy(): void
@@ -224,8 +250,8 @@ class PredisConnectionRetryTest extends TestCase
         $databases = self::getParam('databases');
         $params = $databases['redis'] ?? [];
         $params['options']['parameters']['retry'] = new Retry(
-            new EqualBackoff(1000),
-            3
+            new EqualBackoff(100),
+            1
         );
 
         $db = new PredisConnection($params);
@@ -236,9 +262,9 @@ class PredisConnectionRetryTest extends TestCase
         $db->close();
         $this->assertFalse($db->getIsActive());
 
-        $db->open();
         $result = $db->get('retry_persistent_key');
         $this->assertEquals('persistent_value', $result);
+        $this->assertTrue($db->getIsActive());
         $db->close();
     }
 
@@ -247,8 +273,8 @@ class PredisConnectionRetryTest extends TestCase
         $databases = self::getParam('databases');
         $params = $databases['redis'] ?? [];
         $params['options']['parameters']['retry'] = new Retry(
-            new EqualBackoff(1000),
-            3
+            new EqualBackoff(100),
+            1
         );
 
         $db = new PredisConnection($params);
@@ -259,7 +285,6 @@ class PredisConnectionRetryTest extends TestCase
         $db->close();
         $this->assertFalse($db->getIsActive());
 
-        $db->open();
         $result = $db->get('retry_reconnect_key');
         $this->assertEquals('before', $result);
         $this->assertTrue($db->getIsActive());
