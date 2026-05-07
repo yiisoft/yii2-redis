@@ -11,10 +11,6 @@ declare(strict_types=1);
 namespace yii\redis\Predis;
 
 use Predis\Client;
-use Predis\Connection\ConnectionException as PredisConnectionException;
-use Predis\Connection\Resource\Exception\StreamInitException;
-use Predis\Response\ErrorInterface;
-use Predis\Response\ResponseInterface;
 use Predis\Response\Status;
 use Throwable;
 use Yii;
@@ -69,7 +65,7 @@ class PredisConnection extends Component implements ConnectionInterface
      * @var string[] List of available redis commands.
      * @see https://redis.io/commands
      */
-    public $redisCommands = [
+    public array $redisCommands = [
         'APPEND', // Append a value to a key
         'AUTH', // Authenticate to the server
         'BGREWRITEAOF', // Asynchronously rewrite the append-only file
@@ -283,7 +279,6 @@ class PredisConnection extends Component implements ConnectionInterface
         'ZSCAN', // Incrementally iterate sorted sets elements and associated scores
     ];
 
-
     /**
      * @return LuaScriptBuilder
      */
@@ -313,20 +308,6 @@ class PredisConnection extends Component implements ConnectionInterface
     public $options = [];
 
     /**
-     * @var int The number of times a command execution should be retried when a connection failure occurs.
-     * Defaults to 0 meaning no retries on failure.
-     * @since 2.2.0
-     */
-    public int $retries = 0;
-
-    /**
-     * @var int The retry interval in microseconds to wait between retries.
-     * Defaults to 0 meaning no wait.
-     * @since 2.2.0
-     */
-    public int $retryInterval = 0;
-
-    /**
      * @var Client|null redis connection
      */
     protected ?Client $client = null;
@@ -347,10 +328,8 @@ class PredisConnection extends Component implements ConnectionInterface
     /**
      * @param string $name
      * @param array<mixed> $params
-     * @return mixed|ErrorInterface|ResponseInterface
+     * @return mixed
      * @throws InvalidConfigException
-     * @throws PredisConnectionException
-     * @throws StreamInitException
      * @throws Throwable
      */
     public function executeCommand(string $name, array $params = [])
@@ -359,51 +338,11 @@ class PredisConnection extends Component implements ConnectionInterface
 
         Yii::debug("Executing Redis Command: $name " . implode(' ', $params), __METHOD__);
 
-        if ($this->retries <= 0) {
-            return $this->executeCommandInternal($name, $params);
-        }
-
-        $lastException = null;
-        $savedRetries = $this->retries;
-        $this->retries = 0;
-
-        try {
-            for ($attempt = 0; $attempt <= $savedRetries; $attempt++) {
-                try {
-                    return $this->executeCommandInternal($name, $params);
-                } catch (PredisConnectionException | StreamInitException $e) {
-                    $lastException = $e;
-                    Yii::error($e, __METHOD__);
-
-                    if ($attempt < $savedRetries) {
-                        $this->close();
-                        if ($this->retryInterval > 0) {
-                            usleep($this->retryInterval);
-                        }
-                        $this->open();
-                    }
-                }
-            }
-        } finally {
-            $this->retries = $savedRetries;
-        }
-
-        throw $lastException;
-    }
-
-    /**
-     * @param string $name
-     * @param array<mixed> $params
-     * @return mixed|ErrorInterface|ResponseInterface
-     * @throws Throwable
-     */
-    private function executeCommandInternal(string $name, array $params)
-    {
         $command = $this->client->createCommand($name, $params);
         $response = $this->client->executeCommand(new CommandDecorator($command));
         if ($response instanceof Status) {
             // ResponseStatus yii expect as bool
-            return (string)$response === 'OK' || (string)$response === 'PONG';
+            return (string) $response === 'OK' || (string) $response === 'PONG';
         }
         return $response;
     }

@@ -21,6 +21,7 @@ return [
                     'persistent' => true,
                     'async_connect' => true,
                     'read_write_timeout' => 0.1,
+                    'retry' => new \Predis\Retry\Retry(new \Predis\Retry\Strategy\ExponentialBackoff(1000, 10000), 3), // Base and cap configuration in microseconds and number of retries
                 ],
             ],
         ],
@@ -46,6 +47,7 @@ return [
                     'persistent' => true,
                     'async_connect' => true,
                     'read_write_timeout' => 0.1,
+                    'retry' => new \Predis\Retry\Retry(new \Predis\Retry\Strategy\ExponentialBackoff(1000, 10000), 3), // Base and cap configuration in microseconds and number of retries
                 ],
             ],
         ],
@@ -53,7 +55,7 @@ return [
 ];
 ```
 
->  Больше информации можно о конфигурации подключения и опциях можно получить в документации <a href="https://github.com/predis/predis">predis</a>.
+>  Больше информации о конфигурации подключения и опциях можно получить в документации <a href="https://github.com/predis/predis">predis</a>.
 
 Это обеспечивает базовый доступ к redis-хранилищу через компонент приложения `redis`:
 
@@ -67,4 +69,3 @@ echo Yii::$app->redis->get('mykey');
 
 * [Использование компонента Cache с predis](topics-predis-cache.md)
 * [Использование компонента Session с predis](topics-predis-session.md)
-
