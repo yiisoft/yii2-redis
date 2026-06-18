@@ -17,6 +17,8 @@ on:
 
 name: build
 
+permissions:
+  contents: read
 jobs:
   tests:
     name: PHP ${{ matrix.php }}
@@ -41,7 +43,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5
+        with:
+          persist-credentials: false
 
       - name: PHP tests for PHP ${{ matrix.php }}
         run: |
@@ -49,7 +53,7 @@ jobs:
 
       - name: Upload coverage to Codecov.
         if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@04b047e8bb82a0c002c8312c1c880fbc6a999d45
         with:
           files: ./coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
