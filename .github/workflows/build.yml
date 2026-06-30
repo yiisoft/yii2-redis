@@ -60,7 +60,7 @@ jobs:
 
       - name: Upload coverage to Codecov.
         if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@8f6ec407a34d5ec2b33d7d8f7f50279493b5efb4 # v5.5.0
+        uses: codecov/codecov-action@fdcc8476540edceab3de004e990f80d881c6cc00 # v5.5.0
         with:
           files: ./coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}
