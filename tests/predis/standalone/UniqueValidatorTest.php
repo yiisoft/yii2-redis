@@ -3,6 +3,7 @@
 namespace yiiunit\extensions\predis\standalone;
 
 use yii\validators\UniqueValidator;
+use yiiunit\extensions\redis\data\ar\ActiveRecord as RedisActiveRecord;
 use yiiunit\extensions\predis\standalone\data\ar\ActiveRecord;
 use yiiunit\extensions\predis\standalone\data\ar\Customer;
 use yiiunit\extensions\predis\standalone\data\ar\OrderItem;
@@ -60,7 +61,9 @@ class UniqueValidatorTest extends TestCase
 
     public function testValidationInsertCompositePk(): void
     {
-        ActiveRecord::$db = $this->getConnection(true);
+        $db = $this->getConnection(true);
+        RedisActiveRecord::$db = $db;
+        ActiveRecord::$db = $db;
 
         $validator = new UniqueValidator();
         $validator->targetAttribute = ['order_id', 'item_id'];

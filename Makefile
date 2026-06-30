@@ -5,12 +5,12 @@ start:			## Start services
 	docker compose up -d
 
 test:			## Run tests. Params: {{ v=8.1 }}.
-	PHP_VERSION=$(filter-out $@,$(v)) docker compose up -d --build
-	docker exec yii2-redis-php-1 sh -c "php -v && composer update && vendor/bin/phpunit --coverage-clover=coverage.xml"
+	PHP_VERSION=$(filter-out $@,$(v)) docker compose up -d --build --wait
+	docker exec yii2-redis-php-1 sh -c 'php -v && for attempt in 1 2 3; do composer update && break; [ "$$attempt" -eq 3 ] && exit 1; sleep 5; done && vendor/bin/phpunit --coverage-clover=coverage.xml'
 	make down
 
 build:			## Build an image from a docker-compose file. Params: {{ v=8.1 }}.
-	PHP_VERSION=$(filter-out $@,$(v)) docker compose up -d --build
+	PHP_VERSION=$(filter-out $@,$(v)) docker compose up -d --build --wait
 
 down:			## Stop and remove containers, networks
 	docker compose down
