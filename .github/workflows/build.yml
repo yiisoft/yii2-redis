@@ -19,6 +19,11 @@ name: build
 
 permissions:
   contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   tests:
     name: PHP ${{ matrix.php }}
@@ -43,17 +48,19 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
         with:
           persist-credentials: false
 
       - name: PHP tests for PHP ${{ matrix.php }}
+        env:
+          PHP_VERSION: ${{ matrix.php }}
         run: |
-          make test v=${{ matrix.php }}
+          make test v="$PHP_VERSION"
 
       - name: Upload coverage to Codecov.
         if: ${{ !cancelled() }}
-        uses: codecov/codecov-action@04b047e8bb82a0c002c8312c1c880fbc6a999d45
+        uses: codecov/codecov-action@8f6ec407a34d5ec2b33d7d8f7f50279493b5efb4 # v5.5.0
         with:
           files: ./coverage.xml
           token: ${{ secrets.CODECOV_TOKEN }}

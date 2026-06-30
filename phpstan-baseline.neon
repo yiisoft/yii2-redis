@@ -945,7 +945,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$customer\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 2
 			path: tests/ActiveRecordTest.php
 
 		-
@@ -969,25 +969,25 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$id\.$#'
 			identifier: property.notFound
-			count: 4
+			count: 6
 			path: tests/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$isNewRecord\.$#'
 			identifier: property.notFound
-			count: 6
+			count: 11
 			path: tests/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$name\.$#'
 			identifier: property.notFound
-			count: 11
+			count: 12
 			path: tests/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$orderItems\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 2
 			path: tests/ActiveRecordTest.php
 
 		-
@@ -999,7 +999,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$status\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 4
 			path: tests/ActiveRecordTest.php
 
 		-
@@ -1785,7 +1785,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$customer\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 2
 			path: tests/predis/sentinel/ActiveRecordTest.php
 
 		-
@@ -1809,25 +1809,25 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$id\.$#'
 			identifier: property.notFound
-			count: 4
+			count: 6
 			path: tests/predis/sentinel/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$isNewRecord\.$#'
 			identifier: property.notFound
-			count: 6
+			count: 11
 			path: tests/predis/sentinel/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$name\.$#'
 			identifier: property.notFound
-			count: 11
+			count: 12
 			path: tests/predis/sentinel/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$orderItems\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 2
 			path: tests/predis/sentinel/ActiveRecordTest.php
 
 		-
@@ -1839,7 +1839,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$status\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 4
 			path: tests/predis/sentinel/ActiveRecordTest.php
 
 		-
@@ -2457,7 +2457,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$customer\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 2
 			path: tests/predis/standalone/ActiveRecordTest.php
 
 		-
@@ -2481,25 +2481,25 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$id\.$#'
 			identifier: property.notFound
-			count: 4
+			count: 6
 			path: tests/predis/standalone/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$isNewRecord\.$#'
 			identifier: property.notFound
-			count: 6
+			count: 11
 			path: tests/predis/standalone/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$name\.$#'
 			identifier: property.notFound
-			count: 11
+			count: 12
 			path: tests/predis/standalone/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$orderItems\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 2
 			path: tests/predis/standalone/ActiveRecordTest.php
 
 		-
@@ -2511,7 +2511,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$status\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 4
 			path: tests/predis/standalone/ActiveRecordTest.php
 
 		-
