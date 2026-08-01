@@ -112,7 +112,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * Executes the query and returns all results as an array.
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
-     * @return array|ActiveRecord[] the query results. If the query results in nothing, an empty array will be returned.
+     * @return array the query results. If the query results in nothing, an empty array will be returned.
      */
     public function all($db = null)
     {
