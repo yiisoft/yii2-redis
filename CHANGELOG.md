@@ -4,7 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.1.3 under development
 -----------------------
 
-- no changes in this release.
+- Bug #302: Fix union types in PHPDoc annotations (mspirkov)
 
 2.1.2 May 07, 2026
 ------------------
