@@ -22,6 +22,11 @@ services:
     image: "redis"
     environment:
       - REDIS_REPLICATION_MODE=master
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
     networks:
       - yii2-redis
     ports:
@@ -33,6 +38,12 @@ services:
       - REDIS_MASTER_HOST=redis
       - REDIS_MASTER_PORT_NUMBER=6379
       - REDIS_SENTINEL_QUORUM=1
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "26379", "SENTINEL", "get-master-addr-by-name", "mymaster"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
     networks:
       - yii2-redis
     ports:
@@ -46,6 +57,12 @@ services:
       - REDIS_MASTER_HOST=redis
       - REDIS_MASTER_PORT_NUMBER=6379
       - REDIS_SENTINEL_QUORUM=3
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "26379", "SENTINEL", "get-master-addr-by-name", "mymaster"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
     networks:
       - yii2-redis
     ports:
@@ -59,6 +76,12 @@ services:
       - REDIS_MASTER_HOST=redis
       - REDIS_MASTER_PORT_NUMBER=6379
       - REDIS_SENTINEL_QUORUM=3
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "26379", "SENTINEL", "get-master-addr-by-name", "mymaster"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
     networks:
       - yii2-redis
     ports:

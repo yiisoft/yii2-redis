@@ -175,6 +175,12 @@ parameters:
 			path: src/ActiveQuery.php
 
 		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
 			message: '#^Parameter \#1 \$array of function reset expects array\|object, array\|string\|yii\\db\\ExpressionInterface\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -529,18 +535,6 @@ parameters:
 			path: src/Connection.php
 
 		-
-			message: '#^Method yii\\redis\\ConnectionInterface\:\:executeCommand\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/ConnectionInterface.php
-
-		-
-			message: '#^Method yii\\redis\\ConnectionInterface\:\:executeCommand\(\) has parameter \$params with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/ConnectionInterface.php
-
-		-
 			message: '#^Binary operation "\+" between int\<0, max\>\|yii\\db\\ExpressionInterface and int\<0, max\>\|yii\\db\\ExpressionInterface results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -889,30 +883,6 @@ parameters:
 			path: src/Predis/PredisConnection.php
 
 		-
-			message: '#^Method yii\\redis\\Predis\\PredisConnection\:\:__call\(\) has parameter \$params with no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Predis/PredisConnection.php
-
-		-
-			message: '#^Method yii\\redis\\Predis\\PredisConnection\:\:executeCommand\(\) has parameter \$name with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Predis/PredisConnection.php
-
-		-
-			message: '#^Method yii\\redis\\Predis\\PredisConnection\:\:executeCommand\(\) has parameter \$params with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Predis/PredisConnection.php
-
-		-
-			message: '#^Property yii\\redis\\Predis\\PredisConnection\:\:\$redisCommands type has no value type specified in iterable type array\.$#'
-			identifier: missingType.iterableValue
-			count: 1
-			path: src/Predis/PredisConnection.php
-
-		-
 			message: '#^Cannot call method executeCommand\(\) on array\|string\|yii\\redis\\ConnectionInterface\.$#'
 			identifier: method.nonObject
 			count: 3
@@ -975,7 +945,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$customer\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 2
 			path: tests/ActiveRecordTest.php
 
 		-
@@ -999,25 +969,25 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$id\.$#'
 			identifier: property.notFound
-			count: 4
+			count: 6
 			path: tests/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$isNewRecord\.$#'
 			identifier: property.notFound
-			count: 6
+			count: 11
 			path: tests/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$name\.$#'
 			identifier: property.notFound
-			count: 11
+			count: 12
 			path: tests/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$orderItems\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 2
 			path: tests/ActiveRecordTest.php
 
 		-
@@ -1029,7 +999,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$status\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 4
 			path: tests/ActiveRecordTest.php
 
 		-
@@ -1243,13 +1213,7 @@ parameters:
 			path: tests/RedisCacheTest.php
 
 		-
-			message: '#^Argument of an invalid type bool\|list\|string\|null supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: tests/RedisConnectionTest.php
-
-		-
-			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertTrue\(\) with true and ''Reconnection…'' will always evaluate to true\.$#'
+			message: '#^Call to method PHPUnit\\Framework\\Assert::assertTrue\(\) with true and ''Reconnection…'' will always evaluate to true\.$#'
 			identifier: method.alreadyNarrowedType
 			count: 1
 			path: tests/RedisConnectionTest.php
@@ -1293,12 +1257,6 @@ parameters:
 		-
 			message: '#^Method yiiunit\\extensions\\redis\\RedisConnectionTest\:\:zRangeByScoreData\(\) return type has no value type specified in iterable type array\.$#'
 			identifier: missingType.iterableValue
-			count: 1
-			path: tests/RedisConnectionTest.php
-
-		-
-			message: '#^Parameter \#1 \$array_arg of function sort expects TArray of array, array\|bool\|string\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/RedisConnectionTest.php
 
@@ -1827,7 +1785,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$customer\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 2
 			path: tests/predis/sentinel/ActiveRecordTest.php
 
 		-
@@ -1851,25 +1809,25 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$id\.$#'
 			identifier: property.notFound
-			count: 4
+			count: 6
 			path: tests/predis/sentinel/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$isNewRecord\.$#'
 			identifier: property.notFound
-			count: 6
+			count: 11
 			path: tests/predis/sentinel/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$name\.$#'
 			identifier: property.notFound
-			count: 11
+			count: 12
 			path: tests/predis/sentinel/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$orderItems\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 2
 			path: tests/predis/sentinel/ActiveRecordTest.php
 
 		-
@@ -1881,7 +1839,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$status\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 4
 			path: tests/predis/sentinel/ActiveRecordTest.php
 
 		-
@@ -2499,7 +2457,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$customer\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 2
 			path: tests/predis/standalone/ActiveRecordTest.php
 
 		-
@@ -2523,25 +2481,25 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$id\.$#'
 			identifier: property.notFound
-			count: 4
+			count: 6
 			path: tests/predis/standalone/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$isNewRecord\.$#'
 			identifier: property.notFound
-			count: 6
+			count: 11
 			path: tests/predis/standalone/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$name\.$#'
 			identifier: property.notFound
-			count: 11
+			count: 12
 			path: tests/predis/standalone/ActiveRecordTest.php
 
 		-
 			message: '#^Access to an undefined property object\:\:\$orderItems\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 2
 			path: tests/predis/standalone/ActiveRecordTest.php
 
 		-
@@ -2553,7 +2511,7 @@ parameters:
 		-
 			message: '#^Access to an undefined property object\:\:\$status\.$#'
 			identifier: property.notFound
-			count: 1
+			count: 4
 			path: tests/predis/standalone/ActiveRecordTest.php
 
 		-

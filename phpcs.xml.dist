@@ -4,4 +4,8 @@
 
     <!-- generate relative paths -->
     <arg name="basepath" value="src"/>
+
+    <!-- directories to check -->
+    <file>src</file>
+    <file>tests</file>
 </ruleset>

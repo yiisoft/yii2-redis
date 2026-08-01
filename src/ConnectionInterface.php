@@ -227,9 +227,9 @@ interface ConnectionInterface
     public function getIsActive(): bool;
 
     /**
-     * @param $name
-     * @param $params
+     * @param string $name
+     * @param array<mixed> $params
      * @return mixed
      */
-    public function executeCommand($name, $params = []);
+    public function executeCommand(string $name, array $params = []);
 }
