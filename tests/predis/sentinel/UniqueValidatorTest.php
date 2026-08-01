@@ -3,6 +3,7 @@
 namespace yiiunit\extensions\predis\sentinel;
 
 use yii\validators\UniqueValidator;
+use yiiunit\extensions\redis\data\ar\ActiveRecord as RedisActiveRecord;
 use yiiunit\extensions\predis\sentinel\data\ar\ActiveRecord;
 use yiiunit\extensions\predis\sentinel\data\ar\Customer;
 use yiiunit\extensions\predis\sentinel\data\ar\OrderItem;
@@ -14,7 +15,9 @@ class UniqueValidatorTest extends TestCase
 {
     public function testValidationInsert(): void
     {
-        \yiiunit\extensions\redis\data\ar\ActiveRecord::$db = $this->getConnection(true);
+        $db = $this->getConnection(true);
+        RedisActiveRecord::$db = $db;
+        ActiveRecord::$db = $db;
 
         $validator = new UniqueValidator();
 
@@ -60,7 +63,9 @@ class UniqueValidatorTest extends TestCase
 
     public function testValidationInsertCompositePk(): void
     {
-        ActiveRecord::$db = $this->getConnection(true);
+        $db = $this->getConnection(true);
+        RedisActiveRecord::$db = $db;
+        ActiveRecord::$db = $db;
 
         $validator = new UniqueValidator();
         $validator->targetAttribute = ['order_id', 'item_id'];

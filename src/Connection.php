@@ -546,7 +546,7 @@ class Connection extends Component implements ConnectionInterface
      * for details on the mentioned reply types.
      * @throws Exception for commands that return [error reply](https://redis.io/topics/protocol#error-reply).
      */
-    public function executeCommand($name, $params = [])
+    public function executeCommand(string $name, array $params = [])
     {
         $this->open();
 
@@ -660,7 +660,7 @@ class Connection extends Component implements ConnectionInterface
                 $length = (int)$line + 2;
                 $data = '';
                 while ($length > 0) {
-                    if (($block = fread($this->socket, $length)) === false) {
+                    if (($block = fread($this->socket, $length)) === false || $block === '') {
                         throw new SocketException("Failed to read from socket.\nRedis command was: " . implode(' ', $params));
                     }
                     $data .= $block;

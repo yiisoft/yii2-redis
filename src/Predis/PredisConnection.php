@@ -1,13 +1,18 @@
 <?php
 
+/**
+ * @link https://www.yiiframework.com/
+ * @copyright Copyright (c) 2008 Yii Software LLC
+ * @license https://www.yiiframework.com/license/
+ */
+
 declare(strict_types=1);
 
 namespace yii\redis\Predis;
 
 use Predis\Client;
-use Predis\Response\ErrorInterface;
-use Predis\Response\ResponseInterface;
 use Predis\Response\Status;
+use Throwable;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
@@ -57,10 +62,10 @@ class PredisConnection extends Component implements ConnectionInterface
     public const EVENT_AFTER_OPEN = 'afterOpen';
 
     /**
-     * @var array List of available redis commands.
+     * @var string[] List of available redis commands.
      * @see https://redis.io/commands
      */
-    public $redisCommands = [
+    public array $redisCommands = [
         'APPEND', // Append a value to a key
         'AUTH', // Authenticate to the server
         'BGREWRITEAOF', // Asynchronously rewrite the append-only file
@@ -274,7 +279,6 @@ class PredisConnection extends Component implements ConnectionInterface
         'ZSCAN', // Incrementally iterate sorted sets elements and associated scores
     ];
 
-
     /**
      * @return LuaScriptBuilder
      */
@@ -306,7 +310,7 @@ class PredisConnection extends Component implements ConnectionInterface
     /**
      * @var Client|null redis connection
      */
-    protected $client;
+    protected ?Client $client = null;
 
     /**
      * Returns a value indicating whether the DB connection is established.
@@ -322,10 +326,13 @@ class PredisConnection extends Component implements ConnectionInterface
     }
 
     /**
-     * @return mixed|ErrorInterface|ResponseInterface
+     * @param string $name
+     * @param array<mixed> $params
+     * @return mixed
      * @throws InvalidConfigException
+     * @throws Throwable
      */
-    public function executeCommand($name, $params = [])
+    public function executeCommand(string $name, array $params = [])
     {
         $this->open();
 
@@ -335,7 +342,7 @@ class PredisConnection extends Component implements ConnectionInterface
         $response = $this->client->executeCommand(new CommandDecorator($command));
         if ($response instanceof Status) {
             // ResponseStatus yii expect as bool
-            return (string)$response === 'OK' || (string)$response === 'PONG';
+            return (string) $response === 'OK' || (string) $response === 'PONG';
         }
         return $response;
     }
@@ -373,6 +380,7 @@ class PredisConnection extends Component implements ConnectionInterface
             return;
         }
         $this->client->disconnect();
+        $this->client = null;
     }
 
     /**
@@ -395,7 +403,7 @@ class PredisConnection extends Component implements ConnectionInterface
      * ```
      *
      * @param string $name name of the missing method to execute
-     * @param array $params method call arguments
+     * @param array<mixed> $params method call arguments
      * @return mixed
      * @throws InvalidConfigException
      */

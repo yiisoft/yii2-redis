@@ -93,6 +93,7 @@ class RedisConnectionTest extends TestCase
         $redis->executeCommand('SADD', ['newset2', 'segtggttval', 'sv1', 'sv2', 'sv3']);
         $redis->executeCommand('ZADD', ['newz2', 2, 'ss', 3, 'pfpf']);
         $allKeys = $redis->executeCommand('KEYS', ['*']);
+        self::assertIsArray($allKeys);
         sort($allKeys);
         $this->assertEquals(['hash1', 'key1', 'newlist2', 'newset2', 'newz2'], $allKeys);
         $expected = [

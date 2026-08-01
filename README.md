@@ -8,13 +8,9 @@
     <br>
 </p>
 
-This extension provides the [redis](https://redis.io/) key-value store support for the [Yii framework 2.0](https://www.yiiframework.com).
-It includes a `Cache` and `Session` storage handler and implements the `ActiveRecord` pattern that allows
-you to store active records in redis.
-
-For license information check the [LICENSE](LICENSE.md)-file.
-
-Documentation is at [docs/guide/README.md](docs/guide/README.md).
+This extension provides [redis](https://redis.io/) key-value store support for the [Yii framework 2.0](https://www.yiiframework.com).
+It provides `Cache`, `Mutex`, and `Session` handlers, as well as an `ActiveRecord` implementation that allows
+you to store and query structured data in a familiar way.
 
 [![Latest Stable Version](https://img.shields.io/packagist/v/yiisoft/yii2-redis.svg?style=for-the-badge&label=Stable&logo=packagist)](https://packagist.org/packages/yiisoft/yii2-redis)
 [![Total Downloads](https://img.shields.io/packagist/dt/yiisoft/yii2-redis.svg?style=for-the-badge&label=Downloads)](https://packagist.org/packages/yiisoft/yii2-redis)
@@ -26,7 +22,7 @@ Documentation is at [docs/guide/README.md](docs/guide/README.md).
 Requirements
 ------------
 
-At least redis version is required for all components to work properly.
+Redis version 2.6.12 or later is required for all components to work properly.
 
 Installation
 ------------
@@ -111,8 +107,7 @@ return [
 
 ## Documentation
 
-- [predis support](/docs/guide/predis.md)
-- [Internals](docs/internals.md)
+- [the guide](docs/guide/README.md)
 
 ## Support the project
 
@@ -125,3 +120,6 @@ return [
 [![Telegram](https://img.shields.io/badge/telegram-join-1DA1F2?style=for-the-badge&logo=telegram)](https://t.me/yii_framework_in_english)
 [![Slack](https://img.shields.io/badge/slack-join-1DA1F2?style=for-the-badge&logo=slack)](https://yiiframework.com/go/slack)
 
+## License
+
+[![License](https://img.shields.io/badge/License-BSD--3--Clause-brightgreen.svg?style=for-the-badge&logo=opensourceinitiative&logoColor=white&labelColor=555555)](LICENSE.md)
