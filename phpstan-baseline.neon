@@ -49,12 +49,6 @@ parameters:
 			path: src/ActiveQuery.php
 
 		-
-			message: '#^Cannot call method afterFind\(\) on array\|yii\\db\\ActiveRecord\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/ActiveQuery.php
-
-		-
 			message: '#^Cannot call method hasAttribute\(\) on array\|yii\\db\\ActiveRecordInterface\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -157,12 +151,6 @@ parameters:
 			path: src/ActiveQuery.php
 
 		-
-			message: '#^Method yii\\redis\\ActiveQuery\:\:one\(\) should return array\|yii\\redis\\ActiveRecord\|null but returns array\|yii\\db\\ActiveRecord\.$#'
-			identifier: return.type
-			count: 1
-			path: src/ActiveQuery.php
-
-		-
 			message: '#^Method yii\\redis\\ActiveQuery\:\:scalar\(\) should return string but returns null\.$#'
 			identifier: return.type
 			count: 2
@@ -181,19 +169,19 @@ parameters:
 			path: src/ActiveQuery.php
 
 		-
+			message: '#^Parameter \#1 \$array of function arsort expects an array of values castable to string, list\<array\|bool\|string\|null\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
+			message: '#^Parameter \#1 \$array of function asort expects an array of values castable to string, list\<array\|bool\|string\|null\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ActiveQuery.php
+
+		-
 			message: '#^Parameter \#1 \$array of function reset expects array\|object, array\|string\|yii\\db\\ExpressionInterface\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/ActiveQuery.php
-
-		-
-			message: '#^Parameter \#1 \$array_arg of function arsort expects an array of values castable to string, list\<array\|bool\|string\|null\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/ActiveQuery.php
-
-		-
-			message: '#^Parameter \#1 \$array_arg of function asort expects an array of values castable to string, list\<array\|bool\|string\|null\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/ActiveQuery.php
@@ -223,13 +211,13 @@ parameters:
 			path: src/ActiveQuery.php
 
 		-
-			message: '#^Parameter \#1 \$var of function count expects array\|Countable, array\|string\|true given\.$#'
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, array\|string\|true given\.$#'
 			identifier: argument.type
 			count: 6
 			path: src/ActiveQuery.php
 
 		-
-			message: '#^Parameter \#1 \$var of function count expects array\|Countable, array\|string\|yii\\db\\ExpressionInterface\|null given\.$#'
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, array\|string\|yii\\db\\ExpressionInterface\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/ActiveQuery.php
@@ -238,12 +226,6 @@ parameters:
 			message: '#^Parameter \#2 \$db \(yii\\redis\\Connection\) of method yii\\redis\\ActiveQuery\:\:count\(\) should be compatible with parameter \$db \(yii\\db\\Connection\|null\) of method yii\\db\\QueryInterface\:\:count\(\)$#'
 			identifier: method.childParameterType
 			count: 2
-			path: src/ActiveQuery.php
-
-		-
-			message: '#^Parameter \#2 \$models of method yii\\redis\\ActiveQuery\:\:findWith\(\) expects array\<yii\\db\\ActiveRecord\>, array\<int, array\|yii\\db\\ActiveRecord\> given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/ActiveQuery.php
 
 		-
@@ -325,13 +307,13 @@ parameters:
 			path: src/ActiveRecord.php
 
 		-
-			message: '#^Parameter \#1 \$array_arg of function end expects array\|object, array\|bool\|string\|null given\.$#'
+			message: '#^Parameter \#1 \$array of function end expects array\|object, array\|bool\|string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/ActiveRecord.php
 
 		-
-			message: '#^Parameter \#1 \$str of function md5 expects string, string\|false given\.$#'
+			message: '#^Parameter \#1 \$string of function md5 expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/ActiveRecord.php
@@ -463,19 +445,19 @@ parameters:
 			path: src/Connection.php
 
 		-
-			message: '#^Parameter \#1 \$fp of function fgets expects resource, resource\|false given\.$#'
+			message: '#^Parameter \#1 \$stream of function fgets expects resource, resource\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Connection.php
 
 		-
-			message: '#^Parameter \#1 \$fp of function fread expects resource, resource\|false given\.$#'
+			message: '#^Parameter \#1 \$stream of function fread expects resource, resource\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Connection.php
 
 		-
-			message: '#^Parameter \#1 \$fp of function fwrite expects resource, resource\|false given\.$#'
+			message: '#^Parameter \#1 \$stream of function fwrite expects resource, resource\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Connection.php
@@ -505,7 +487,7 @@ parameters:
 			path: src/Connection.php
 
 		-
-			message: '#^Parameter \#4 \$timeout of function stream_socket_client expects float, float\|string given\.$#'
+			message: '#^Parameter \#4 \$timeout of function stream_socket_client expects float\|null, float\|string given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Connection.php
@@ -799,7 +781,7 @@ parameters:
 			path: src/Mutex.php
 
 		-
-			message: '#^Parameter \#1 \$str of function md5 expects string, string\|false given\.$#'
+			message: '#^Parameter \#1 \$string of function md5 expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Mutex.php
@@ -859,7 +841,7 @@ parameters:
 			path: src/Predis/Command/CommandDecorator.php
 
 		-
-			message: '#^Parameter \#1 \$function of function call_user_func_array expects callable\(\)\: mixed, array\{mixed, mixed\} given\.$#'
+			message: '#^Parameter \#1 \$callback of function call_user_func_array expects callable\(\)\: mixed, array\{mixed, mixed\} given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Predis/Command/CommandDecorator.php
@@ -901,7 +883,7 @@ parameters:
 			path: src/Session.php
 
 		-
-			message: '#^Parameter \#1 \$str of function md5 expects string, string\|false given\.$#'
+			message: '#^Parameter \#1 \$string of function md5 expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Session.php
@@ -1012,12 +994,6 @@ parameters:
 			message: '#^Access to an undefined property object\:\:\$total\.$#'
 			identifier: property.notFound
 			count: 2
-			path: tests/ActiveRecordTest.php
-
-		-
-			message: '#^Access to an undefined property yiiunit\\data\\ar\\Order\|yiiunit\\extensions\\redis\\data\\ar\\Order\:\:\$orderItems\.$#'
-			identifier: property.notFound
-			count: 1
 			path: tests/ActiveRecordTest.php
 
 		-
@@ -1189,7 +1165,7 @@ parameters:
 			path: tests/RedisCacheTest.php
 
 		-
-			message: '#^Parameter \#1 \$str of function sha1 expects string, int\<0, 999\> given\.$#'
+			message: '#^Parameter \#1 \$string of function sha1 expects string, int\<0, 999\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/RedisCacheTest.php
@@ -1855,12 +1831,6 @@ parameters:
 			path: tests/predis/sentinel/ActiveRecordTest.php
 
 		-
-			message: '#^Access to an undefined property yiiunit\\data\\ar\\Order\|yiiunit\\extensions\\redis\\data\\ar\\Order\:\:\$orderItems\.$#'
-			identifier: property.notFound
-			count: 1
-			path: tests/predis/sentinel/ActiveRecordTest.php
-
-		-
 			message: '#^Call to an undefined method object\:\:canGetProperty\(\)\.$#'
 			identifier: method.notFound
 			count: 5
@@ -2023,7 +1993,7 @@ parameters:
 			path: tests/predis/sentinel/RedisCacheTest.php
 
 		-
-			message: '#^Parameter \#1 \$str of function sha1 expects string, int\<0, 999\> given\.$#'
+			message: '#^Parameter \#1 \$string of function sha1 expects string, int\<0, 999\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/predis/sentinel/RedisCacheTest.php
@@ -2527,12 +2497,6 @@ parameters:
 			path: tests/predis/standalone/ActiveRecordTest.php
 
 		-
-			message: '#^Access to an undefined property yiiunit\\data\\ar\\Order\|yiiunit\\extensions\\redis\\data\\ar\\Order\:\:\$orderItems\.$#'
-			identifier: property.notFound
-			count: 1
-			path: tests/predis/standalone/ActiveRecordTest.php
-
-		-
 			message: '#^Call to an undefined method object\:\:canGetProperty\(\)\.$#'
 			identifier: method.notFound
 			count: 5
@@ -2695,7 +2659,7 @@ parameters:
 			path: tests/predis/standalone/RedisCacheTest.php
 
 		-
-			message: '#^Parameter \#1 \$str of function sha1 expects string, int\<0, 999\> given\.$#'
+			message: '#^Parameter \#1 \$string of function sha1 expects string, int\<0, 999\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/predis/standalone/RedisCacheTest.php

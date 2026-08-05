@@ -9,7 +9,7 @@
 namespace yii\redis;
 
 use yii\base\BaseObject;
-use yii\base\InvalidParamException;
+use yii\base\InvalidArgumentException;
 use yii\base\NotSupportedException;
 use yii\db\Exception;
 use yii\db\Expression;
@@ -343,7 +343,7 @@ EOF;
     private function buildNotCondition($operator, $operands, &$params)
     {
         if (count($operands) != 1) {
-            throw new InvalidParamException("Operator '$operator' requires exactly one operand.");
+            throw new InvalidArgumentException("Operator '$operator' requires exactly one operand.");
         }
 
         $operand = reset($operands);

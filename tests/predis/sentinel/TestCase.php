@@ -28,7 +28,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
             static::$params = require(__DIR__ . '/config/config.php');
         }
 
-
         return isset(static::$params[$name]) ? static::$params[$name] : $default;
     }
 
@@ -132,14 +131,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         $reflection = new \ReflectionObject($object);
         $method = $reflection->getMethod($method);
 
-        if (\PHP_VERSION_ID < 80100) {
-            $method->setAccessible(true);
-        }
-
         $result = $method->invokeArgs($object, $args);
-        if ($revoke && \PHP_VERSION_ID < 80100) {
-            $method->setAccessible(false);
-        }
 
         return $result;
     }

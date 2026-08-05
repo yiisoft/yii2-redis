@@ -12,9 +12,6 @@ use yii\base\Event;
 use yii\db\ActiveRecordInterface;
 use yii\db\BaseActiveRecord;
 use yii\db\Expression;
-use yiiunit\data\ar\Customer;
-use yiiunit\data\ar\Order;
-use yiiunit\TestCase;
 use yiiunit\extensions\redis\data\ar\Order as RedisOrder;
 
 /**
@@ -568,7 +565,7 @@ trait ActiveRecordTestTrait
         $this->assertTrue($customers->isRelationPopulated('ordersWithItems'));
         $this->assertCount(1, $customers->ordersWithItems);
 
-        /** @var Order|RedisOrder $order */
+        /** @var RedisOrder $order */
         $order = $customers->ordersWithItems[0];
         $this->assertTrue($order->isRelationPopulated('orderItems'));
         $this->assertCount(2, $order->orderItems);
