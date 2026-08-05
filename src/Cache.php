@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -9,6 +10,7 @@ namespace yii\redis;
 
 use yii\db\Exception;
 use yii\di\Instance;
+use yii\redis\Predis\PredisConnection;
 
 /**
  * Redis Cache implements a cache application component based on [redis](https://redis.io/) key-value store.
@@ -228,8 +230,8 @@ class Cache extends \yii\caching\Cache
         if (
             is_string($key)
             && $this->isCluster
-            && preg_match('/^(.*)({.+})(.*)$/', $key, $matches) === 1) {
-
+            && preg_match('/^(.*)({.+})(.*)$/', $key, $matches) === 1
+        ) {
             $this->_hashTagAvailable = true;
 
             return parent::buildKey($matches[1] . $matches[3]) . $matches[2];
@@ -376,7 +378,7 @@ class Cache extends \yii\caching\Cache
     protected function getReplica()
     {
         // @NOTE Predis uses its own implementation of balancing
-        if ($this->enableReplicas === false || $this->redis instanceof \yii\redis\Predis\PredisConnection) {
+        if ($this->enableReplicas === false || $this->redis instanceof PredisConnection) {
             return $this->redis;
         }
 
@@ -391,7 +393,7 @@ class Cache extends \yii\caching\Cache
         $replicas = $this->replicas;
         shuffle($replicas);
         $config = array_shift($replicas);
-        $this->_replica = Instance::ensure($config, Connection::className());
+        $this->_replica = Instance::ensure($config, Connection::class);
         return $this->_replica;
     }
 }

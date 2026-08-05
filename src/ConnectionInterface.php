@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace yii\redis;
@@ -225,5 +226,10 @@ interface ConnectionInterface
 
     public function getIsActive(): bool;
 
-    public function executeCommand($name, $params = []): mixed;
+    /**
+     * @param string $name
+     * @param array<mixed> $params
+     * @return mixed
+     */
+    public function executeCommand(string $name, array $params = []);
 }

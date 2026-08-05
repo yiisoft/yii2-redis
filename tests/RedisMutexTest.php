@@ -19,7 +19,7 @@ class RedisMutexTest extends TestCase
 
     private static $_keys = [];
 
-    public function testAcquireAndRelease()
+    public function testAcquireAndRelease(): void
     {
         $mutex = $this->createMutex();
 
@@ -36,7 +36,7 @@ class RedisMutexTest extends TestCase
         $this->assertMutexKeyNotInRedis();
     }
 
-    public function testExpiration()
+    public function testExpiration(): void
     {
         $mutex = $this->createMutex();
 
@@ -51,7 +51,7 @@ class RedisMutexTest extends TestCase
         $this->assertMutexKeyNotInRedis();
     }
 
-    public function acquireTimeoutProvider()
+    public function acquireTimeoutProvider(): array
     {
         return [
             'no timeout (lock is held)' => [0, false, false],
@@ -66,7 +66,7 @@ class RedisMutexTest extends TestCase
      * @covers \yii\redis\Mutex::releaseLock
      * @dataProvider acquireTimeoutProvider
      */
-    public function testConcurentMutexAcquireAndRelease($timeout, $canAcquireAfterTimeout, $lockIsReleased)
+    public function testConcurentMutexAcquireAndRelease($timeout, $canAcquireAfterTimeout, $lockIsReleased): void
     {
         $mutexOne = $this->createMutex();
         $mutexTwo = $this->createMutex();
@@ -119,7 +119,7 @@ class RedisMutexTest extends TestCase
     protected function createMutex()
     {
         return Yii::createObject([
-            'class' => Mutex::className(),
+            'class' => Mutex::class,
             'expire' => 1.5,
             'keyPrefix' => static::$mutexPrefix
         ]);
@@ -129,20 +129,21 @@ class RedisMutexTest extends TestCase
     {
         if (!isset(self::$_keys[$name])) {
             $mutex = $this->createMutex();
+
             $method = new \ReflectionMethod($mutex, 'calculateKey');
-            $method->setAccessible(true);
+
             self::$_keys[$name] = $method->invoke($mutex, $name);
         }
 
         return self::$_keys[$name];
     }
 
-    protected function assertMutexKeyInRedis()
+    protected function assertMutexKeyInRedis(): void
     {
         $this->assertNotNull(Yii::$app->redis->executeCommand('GET', [$this->getKey(static::$mutexName)]));
     }
 
-    protected function assertMutexKeyNotInRedis()
+    protected function assertMutexKeyNotInRedis(): void
     {
         $this->assertNull(Yii::$app->redis->executeCommand('GET', [$this->getKey(static::$mutexName)]));
     }

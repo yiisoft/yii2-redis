@@ -1,13 +1,13 @@
 <?php
 
-namespace yiiunit\extensions\redis\predis\standalone;
+namespace yiiunit\extensions\predis\standalone;
 
 use yii\base\InvalidConfigException;
 
 /**
  * @group redis
  */
-class ConnectionTest extends TestCase
+class RedisConnectionTest extends TestCase
 {
     protected function tearDown(): void
     {
@@ -53,7 +53,6 @@ class ConnectionTest extends TestCase
         $db->close();
     }
 
-
     /**
      * @return array
      */
@@ -74,7 +73,7 @@ class ConnectionTest extends TestCase
      * @param mixed $data
      * @throws InvalidConfigException
      */
-    public function testStoreGet(mixed $data): void
+    public function testStoreGet($data): void
     {
         $db = $this->getConnection(true);
 
@@ -94,6 +93,7 @@ class ConnectionTest extends TestCase
         $redis->executeCommand('SADD', ['newset2', 'segtggttval', 'sv1', 'sv2', 'sv3']);
         $redis->executeCommand('ZADD', ['newz2', 2, 'ss', 3, 'pfpf']);
         $allKeys = $redis->executeCommand('KEYS', ['*']);
+        self::assertIsArray($allKeys);
         sort($allKeys);
         $this->assertEquals(['hash1', 'key1', 'newlist2', 'newset2', 'newz2'], $allKeys);
         $expected = [
@@ -107,7 +107,6 @@ class ConnectionTest extends TestCase
             $this->assertEquals($expected[$key], $redis->executeCommand('TYPE', [$key]));
         }
     }
-
 
     /**
      * @return array
@@ -169,9 +168,9 @@ class ConnectionTest extends TestCase
             [$min, $max, $withScores, $limit, $offset, $count, $expectedRows] = $case;
             if ($withScores !== null && $limit !== null) {
                 $rows = $redis->zrangebyscore($set, $min, $max, $withScores, $limit, $offset, $count);
-            } else if ($withScores !== null) {
+            } elseif ($withScores !== null) {
                 $rows = $redis->zrangebyscore($set, $min, $max, $withScores);
-            } else if ($limit !== null) {
+            } elseif ($limit !== null) {
                 $rows = $redis->zrangebyscore($set, $min, $max, $limit, $offset, $count);
             } else {
                 $rows = $redis->zrangebyscore($set, $min, $max);

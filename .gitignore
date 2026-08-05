@@ -1,8 +1,11 @@
 /.idea
 /vendor
+/coverage
 /composer.lock
 /tests/ActiveRecordTestTrait.php
 /tests/CacheTestCase.php
 /tests/BaseTestCase.php
 /tests/data/config.local.php
 /tests/dockerids
+.phpunit.result.cache
+coverage.xml

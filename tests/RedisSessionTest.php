@@ -12,7 +12,7 @@ use yii\web\DbSession;
  */
 class RedisSessionTest extends TestCase
 {
-    public function testReadWrite()
+    public function testReadWrite(): void
     {
         $session = new Session();
 
@@ -26,7 +26,7 @@ class RedisSessionTest extends TestCase
      * Test set name. Also check set name twice and after open
      * @runInSeparateProcess
      */
-    public function testSetName()
+    public function testSetName(): void
     {
         $session = new Session();
         $session->setName('oldName');
@@ -45,7 +45,7 @@ class RedisSessionTest extends TestCase
      * @depends testReadWrite
      * @runInSeparateProcess
      */
-    public function testStrictMode()
+    public function testStrictMode(): void
     {
         //non-strict-mode test
         $nonStrictSession = new Session([

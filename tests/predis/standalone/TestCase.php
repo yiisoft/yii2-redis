@@ -1,12 +1,12 @@
 <?php
 
-namespace yiiunit\extensions\redis\predis\standalone;
+namespace yiiunit\extensions\predis\standalone;
 
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\di\Container;
 use yii\helpers\ArrayHelper;
-use yii\redis\predis\PredisConnection;
+use yii\redis\Predis\PredisConnection;
 
 /**
  * This is the base class for all yii framework unit tests.
@@ -14,7 +14,6 @@ use yii\redis\predis\PredisConnection;
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     public static $params;
-
 
     /**
      * Returns a test configuration param from /data/config.php
@@ -28,7 +27,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
         if (static::$params === null) {
             static::$params = require(__DIR__ . '/config/config.php');
         }
-
 
         return isset(static::$params[$name]) ? static::$params[$name] : $default;
     }
@@ -132,11 +130,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         $reflection = new \ReflectionObject($object);
         $method = $reflection->getMethod($method);
-        $method->setAccessible(true);
+
         $result = $method->invokeArgs($object, $args);
-        if ($revoke) {
-            $method->setAccessible(false);
-        }
 
         return $result;
     }

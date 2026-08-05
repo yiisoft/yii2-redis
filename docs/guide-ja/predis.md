@@ -21,6 +21,7 @@ return [
                     'persistent' => true,
                     'async_connect' => true,
                     'read_write_timeout' => 0.1,
+                    'retry' => new \Predis\Retry\Retry(new \Predis\Retry\Strategy\ExponentialBackoff(1000, 10000), 3), // Base and cap configuration in microseconds and number of retries
                 ],
             ],
         ],
@@ -46,6 +47,7 @@ return [
                     'persistent' => true,
                     'async_connect' => true,
                     'read_write_timeout' => 0.1,
+                    'retry' => new \Predis\Retry\Retry(new \Predis\Retry\Strategy\ExponentialBackoff(1000, 10000), 3), // Base and cap configuration in microseconds and number of retries
                 ],
             ],
         ],

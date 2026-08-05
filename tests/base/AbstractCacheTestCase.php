@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -28,6 +29,7 @@ function microtime($float = false)
 
 namespace yiiunit\extensions\redis\base;
 
+use yii\caching\Cache;
 use yii\caching\CacheInterface;
 use yii\caching\TagDependency;
 use yiiunit\extensions\redis\TestCase;
@@ -193,6 +195,7 @@ abstract class AbstractCacheTestCase extends TestCase
 
     public function testDefaultTtl()
     {
+        /** @var Cache $cache */
         $cache = $this->getCacheInstance();
 
         $this->assertSame(0, $cache->defaultDuration);
@@ -288,11 +291,15 @@ abstract class AbstractCacheTestCase extends TestCase
         $dependency = new TagDependency(['tags' => 'test']);
 
         $expected = 'SilverFire';
-        $loginClosure = function ($cache) use (&$login) { return 'SilverFire'; };
+        $loginClosure = function ($cache) use (&$login) {
+            return 'SilverFire';
+        };
         $this->assertEquals($expected, $cache->getOrSet('some-login', $loginClosure, null, $dependency));
 
         // Call again with another login to make sure that value is cached
-        $loginClosure = function ($cache) use (&$login) { return 'SamDark'; };
+        $loginClosure = function ($cache) use (&$login) {
+            return 'SamDark';
+        };
         $this->assertEquals($expected, $cache->getOrSet('some-login', $loginClosure, null, $dependency));
 
         $dependency->invalidate($cache, 'test');

@@ -14,7 +14,6 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     public static $params;
 
-
     /**
      * Returns a test configuration param from /data/config.php
      * @param string $name params name
@@ -46,7 +45,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      * @param array $config The application configuration, if needed
      * @param string $appClass name of the application class to create
      */
-    protected function mockApplication(array $config = [], $appClass = '\yii\console\Application')
+    protected function mockApplication(array $config = [], $appClass = '\yii\console\Application'): void
     {
         new $appClass(ArrayHelper::merge([
             'id' => 'testapp',
@@ -80,7 +79,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * Destroys application in Yii::$app by setting it to null.
      */
-    protected function destroyApplication()
+    protected function destroyApplication(): void
     {
         Yii::$app = null;
         Yii::$container = new Container();
@@ -130,12 +129,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     protected function invokeMethod($object, $method, $args = [], $revoke = true)
     {
         $reflection = new \ReflectionObject($object);
+
         $method = $reflection->getMethod($method);
-        $method->setAccessible(true);
+
         $result = $method->invokeArgs($object, $args);
-        if ($revoke) {
-            $method->setAccessible(false);
-        }
 
         return $result;
     }

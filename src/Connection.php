@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -38,7 +39,7 @@ class Connection extends Component implements ConnectionInterface
     /**
      * @event Event an event that is triggered after a DB connection is established
      */
-    const EVENT_AFTER_OPEN = 'afterOpen';
+    public const EVENT_AFTER_OPEN = 'afterOpen';
 
     /**
      * @var string the hostname or ip address to use for connecting to the redis server. Defaults to 'localhost'.
@@ -51,7 +52,7 @@ class Connection extends Component implements ConnectionInterface
      */
     public $scheme = 'tcp';
     /**
-     * @var string if the query gets redirected, use this as the temporary new hostname
+     * @var string|null $redirectConnectionString if the query gets redirected, use this as the temporary new hostname
      * @since 2.0.11
      */
     public $redirectConnectionString;
@@ -545,7 +546,7 @@ class Connection extends Component implements ConnectionInterface
      * for details on the mentioned reply types.
      * @throws Exception for commands that return [error reply](https://redis.io/topics/protocol#error-reply).
      */
-    public function executeCommand($name, $params = []): mixed
+    public function executeCommand(string $name, array $params = [])
     {
         $this->open();
 
@@ -648,7 +649,7 @@ class Connection extends Component implements ConnectionInterface
                     return $this->redirect($line, $command, $params);
                 }
 
-                throw new Exception("Redis error: " . $line . "\nRedis command was: " . implode(' ', $params));
+                throw new Exception('Redis error: ' . $line . "\nRedis command was: " . implode(' ', $params));
             case ':': // Integer reply
                 // no cast to int as it is in the range of a signed 64 bit integer
                 return $line;
@@ -659,7 +660,7 @@ class Connection extends Component implements ConnectionInterface
                 $length = (int)$line + 2;
                 $data = '';
                 while ($length > 0) {
-                    if (($block = fread($this->socket, $length)) === false) {
+                    if (($block = fread($this->socket, $length)) === false || $block === '') {
                         throw new SocketException("Failed to read from socket.\nRedis command was: " . implode(' ', $params));
                     }
                     $data .= $block;

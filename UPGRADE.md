@@ -12,6 +12,13 @@ if you want to upgrade from version A to version C and there is
 version B between A and C, you need to follow the instructions
 for both A and B.
 
+Upgrade from 2.1.0
+------------------
+* Retry handling in `PredisConnection` now relies on `predis` built-in retry policies. The
+  `PredisConnection::$retries` and `PredisConnection::$retryInterval` properties were removed, so
+  applications that set these properties in component configuration must update their configuration.
+  Use `options.parameters.retry` instead. [See documentation for details](https://github.com/predis/predis/tree/main#retry-exceptions).
+
 Upgrade from 2.0.17
 ------------------
 
