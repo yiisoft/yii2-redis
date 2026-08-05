@@ -1,13 +1,35 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
-2.0.21 under development
-------------------------
+2.1.3 under development
+-----------------------
 
+- Bug #302: Fix union types in PHPDoc annotations (mspirkov)
+
+2.1.2 May 07, 2026
+------------------
+
+- Chg #294: Revert custom retry in `PredisConnection` after update `predis` package (@s1lver)
+
+2.1.1 April 29, 2026
+--------------------
+
+- Bug #281: PHP 7.4 compatibility is now fixed (@s1lver)
+- Bug #291: Prevent infinite loop in `parseResponse()` when `fread()` returns empty string on broken socket (@dkostik)
+- Bug #292: Fixed `fwrite()` supplied resource is not a valid stream (@s1lver)
+- Enh #281: PHP 7.3 support was removed to align with Yii2 minimum PHP version (@s1lver)
+- Enh #282: Static analysis with PHPStan has been added (@s1lver)
+- Enh #287: Applying Yii2 coding standards (@s1lver)
+- Chg #292: Bump version `predis/predis` to `3.4` (@s1lver)
+- Chg #293: Update PHP, Yii2 dependency in `composer.json`, and update `CHANGELOG.md` (@terabytesoftw)
+
+2.1.0 December 25, 2025
+-----------------------
+
+- Fix #278: Prevent `null` parameter on `SocketException` to avoid PHP 8.4 implicity nullable types deprecation (HenryVolkmer)
 - New #276: Added support for predis (antonshevelev)
-- New #276: Changed default value of yii\redis\Cache::$forceClusterMode to false (antonshevelev)
-- New #276: Implemented yii\redis\ConnectionInterface in yii\redis\Connection (antonshevelev)
-- New #276: Updated minimum required PHP version to 8.1 (antonshevelev)
+- New #276: Changed default value of `yii\redis\Cache::$forceClusterMode` to `false` (antonshevelev)
+- New #276: Implemented `yii\redis\ConnectionInterface` in `yii\redis\Connection` (antonshevelev)
 
 
 2.0.20 June 05, 2025

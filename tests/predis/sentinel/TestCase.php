@@ -1,12 +1,12 @@
 <?php
 
-namespace yiiunit\extensions\redis\predis\sentinel;
+namespace yiiunit\extensions\predis\sentinel;
 
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\di\Container;
 use yii\helpers\ArrayHelper;
-use yii\redis\predis\PredisConnection;
+use yii\redis\Predis\PredisConnection;
 
 /**
  * This is the base class for all yii framework unit tests.
@@ -14,7 +14,6 @@ use yii\redis\predis\PredisConnection;
 abstract class TestCase extends \PHPUnit\Framework\TestCase
 {
     public static $params;
-
 
     /**
      * Returns a test configuration param from /data/config.php
@@ -132,9 +131,13 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     {
         $reflection = new \ReflectionObject($object);
         $method = $reflection->getMethod($method);
-        $method->setAccessible(true);
+
+        if (\PHP_VERSION_ID < 80100) {
+            $method->setAccessible(true);
+        }
+
         $result = $method->invokeArgs($object, $args);
-        if ($revoke) {
+        if ($revoke && \PHP_VERSION_ID < 80100) {
             $method->setAccessible(false);
         }
 

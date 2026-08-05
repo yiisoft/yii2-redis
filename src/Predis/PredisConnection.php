@@ -1,19 +1,25 @@
 <?php
+
+/**
+ * @link https://www.yiiframework.com/
+ * @copyright Copyright (c) 2008 Yii Software LLC
+ * @license https://www.yiiframework.com/license/
+ */
+
 declare(strict_types=1);
 
-namespace yii\redis\predis;
+namespace yii\redis\Predis;
 
 use Predis\Client;
-use Predis\Response\ErrorInterface;
-use Predis\Response\ResponseInterface;
 use Predis\Response\Status;
+use Throwable;
 use Yii;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
 use yii\helpers\Inflector;
 use yii\redis\ConnectionInterface;
 use yii\redis\LuaScriptBuilder;
-use yii\redis\predis\Command\CommandDecorator;
+use yii\redis\Predis\Command\CommandDecorator;
 
 /**
  * Class PredisConnection
@@ -42,6 +48,11 @@ use yii\redis\predis\Command\CommandDecorator;
  *      ],
  * ];
  * ```
+ *
+ * @property-read Client|null $client
+ * @property-read bool $isActive Whether the DB connection is established.
+ * @property-read LuaScriptBuilder $luaScriptBuilder
+ *
  */
 class PredisConnection extends Component implements ConnectionInterface
 {
@@ -51,7 +62,7 @@ class PredisConnection extends Component implements ConnectionInterface
     public const EVENT_AFTER_OPEN = 'afterOpen';
 
     /**
-     * @var array List of available redis commands.
+     * @var string[] List of available redis commands.
      * @see https://redis.io/commands
      */
     public array $redisCommands = [
@@ -289,17 +300,17 @@ class PredisConnection extends Component implements ConnectionInterface
     /**
      * @var mixed Connection parameters for one or more servers.
      */
-    public mixed $parameters;
+    public $parameters;
 
     /**
      * @var mixed Options to configure some behaviours of the client.
      */
-    public mixed $options = [];
+    public $options = [];
 
     /**
      * @var Client|null redis connection
      */
-    protected Client|null $client = null;
+    protected ?Client $client = null;
 
     /**
      * Returns a value indicating whether the DB connection is established.
@@ -308,14 +319,20 @@ class PredisConnection extends Component implements ConnectionInterface
      */
     public function getIsActive(): bool
     {
-        return (bool)$this->client?->isConnected();
+        if ($this->client === null) {
+            return false;
+        }
+        return $this->client->isConnected();
     }
 
     /**
-     * @return mixed|ErrorInterface|ResponseInterface
+     * @param string $name
+     * @param array<mixed> $params
+     * @return mixed
      * @throws InvalidConfigException
+     * @throws Throwable
      */
-    public function executeCommand($name, $params = []): mixed
+    public function executeCommand(string $name, array $params = [])
     {
         $this->open();
 
@@ -325,7 +342,7 @@ class PredisConnection extends Component implements ConnectionInterface
         $response = $this->client->executeCommand(new CommandDecorator($command));
         if ($response instanceof Status) {
             // ResponseStatus yii expect as bool
-            return (string)$response === 'OK' || (string)$response === 'PONG';
+            return (string) $response === 'OK' || (string) $response === 'PONG';
         }
         return $response;
     }
@@ -359,7 +376,11 @@ class PredisConnection extends Component implements ConnectionInterface
      */
     public function close(): void
     {
-        $this->client?->disconnect();
+        if ($this->client === null) {
+            return;
+        }
+        $this->client->disconnect();
+        $this->client = null;
     }
 
     /**
@@ -382,11 +403,11 @@ class PredisConnection extends Component implements ConnectionInterface
      * ```
      *
      * @param string $name name of the missing method to execute
-     * @param array $params method call arguments
+     * @param array<mixed> $params method call arguments
      * @return mixed
      * @throws InvalidConfigException
      */
-    public function __call($name, $params): mixed
+    public function __call($name, $params)
     {
         $redisCommand = strtoupper(Inflector::camel2words($name, false));
         if (in_array($redisCommand, $this->redisCommands, true)) {

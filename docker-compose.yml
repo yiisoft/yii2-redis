@@ -3,17 +3,30 @@
 
 services:
 
-  yii2-redis-php:
-    image: "yiisoftware/yii2-php:${PHP_VERSION:-8.1}-apache"
+  php:
+    image: "yiisoftware/yii2-php:${PHP_VERSION:-8.3}-apache"
     networks:
       - yii2-redis
     volumes:
-      - ../..:/app # Mount source-code for development
+      - .:/app # Mount source-code for development
+    environment:
+      XDEBUG_MODE: ${XDEBUG_MODE:-coverage} # Setup "debug" to enable debugging
+      XDEBUG_CONFIG: "client_host=host.docker.internal"
+      XDEBUG_TRIGGER: ${XDEBUG_TRIGGER:-yes}
+    command: >
+      bash -c "
+      docker-php-ext-enable xdebug;
+      apache2-foreground"
 
   redis:
     image: "redis"
     environment:
       - REDIS_REPLICATION_MODE=master
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
     networks:
       - yii2-redis
     ports:
@@ -25,30 +38,50 @@ services:
       - REDIS_MASTER_HOST=redis
       - REDIS_MASTER_PORT_NUMBER=6379
       - REDIS_SENTINEL_QUORUM=1
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "26379", "SENTINEL", "get-master-addr-by-name", "mymaster"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
     networks:
       - yii2-redis
     ports:
       - '26379:26379'
     depends_on:
       - redis
+
   redis-sentinel-2:
     image: bitnami/redis-sentinel:latest
     environment:
       - REDIS_MASTER_HOST=redis
       - REDIS_MASTER_PORT_NUMBER=6379
       - REDIS_SENTINEL_QUORUM=3
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "26379", "SENTINEL", "get-master-addr-by-name", "mymaster"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
     networks:
       - yii2-redis
     ports:
       - '26380:26379'
     depends_on:
       - redis
+
   redis-sentinel-3:
     image: bitnami/redis-sentinel:latest
     environment:
       - REDIS_MASTER_HOST=redis
       - REDIS_MASTER_PORT_NUMBER=6379
       - REDIS_SENTINEL_QUORUM=3
+      - ALLOW_EMPTY_PASSWORD=yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "-p", "26379", "SENTINEL", "get-master-addr-by-name", "mymaster"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
     networks:
       - yii2-redis
     ports:

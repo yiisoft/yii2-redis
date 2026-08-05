@@ -24,7 +24,7 @@ class ActiveDataProviderTest extends TestCase
         $item->save(false);
     }
 
-    public function testQuery()
+    public function testQuery(): void
     {
         $query = Item::find();
         $provider = new ActiveDataProvider(['query' => $query]);

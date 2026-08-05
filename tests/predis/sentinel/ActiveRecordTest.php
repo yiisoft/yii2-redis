@@ -1,17 +1,17 @@
 <?php
 
-namespace yiiunit\extensions\redis\predis\sentinel;
+namespace yiiunit\extensions\predis\sentinel;
 
 use yii\redis\ActiveQuery;
 use yii\redis\LuaScriptBuilder;
 use yiiunit\extensions\redis\base\ActiveRecordTestTrait;
-use yiiunit\extensions\redis\predis\sentinel\data\ar\ActiveRecord;
-use yiiunit\extensions\redis\predis\sentinel\data\ar\Customer;
-use yiiunit\extensions\redis\predis\sentinel\data\ar\Item;
-use yiiunit\extensions\redis\predis\sentinel\data\ar\Order;
-use yiiunit\extensions\redis\predis\sentinel\data\ar\OrderItem;
-use yiiunit\extensions\redis\predis\sentinel\data\ar\OrderItemWithNullFK;
-use yiiunit\extensions\redis\predis\sentinel\data\ar\OrderWithNullFK;
+use yiiunit\extensions\predis\sentinel\data\ar\ActiveRecord;
+use yiiunit\extensions\predis\sentinel\data\ar\Customer;
+use yiiunit\extensions\predis\sentinel\data\ar\Item;
+use yiiunit\extensions\predis\sentinel\data\ar\Order;
+use yiiunit\extensions\predis\sentinel\data\ar\OrderItem;
+use yiiunit\extensions\predis\sentinel\data\ar\OrderItemWithNullFK;
+use yiiunit\extensions\predis\sentinel\data\ar\OrderWithNullFK;
 
 /**
  * @group redis
@@ -64,9 +64,6 @@ class ActiveRecordTest extends TestCase
         $customer = new Customer();
         $customer->setAttributes(['email' => 'user3@example.com', 'name' => 'user3', 'address' => 'address3', 'status' => 2, 'profile_id' => 2], false);
         $customer->save(false);
-
-//		INSERT INTO category (name) VALUES ('Books');
-//		INSERT INTO category (name) VALUES ('Movies');
 
         $item = new Item();
         $item->setAttributes(['name' => 'Agile Web Application Development with Yii1.1 and PHP5', 'category_id' => 1], false);
@@ -145,7 +142,6 @@ class ActiveRecordTest extends TestCase
         $orderItem = new OrderItemWithNullFK();
         $orderItem->setAttributes(['order_id' => 3, 'item_id' => 2, 'quantity' => 1, 'subtotal' => 40.0], false);
         $orderItem->save(false);
-
     }
 
     /**
@@ -570,7 +566,7 @@ class ActiveRecordTest extends TestCase
         /* @var $itemClass \yii\db\ActiveRecordInterface */
         $itemClass = $this->getItemClass();
 
-        $query = $this->invokeMethod(new $itemClass, 'findByCondition', [$filterWithInjection['id']]);
+        $query = $this->invokeMethod(new $itemClass(), 'findByCondition', [$filterWithInjection['id']]);
         $lua = new LuaScriptBuilder();
         $script = $lua->buildOne($query);
 

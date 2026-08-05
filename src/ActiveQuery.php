@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @link https://www.yiiframework.com/
  * @copyright Copyright (c) 2008 Yii Software LLC
@@ -70,6 +71,8 @@ use yii\db\QueryTrait;
  *
  * @author Carsten Brandt <mail@cebe.cc>
  * @since 2.0
+ *
+ * @phpstan-property class-string<\yii\db\ActiveRecord> $modelClass
  */
 class ActiveQuery extends Component implements ActiveQueryInterface
 {
@@ -80,8 +83,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
     /**
      * @event Event an event that is triggered when the query is initialized via [[init()]].
      */
-    const EVENT_INIT = 'init';
-
+    public const EVENT_INIT = 'init';
 
     /**
      * Constructor.
@@ -110,7 +112,7 @@ class ActiveQuery extends Component implements ActiveQueryInterface
      * Executes the query and returns all results as an array.
      * @param Connection $db the database connection used to execute the query.
      * If this parameter is not given, the `db` application component will be used.
-     * @return array|ActiveRecord[] the query results. If the query results in nothing, an empty array will be returned.
+     * @return array the query results. If the query results in nothing, an empty array will be returned.
      */
     public function all($db = null)
     {
@@ -224,7 +226,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
         }
 
         if ($this->where === null) {
-            /* @var $modelClass ActiveRecord */
+            /**
+             * @var ActiveRecord $modelClass
+             * @phpstan-var ActiveRecord $modelClass
+             */
             $modelClass = $this->modelClass;
             if ($db === null) {
                 $db = $modelClass::getDb();
@@ -389,7 +394,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             }
         }
 
-        /* @var $modelClass ActiveRecord */
+        /**
+         * @var ActiveRecord $modelClass
+         * @phpstan-var ActiveRecord $modelClass
+         */
         $modelClass = $this->modelClass;
 
         if ($db === null) {
@@ -458,7 +466,10 @@ class ActiveQuery extends Component implements ActiveQueryInterface
             $pks = [$this->where];
         }
 
-        /* @var $modelClass ActiveRecord */
+        /**
+         * @var ActiveRecord $modelClass
+         * @phpstan-var ActiveRecord $modelClass
+         */
         $modelClass = $this->modelClass;
 
         if ($type === 'Count') {

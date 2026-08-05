@@ -1,10 +1,10 @@
 <?php
 
-namespace yiiunit\extensions\redis\predis\standalone;
+namespace yiiunit\extensions\predis\standalone;
 
 use yii\data\ActiveDataProvider;
-use yiiunit\extensions\redis\predis\standalone\data\ar\ActiveRecord;
-use yiiunit\extensions\redis\predis\standalone\data\ar\Item;
+use yiiunit\extensions\predis\standalone\data\ar\ActiveRecord;
+use yiiunit\extensions\predis\standalone\data\ar\Item;
 
 /**
  * @group redis
@@ -24,7 +24,7 @@ class ActiveDataProviderTest extends TestCase
         $item->save(false);
     }
 
-    public function testQuery()
+    public function testQuery(): void
     {
         $query = Item::find();
         $provider = new ActiveDataProvider(['query' => $query]);

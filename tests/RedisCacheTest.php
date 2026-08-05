@@ -26,9 +26,6 @@ class RedisCacheTest extends AbstractCacheTestCase
             $this->markTestSkipped('No redis server connection configured.');
         }
         $connection = new Connection($params);
-//        if (!@stream_socket_client($connection->hostname . ':' . $connection->port, $errorNumber, $errorDescription, 0.5)) {
-//            $this->markTestSkipped('No redis server running at ' . $connection->hostname . ':' . $connection->port . ' : ' . $errorNumber . ' - ' . $errorDescription);
-//        }
 
         $this->mockApplication(['components' => ['redis' => $connection]]);
 
@@ -39,13 +36,13 @@ class RedisCacheTest extends AbstractCacheTestCase
         return $this->_cacheInstance;
     }
 
-    protected function resetCacheInstance()
+    protected function resetCacheInstance(): void
     {
         $this->getCacheInstance()->redis->flushdb();
         $this->_cacheInstance = null;
     }
 
-    public function testExpireMilliseconds()
+    public function testExpireMilliseconds(): void
     {
         $cache = $this->getCacheInstance();
 
@@ -56,7 +53,7 @@ class RedisCacheTest extends AbstractCacheTestCase
         $this->assertFalse($cache->get('expire_test_ms'));
     }
 
-    public function testExpireAddMilliseconds()
+    public function testExpireAddMilliseconds(): void
     {
         $cache = $this->getCacheInstance();
 
@@ -71,7 +68,7 @@ class RedisCacheTest extends AbstractCacheTestCase
      * Store a value that is 2 times buffer size big
      * https://github.com/yiisoft/yii2/issues/743
      */
-    public function testLargeData()
+    public function testLargeData(): void
     {
         $cache = $this->getCacheInstance();
 
@@ -95,7 +92,7 @@ class RedisCacheTest extends AbstractCacheTestCase
      * Store a megabyte and see how it goes
      * https://github.com/yiisoft/yii2/issues/6547
      */
-    public function testReallyLargeData()
+    public function testReallyLargeData(): void
     {
         $cache = $this->getCacheInstance();
 
@@ -115,7 +112,7 @@ class RedisCacheTest extends AbstractCacheTestCase
         }
     }
 
-    public function testMultiByteGetAndSet()
+    public function testMultiByteGetAndSet(): void
     {
         $cache = $this->getCacheInstance();
 
@@ -127,7 +124,7 @@ class RedisCacheTest extends AbstractCacheTestCase
         $this->assertSame($cache->get($key), $data);
     }
 
-    public function testReplica()
+    public function testReplica(): void
     {
         $this->resetCacheInstance();
 
@@ -199,7 +196,7 @@ class RedisCacheTest extends AbstractCacheTestCase
         $this->resetCacheInstance();
     }
 
-    public function testFlushWithSharedDatabase()
+    public function testFlushWithSharedDatabase(): void
     {
         $instance = $this->getCacheInstance();
         $this->resetCacheInstance();
