@@ -15,11 +15,12 @@ use yiiunit\extensions\redis\ActiveRecordTest;
  *
  * @method CustomerQuery findBySql($sql, $params = []) static
  *
- * @property Order[] $orders
- * @property Order[] $expensiveOrders
- * @property Order[] $expensiveOrdersWithNullFK
- * @property Order[] $ordersWithNullFK
- * @property Order[] $ordersWithItems
+ * @property-read Order[] $orders
+ * @property-read Order[] $expensiveOrders
+ * @property-read OrderWithNullFK[] $expensiveOrdersWithNullFK
+ * @property-read OrderWithNullFK[] $ordersWithNullFK
+ * @property-read Order[] $ordersWithItems
+ * @property-read Item[] $orderItems
  */
 class Customer extends ActiveRecord
 {
