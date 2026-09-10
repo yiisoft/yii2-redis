@@ -10,8 +10,8 @@ namespace yiiunit\extensions\redis\data\ar;
  * @property int $quantity
  * @property string $subtotal
  *
- * @property Order $order
- * @property Item $item
+ * @property-read Order $order
+ * @property-read Item $item
  */
 class OrderItem extends ActiveRecord
 {

@@ -9,8 +9,8 @@ namespace yiiunit\extensions\predis\sentinel\data\ar;
  * @property int $item_id
  * @property int $quantity
  * @property string $subtotal
- * @property Order $order
- * @property Item $item
+ * @property-read Order $order
+ * @property-read Item $item
  */
 class OrderItem extends ActiveRecord
 {

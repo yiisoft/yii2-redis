@@ -9,16 +9,16 @@ namespace yiiunit\extensions\predis\standalone\data\ar;
  * @property int $customer_id
  * @property int $created_at
  * @property string $total
- * @property Customer $customer
- * @property Item[] $itemsIndexed
- * @property OrderItem[] $orderItems
- * @property Item[] $items
- * @property Item[] $itemsInOrder1
- * @property Item[] $itemsInOrder2
- * @property Item[] $booksWithNullFK
- * @property Item[] $itemsWithNullFK
- * @property OrderItemWithNullFK[] $orderItemsWithNullFK
- * @property Item[] $books
+ * @property-read Customer $customer
+ * @property-read Item[] $itemsIndexed
+ * @property-read OrderItem[] $orderItems
+ * @property-read Item[] $items
+ * @property-read Item[] $itemsInOrder1
+ * @property-read Item[] $itemsInOrder2
+ * @property-read Item[] $booksWithNullFK
+ * @property-read Item[] $itemsWithNullFK
+ * @property-read OrderItemWithNullFK[] $orderItemsWithNullFK
+ * @property-read Item[] $books
  * @property-read Item[] $expensiveItemsUsingViaWithCallable
  * @property-read Item[] $cheapItemsUsingViaWithCallable
  */
