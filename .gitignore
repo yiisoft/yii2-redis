@@ -9,3 +9,7 @@
 /tests/dockerids
 .phpunit.result.cache
 coverage.xml
+
+# PHP CS Fixer
+.php-cs-fixer.php
+.php-cs-fixer.cache

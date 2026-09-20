@@ -57,7 +57,7 @@ class Connection extends Component implements ConnectionInterface
      */
     public $redirectConnectionString;
     /**
-     * @var integer the port to use for connecting to the redis server. Default port is 6379.
+     * @var int the port to use for connecting to the redis server. Default port is 6379.
      * If [[unixSocket]] is specified, [[hostname]] and port will be ignored.
      */
     public $port = 6379;
@@ -82,7 +82,7 @@ class Connection extends Component implements ConnectionInterface
      */
     public $password;
     /**
-     * @var integer the redis database to use. This is an integer value starting from 0. Defaults to 0.
+     * @var int the redis database to use. This is an integer value starting from 0. Defaults to 0.
      * Since version 2.0.6 you can disable the SELECT command sent after connection by setting this property to `null`.
      */
     public $database = 0;
@@ -95,7 +95,7 @@ class Connection extends Component implements ConnectionInterface
      */
     public $dataTimeout;
     /**
-     * @var boolean Send sockets over SSL protocol. Default state is false.
+     * @var bool Send sockets over SSL protocol. Default state is false.
      * @since 2.0.12
      */
     public $useSSL = false;
@@ -106,7 +106,7 @@ class Connection extends Component implements ConnectionInterface
      */
     public $contextOptions = [];
     /**
-     * @var integer Bitmask field which may be set to any combination of connection flags passed to [stream_socket_client()](https://www.php.net/manual/en/function.stream-socket-client.php).
+     * @var int Bitmask field which may be set to any combination of connection flags passed to [stream_socket_client()](https://www.php.net/manual/en/function.stream-socket-client.php).
      * Currently the select of connection flags is limited to `STREAM_CLIENT_CONNECT` (default), `STREAM_CLIENT_ASYNC_CONNECT` and `STREAM_CLIENT_PERSISTENT`.
      *
      * > Warning: `STREAM_CLIENT_PERSISTENT` will make PHP reuse connections to the same server. If you are using multiple
@@ -126,14 +126,14 @@ class Connection extends Component implements ConnectionInterface
      */
     public $socketClientFlags = STREAM_CLIENT_CONNECT;
     /**
-     * @var integer The number of times a command execution should be retried when a connection failure occurs.
+     * @var int The number of times a command execution should be retried when a connection failure occurs.
      * This is used in [[executeCommand()]] when a [[SocketException]] is thrown.
      * Defaults to 0 meaning no retries on failure.
      * @since 2.0.7
      */
     public $retries = 0;
     /**
-     * @var integer The retry interval in microseconds to wait between retry.
+     * @var int The retry interval in microseconds to wait between retry.
      * This is used in [[executeCommand()]] when a [[SocketException]] is thrown.
      * Defaults to 0 meaning no wait.
      * @since 2.0.10

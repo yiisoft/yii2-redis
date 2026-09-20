@@ -1,11 +1,17 @@
 <?php
 
+/**
+ * @link https://www.yiiframework.com/
+ * @copyright Copyright (c) 2008 Yii Software LLC
+ * @license https://www.yiiframework.com/license/
+ */
+
 declare(strict_types=1);
 
 namespace yii\redis;
 
 /**
- *  The execution of [redis commands](https://redis.io/commands) is possible with via [[executeCommand()]].
+ * The execution of [redis commands](https://redis.io/commands) is possible with via [[executeCommand()]].
  * @method mixed append($key, $value) Append a value to a key. <https://redis.io/commands/append>
  * @method mixed auth($password) Authenticate to the server. <https://redis.io/commands/auth>
  * @method mixed bgrewriteaof() Asynchronously rewrite the append-only file. <https://redis.io/commands/bgrewriteaof>
