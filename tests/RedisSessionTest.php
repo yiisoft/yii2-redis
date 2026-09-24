@@ -1,9 +1,14 @@
 <?php
 
+/**
+ * @link https://www.yiiframework.com/
+ * @copyright Copyright (c) 2008 Yii Software LLC
+ * @license https://www.yiiframework.com/license/
+ */
+
 namespace yiiunit\extensions\redis;
 
 use yii\redis\Session;
-use yii\web\DbSession;
 
 /**
  * Class for testing redis session backend

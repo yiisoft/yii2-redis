@@ -1,5 +1,11 @@
 <?php
 
+/**
+ * @link https://www.yiiframework.com/
+ * @copyright Copyright (c) 2008 Yii Software LLC
+ * @license https://www.yiiframework.com/license/
+ */
+
 namespace yiiunit\extensions\predis\standalone;
 
 use yii\redis\Cache;
@@ -103,7 +109,7 @@ class RedisCacheTest extends CacheTestCase
             $data = str_repeat('X', 100 * 1024); // 100 KB
             $keys[$key] = $data;
 
-//            $this->assertTrue($cache->get($key) === false); // do not display 100KB in terminal if this fails :)
+            //            $this->assertTrue($cache->get($key) === false); // do not display 100KB in terminal if this fails :)
             $cache->set($key, $data);
         }
         $values = $cache->multiGet(array_keys($keys));
