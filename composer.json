@@ -29,7 +29,7 @@
         "phpstan/phpstan-phpunit": "^2.0",
         "yiisoft/yii2-dev": "~2.0.50",
         "rector/rector": "^2.6",
-        "mspirkov/yii2-rector": "^0.1",
+        "mspirkov/yii2-rector": "^0.2",
         "friendsofphp/php-cs-fixer": "^3.95"
     },
     "autoload": {
