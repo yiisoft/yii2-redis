@@ -9,6 +9,7 @@
 namespace yiiunit\extensions\redis;
 
 use yii\redis\Session;
+use yiiunit\extensions\redis\data\session\DelegatingSessionHandler;
 
 /**
  * Class for testing redis session backend
@@ -25,6 +26,18 @@ class RedisSessionTest extends TestCase
         $this->assertEquals('session data', $session->readSession('test'));
         $session->destroySession('test');
         $this->assertEquals('', $session->readSession('test'));
+    }
+
+    public function testSessionIdExists(): void
+    {
+        $session = new Session();
+
+        $session->destroySession('test-exists');
+        $this->assertFalse($session->sessionIdExists('test-exists'));
+        $session->writeSession('test-exists', 'session data');
+        $this->assertTrue($session->sessionIdExists('test-exists'));
+        $session->destroySession('test-exists');
+        $this->assertFalse($session->sessionIdExists('test-exists'));
     }
 
     /**
@@ -87,5 +100,29 @@ class RedisSessionTest extends TestCase
         $this->assertEquals($id, $strictSession->getId());
         $this->assertEquals('session data', $strictSession->get('strict_mode_test'));
         $strictSession->close();
+    }
+
+    /**
+     * A configured handler without `validateId()` leaves strict mode to [[Session::openSession()]].
+     * PHP 8.6 deprecates such handlers.
+     * @requires PHP < 8.6.0-dev
+     * @runInSeparateProcess
+     */
+    public function testStrictModeWithHandlerWithoutValidateId(): void
+    {
+        $session = new Session([
+            'useStrictMode' => true,
+        ]);
+        $session->handler = new DelegatingSessionHandler($session);
+        $session->close();
+        $session->destroySession('non-existing-strict-handler');
+        $session->setId('non-existing-strict-handler');
+        $session->open();
+        $id = $session->getId();
+        $this->assertNotEquals('non-existing-strict-handler', $id);
+        $session->set('strict_mode_test', 'session data');
+        $session->close();
+        $this->assertSame('', $session->readSession('non-existing-strict-handler'));
+        $session->destroySession($id);
     }
 }
