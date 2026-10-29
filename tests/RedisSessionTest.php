@@ -27,6 +27,18 @@ class RedisSessionTest extends TestCase
         $this->assertEquals('', $session->readSession('test'));
     }
 
+    public function testSessionIdExists(): void
+    {
+        $session = new Session();
+
+        $session->destroySession('test-exists');
+        $this->assertFalse($session->sessionIdExists('test-exists'));
+        $session->writeSession('test-exists', 'session data');
+        $this->assertTrue($session->sessionIdExists('test-exists'));
+        $session->destroySession('test-exists');
+        $this->assertFalse($session->sessionIdExists('test-exists'));
+    }
+
     /**
      * Test set name. Also check set name twice and after open
      * @runInSeparateProcess

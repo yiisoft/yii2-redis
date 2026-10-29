@@ -11,6 +11,7 @@ namespace yii\redis;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\di\Instance;
+use yii\web\SessionHandler;
 
 /**
  * Redis Session implements a session component using [redis](https://redis.io/) as the storage medium.
@@ -107,15 +108,29 @@ class Session extends \yii\web\Session
      */
     public function openSession($savePath, $sessionName)
     {
-        if ($this->getUseStrictMode()) {
+        if ($this->useLegacyStrictMode()) {
             $id = $this->getId();
-            if (!$this->redis->exists($this->calculateKey($id))) {
+            if (!$this->sessionIdExists($id)) {
                 //This session id does not exist, mark it for forced regeneration
                 $this->_forceRegenerateId = $id;
             }
         }
 
         return parent::openSession($savePath, $sessionName);
+    }
+
+    /**
+     * Session ID existence check handler.
+     * With Yii 2.0.56 or later, PHP calls this method through [[SessionHandler::validateId()]] when [[useStrictMode]]
+     * is enabled, so that `session_start()` replaces a session ID that is not present in redis.
+     * @internal Do not call this method directly.
+     * @param string $id session ID
+     * @return bool whether a session with the given ID exists in redis
+     * @since 2.1.3
+     */
+    public function sessionIdExists($id)
+    {
+        return (bool) $this->redis->exists($this->calculateKey($id));
     }
 
     /**
@@ -140,7 +155,7 @@ class Session extends \yii\web\Session
      */
     public function writeSession($id, $data)
     {
-        if ($this->getUseStrictMode() && $id === $this->_forceRegenerateId) {
+        if ($this->useLegacyStrictMode() && $id === $this->_forceRegenerateId) {
             //Ignore write when forceRegenerate is active for this id
             return true;
         }
@@ -159,6 +174,17 @@ class Session extends \yii\web\Session
         $this->redis->executeCommand('DEL', [$this->calculateKey($id)]);
         // @see https://github.com/yiisoft/yii2-redis/issues/82
         return true;
+    }
+
+    /**
+     * Returns whether strict mode has to be enforced by [[openSession()]] and [[writeSession()]].
+     * Yii 2.0.56 and later validate session IDs through [[SessionHandler::validateId()]] and [[sessionIdExists()]],
+     * so the check is only needed with earlier versions.
+     * @return bool whether strict mode is enabled and the Yii session handler does not validate session IDs
+     */
+    private function useLegacyStrictMode()
+    {
+        return $this->getUseStrictMode() && !method_exists(SessionHandler::class, 'validateId');
     }
 
     /**
