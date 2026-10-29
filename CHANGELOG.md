@@ -5,7 +5,7 @@ Yii Framework 2 redis extension Change Log
 -----------------------
 
 - Bug #302: Fix union types in PHPDoc annotations (mspirkov)
-- Bug #308: Add `yii\redis\Session::sessionIdExists()` so that strict mode keeps working with Yii 2.0.56 session ID validation (samdark)
+- Enh #308: Add `yii\redis\Session::sessionIdExists()` so that Yii 2.0.56 strict mode checks session IDs through it instead of the deprecated `Session::$_forceRegenerateId` (samdark)
 
 2.1.2 May 07, 2026
 ------------------

@@ -11,7 +11,6 @@ namespace yii\redis;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\di\Instance;
-use yii\web\SessionHandler;
 
 /**
  * Redis Session implements a session component using [redis](https://redis.io/) as the storage medium.
@@ -121,8 +120,8 @@ class Session extends \yii\web\Session
 
     /**
      * Session ID existence check handler.
-     * With Yii 2.0.56 or later, PHP calls this method through [[SessionHandler::validateId()]] when [[useStrictMode]]
-     * is enabled, so that `session_start()` replaces a session ID that is not present in redis.
+     * With Yii 2.0.56 or later, PHP calls this method through [[\yii\web\SessionHandler::validateId()]] when
+     * [[useStrictMode]] is enabled, so that `session_start()` replaces a session ID that is not present in redis.
      * @internal Do not call this method directly.
      * @param string $id session ID
      * @return bool whether a session with the given ID exists in redis
@@ -178,13 +177,15 @@ class Session extends \yii\web\Session
 
     /**
      * Returns whether strict mode has to be enforced by [[openSession()]] and [[writeSession()]].
-     * Yii 2.0.56 and later validate session IDs through [[SessionHandler::validateId()]] and [[sessionIdExists()]],
-     * so the check is only needed with earlier versions.
-     * @return bool whether strict mode is enabled and the Yii session handler does not validate session IDs
+     * PHP validates session IDs through the `validateId()` method of the active session [[handler]]. The handler
+     * of Yii 2.0.56 and later implements it with [[sessionIdExists()]], so the check is only needed with earlier
+     * versions and with a configured [[handler]] that does not implement `validateId()`.
+     * @return bool whether strict mode is enabled and the active session handler does not validate session IDs
      */
     private function useLegacyStrictMode()
     {
-        return $this->getUseStrictMode() && !method_exists(SessionHandler::class, 'validateId');
+        return $this->getUseStrictMode()
+            && !(is_object($this->handler) && method_exists($this->handler, 'validateId'));
     }
 
     /**
