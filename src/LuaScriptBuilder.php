@@ -207,12 +207,7 @@ EOF;
                 $orderType = $v === SORT_DESC ? 'DESC' : 'ASC';
             }
 
-            $getAllPks = <<<EOF
-local allpks=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType')
-if allpks['err'] then
-    allpks=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType', 'ALPHA')
-end
-EOF;
+            $getAllPks = $this->buildOrderedPkLookup($key, $orderColumn, $orderType);
         }
 
         return <<<EOF
@@ -232,6 +227,86 @@ for k,pk in ipairs(allpks) do
     end
 end
 return $return
+EOF;
+    }
+
+    /**
+     * Builds the Lua that loads primary keys in [[ActiveQuery::orderBy()]] order.
+     *
+     * `SORT` is a write command, so a read-only replica rejects it and the query used to
+     * return an empty list. Redis 7 and newer provide the read-only `SORT_RO`. Older
+     * replicas sort the key list in Lua with `LRANGE` and `HGET`.
+     *
+     * @param string $key quoted key prefix literal
+     * @param string $orderColumn attribute used for sorting
+     * @param string $orderType `ASC` or `DESC`
+     * @return string
+     */
+    private function buildOrderedPkLookup($key, $orderColumn, $orderType)
+    {
+        $orderColumn = $this->quoteValue($orderColumn);
+
+        return <<<EOF
+local column = $orderColumn
+local bypattern = $key .. ':a:*->' .. column
+local function sort_by(command, alpha)
+    if alpha then
+        return redis.pcall(command, $key, 'BY', bypattern, '$orderType', 'ALPHA')
+    end
+    return redis.pcall(command, $key, 'BY', bypattern, '$orderType')
+end
+local function unknown_command(result)
+    if result['err'] == nil then
+        return false
+    end
+    local message = string.lower(result['err'])
+    return string.find(message, 'unknown command', 1, true) ~= nil
+        or string.find(message, 'unknown redis command', 1, true) ~= nil
+end
+local allpks = sort_by('SORT_RO', false)
+if unknown_command(allpks) then
+    allpks = sort_by('SORT', false)
+end
+if allpks['err'] ~= nil and string.find(allpks['err'], 'converted into double', 1, true) ~= nil then
+    allpks = sort_by('SORT_RO', true)
+    if unknown_command(allpks) then
+        allpks = sort_by('SORT', true)
+    end
+end
+if allpks['err'] ~= nil and string.find(allpks['err'], 'READONLY', 1, true) ~= nil then
+    local entries = redis.call('LRANGE', $key, 0, -1)
+    local rows = {}
+    local alpha = false
+    for index, pk in ipairs(entries) do
+        local score = redis.call('HGET', $key .. ':a:' .. pk, column)
+        if score ~= false and tonumber(score) == nil then
+            alpha = true
+        end
+        rows[index] = {pk, score}
+    end
+    table.sort(rows, function(left, right)
+        local leftScore
+        local rightScore
+        if alpha then
+            leftScore = left[2] ~= false and left[2] or ''
+            rightScore = right[2] ~= false and right[2] or ''
+        else
+            leftScore = left[2] ~= false and tonumber(left[2]) or 0
+            rightScore = right[2] ~= false and tonumber(right[2]) or 0
+        end
+        if leftScore == rightScore then
+            return false
+        end
+        if '$orderType' == 'DESC' then
+            return leftScore > rightScore
+        end
+        return leftScore < rightScore
+    end)
+    allpks = {}
+    for index, row in ipairs(rows) do
+        allpks[index] = row[1]
+    end
+end
 EOF;
     }
 

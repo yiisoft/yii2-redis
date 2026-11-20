@@ -32,6 +32,31 @@ services:
     ports:
       - "6399:6379"
 
+  # Isolated from the sentinel master so read commands in the sentinel tests stay on `redis`.
+  redis-order-master:
+    image: "redis"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
+    networks:
+      - yii2-redis
+
+  redis-order-replica:
+    image: "redis"
+    command: ["redis-server", "--replicaof", "redis-order-master", "6379", "--replica-read-only", "yes"]
+    depends_on:
+      redis-order-master:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli INFO replication | grep -q master_link_status:up"]
+      interval: 1s
+      timeout: 1s
+      retries: 30
+    networks:
+      - yii2-redis
+
   redis-sentinel-1:
     image: bitnami/redis-sentinel:latest
     environment:

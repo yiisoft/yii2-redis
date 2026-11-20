@@ -9,6 +9,7 @@
 namespace yiiunit\extensions\redis;
 
 use yii\redis\ActiveQuery;
+use yii\redis\Connection;
 use yii\redis\LuaScriptBuilder;
 use yiiunit\extensions\redis\base\ActiveRecordTestTrait;
 use yiiunit\extensions\redis\data\ar\ActiveRecord;
@@ -72,6 +73,65 @@ class ActiveRecordTest extends TestCase
     public function getOrderItemWithNullFKmClass()
     {
         return OrderItemWithNullFK::class;
+    }
+
+    public function testOrderByOnReadOnlyReplica(): void
+    {
+        $master = new Connection([
+            'hostname' => 'redis-order-master',
+            'port' => 6379,
+            'database' => 0,
+        ]);
+        $replica = new Connection([
+            'hostname' => 'redis-order-replica',
+            'port' => 6379,
+            'database' => 0,
+        ]);
+
+        try {
+            $master->open();
+            $replica->open();
+        } catch (\Throwable $e) {
+            $master->close();
+            $replica->close();
+            $this->markTestSkipped('Redis replica is not available: ' . $e->getMessage());
+        }
+
+        $role = $replica->executeCommand('ROLE');
+        if (!in_array($role[0] ?? '', ['slave', 'replica'], true)) {
+            $master->close();
+            $replica->close();
+            $this->markTestSkipped('redis-order-replica is not a read-only replica.');
+        }
+
+        $previous = ActiveRecord::$db;
+        ActiveRecord::$db = $master;
+
+        try {
+            $master->flushdb();
+            foreach ([['name' => 'user1', 'status' => 2], ['name' => 'user10', 'status' => 10], ['name' => 'user3', 'status' => 3]] as $row) {
+                $customer = new Customer();
+                $customer->setAttributes([
+                    'email' => $row['name'] . '@example.com',
+                    'name' => $row['name'],
+                    'address' => 'address',
+                    'status' => $row['status'],
+                ], false);
+                $customer->save(false);
+            }
+
+            $this->assertGreaterThan(0, (int) $master->executeCommand('WAIT', [1, 5000]));
+
+            ActiveRecord::$db = $replica;
+            $this->assertSame(['user3', 'user10', 'user1'], Customer::find()->orderBy(['name' => SORT_DESC])->column('name'));
+            $this->assertSame(['user1', 'user10', 'user3'], Customer::find()->orderBy(['name' => SORT_ASC])->column('name'));
+            $this->assertEquals([10, 3, 2], Customer::find()->orderBy(['status' => SORT_DESC])->column('status'));
+            $this->assertEquals([2, 3, 10], Customer::find()->orderBy(['status' => SORT_ASC])->column('status'));
+        } finally {
+            ActiveRecord::$db = $previous;
+            $master->close();
+            $replica->close();
+        }
     }
 
     public function setUp(): void
