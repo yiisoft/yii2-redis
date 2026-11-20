@@ -58,7 +58,6 @@ abstract class AbstractCacheTestCase extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
         $this->mockApplication();
     }
 
@@ -66,6 +65,7 @@ abstract class AbstractCacheTestCase extends TestCase
     {
         static::$time = null;
         static::$microtime = null;
+        parent::tearDown();
     }
 
     /**
@@ -109,7 +109,7 @@ abstract class AbstractCacheTestCase extends TestCase
     /**
      * @return array testing multiSet with and without expiry
      */
-    public function multiSetExpiry()
+    public static function multiSetExpiry(): array
     {
         return [[0], [2]];
     }
