@@ -1,12 +1,16 @@
 Yii Framework 2 redis extension Change Log
 ==========================================
 
-2.1.3 under development
+2.1.4 under development
+-----------------------
+
+
+2.1.3 November 20, 2027
 -----------------------
 
 - Bug #302: Fix union types in PHPDoc annotations (mspirkov)
 - Enh #308: Add `yii\redis\Session::sessionIdExists()` so that Yii 2.0.56 strict mode checks session IDs through it instead of the deprecated `Session::$_forceRegenerateId` (samdark)
-- Chg: Drop `yiisoft/yii2-dev` from dev dependencies. Tests no longer use the Yii framework test suite, and `yiisoft/yii2` is required as `~2.0.55` (@s1lver)
+- Chg #311: Drop `yiisoft/yii2-dev` from dev dependencies. Tests no longer use the Yii framework test suite, and `yiisoft/yii2` is required as `~2.0.55` (@s1lver)
 
 2.1.2 May 07, 2026
 ------------------
