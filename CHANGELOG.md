@@ -4,7 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.1.4 under development
 -----------------------
 
-- Bug #267: A persistent `Connection` with `useSSL` reuses the socket without enabling TLS a second time (@s1lver)
+- Bug #267: A persistent `Connection` with `useSSL` reuses the socket without enabling TLS a second time when the SSL context options match, and reconnects otherwise (@s1lver)
 
 
 2.1.3 November 20, 2026

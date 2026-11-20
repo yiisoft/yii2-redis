@@ -112,6 +112,8 @@ class Connection extends Component implements ConnectionInterface
      * > Warning: `STREAM_CLIENT_PERSISTENT` will make PHP reuse connections to the same server. If you are using multiple
      * > connection objects to refer to different redis [[$database|databases]] on the same [[port]], redis commands may
      * > get executed on the wrong database. `STREAM_CLIENT_PERSISTENT` is only safe to use if you use only one database.
+     * > A persistent SSL socket is reused only when its [[contextOptions]] SSL settings match the settings it was
+     * > established with. Otherwise the socket is reconnected, so a later connection cannot skip peer verification.
      * >
      * > You may still use persistent connections in this case when disambiguating ports as described
      * > in [a comment on the PHP manual](https://www.php.net/manual/en/function.stream-socket-client.php#105393)
@@ -361,7 +363,12 @@ class Connection extends Component implements ConnectionInterface
      * @var array redis redirect socket connection pool
      */
     private $_pool = [];
-
+    /**
+     * SSL context options of the persistent socket currently established for a connection string.
+     * The map lives for the process lifetime, same as PHP's persistent stream table.
+     * @var array<string, string>
+     */
+    private static array $persistentSslContexts = [];
 
     /**
      * Closes the connection when this component is being serialized.
@@ -419,14 +426,15 @@ class Connection extends Component implements ConnectionInterface
 
         $connection = $this->connectionString . ', database=' . $this->database;
         \Yii::debug('Opening redis DB connection: ' . $connection, __METHOD__);
-        $socket = @stream_socket_client(
-            $this->connectionString,
-            $errorNumber,
-            $errorDescription,
-            $this->connectionTimeout ?: ini_get('default_socket_timeout'),
-            $this->socketClientFlags,
-            $this->createStreamContext()
-        );
+        $errorNumber = 0;
+        $errorDescription = '';
+        $socket = $this->openSocket($errorNumber, $errorDescription);
+        if ($socket && $this->mustReplacePersistentSslSocket($socket)) {
+            fclose($socket);
+            $errorNumber = 0;
+            $errorDescription = '';
+            $socket = $this->openSocket($errorNumber, $errorDescription);
+        }
 
         if ($socket) {
             $this->_pool[ $this->connectionString ] = $socket;
@@ -436,6 +444,7 @@ class Connection extends Component implements ConnectionInterface
             }
             if ($this->useSSL && !$this->isSocketEncrypted($socket)) {
                 stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
+                $this->rememberPersistentSslContext();
             }
             if ($this->password !== null) {
                 $this->executeCommand('AUTH', array_filter([$this->username, $this->password]));
@@ -478,6 +487,56 @@ class Connection extends Component implements ConnectionInterface
     protected function createStreamContext()
     {
         return stream_context_create($this->contextOptions);
+    }
+
+    /**
+     * @param-out int|null $errorNumber
+     * @param-out string|null $errorDescription
+     * @return resource|false
+     */
+    private function openSocket(?int &$errorNumber, ?string &$errorDescription)
+    {
+        return @stream_socket_client(
+            $this->connectionString,
+            $errorNumber,
+            $errorDescription,
+            $this->connectionTimeout ?: ini_get('default_socket_timeout'),
+            $this->socketClientFlags,
+            $this->createStreamContext()
+        );
+    }
+
+    /**
+     * PHP persistent sockets are keyed only by the target address. A socket established
+     * with weaker SSL options must not satisfy a later connection that asks for stricter ones.
+     * @param resource $socket
+     */
+    private function mustReplacePersistentSslSocket($socket): bool
+    {
+        return $this->useSSL && $this->isSocketEncrypted($socket) && !$this->persistentSslContextMatches();
+    }
+
+    private function persistentSslContextMatches(): bool
+    {
+        if (($this->socketClientFlags & STREAM_CLIENT_PERSISTENT) === 0) {
+            return true;
+        }
+
+        return (self::$persistentSslContexts[$this->connectionString] ?? null) === $this->sslContextToken();
+    }
+
+    private function rememberPersistentSslContext(): void
+    {
+        if (($this->socketClientFlags & STREAM_CLIENT_PERSISTENT) === 0) {
+            return;
+        }
+
+        self::$persistentSslContexts[$this->connectionString] = $this->sslContextToken();
+    }
+
+    private function sslContextToken(): string
+    {
+        return serialize($this->contextOptions['ssl'] ?? []);
     }
 
     /**

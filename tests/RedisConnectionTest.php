@@ -430,57 +430,67 @@ class RedisConnectionTest extends TestCase
 
     public function testPersistentSslSocketIsReusedWithoutReEnablingCrypto(): void
     {
-        $directory = sys_get_temp_dir() . '/yii2-redis-ssl-' . bin2hex(random_bytes(4));
-        mkdir($directory);
-        $certificate = $directory . '/cert.pem';
-        $portFile = $directory . '/port';
-        file_put_contents($certificate, $this->createSelfSignedCertificate());
-
-        $pid = pcntl_fork();
-        $this->assertNotSame(-1, $pid);
-        if ($pid === 0) {
+        $this->withTlsServer(function (string $host, int $port): void {
+            $sockets = [];
             try {
-                $this->serveTlsOnce($certificate, $portFile);
-            } catch (\Throwable $e) {
-                file_put_contents($portFile . '.err', $e->getMessage());
+                $connection = $this->createPersistentSslConnection($host, $port);
+                $connection->open();
+                $socket = $connection->getSocket();
+                $this->assertNotFalse($socket);
+                $sockets[] = $socket;
+                $this->assertArrayHasKey('crypto', stream_get_meta_data($socket));
+
+                $reused = $this->createPersistentSslConnection($host, $port);
+                $reused->open();
+                $reusedSocket = $reused->getSocket();
+                $this->assertNotFalse($reusedSocket);
+                $sockets[] = $reusedSocket;
+                $this->assertSame($socket, $reusedSocket);
+                $this->assertArrayHasKey('crypto', stream_get_meta_data($reusedSocket));
+            } finally {
+                $this->closeSockets($sockets);
             }
-            exit(1);
-        }
+        });
+    }
 
-        $sockets = [];
-        try {
-            $address = $this->waitForTlsServer($portFile);
-            [$host, $port] = explode(':', $address, 2);
+    public function testPersistentSslSocketIsNotReusedWhenVerificationDiffers(): void
+    {
+        $this->withTlsServer(function (string $host, int $port): void {
+            $sockets = [];
+            try {
+                $loose = $this->createPersistentSslConnection($host, $port);
+                $loose->open();
+                $looseSocket = $loose->getSocket();
+                $this->assertNotFalse($looseSocket);
+                $sockets[] = $looseSocket;
 
-            $connection = $this->createPersistentSslConnection($host, (int) $port);
-            $connection->open();
-            $socket = $connection->getSocket();
-            $this->assertNotFalse($socket);
-            $sockets[] = $socket;
-            $this->assertArrayHasKey('crypto', stream_get_meta_data($socket));
+                $strict = $this->createPersistentSslConnection($host, $port, [
+                    'verify_peer' => true,
+                    'verify_peer_name' => true,
+                    'allow_self_signed' => false,
+                ]);
+                $warning = null;
+                set_error_handler(static function (int $severity, string $message) use (&$warning): bool {
+                    $warning = $message;
 
-            $reused = $this->createPersistentSslConnection($host, (int) $port);
-            $reused->open();
-            $reusedSocket = $reused->getSocket();
-            $this->assertNotFalse($reusedSocket);
-            $sockets[] = $reusedSocket;
-            $this->assertSame($socket, $reusedSocket);
-            $this->assertArrayHasKey('crypto', stream_get_meta_data($reusedSocket));
-        } finally {
-            foreach ($sockets as $socket) {
-                if (is_resource($socket)) {
-                    @fclose($socket);
+                    return true;
+                });
+                try {
+                    $strict->open();
+                } finally {
+                    restore_error_handler();
                 }
+                $this->assertNotNull($warning);
+                $this->assertStringContainsString('SSL', $warning);
+                $strictSocket = $strict->getSocket();
+                if (is_resource($strictSocket)) {
+                    $sockets[] = $strictSocket;
+                }
+                $this->assertNotSame($looseSocket, $strictSocket);
+            } finally {
+                $this->closeSockets($sockets);
             }
-            file_put_contents($portFile . '.done', '1');
-            $status = 0;
-            pcntl_waitpid($pid, $status);
-            @unlink($certificate);
-            @unlink($portFile);
-            @unlink($portFile . '.done');
-            @unlink($portFile . '.err');
-            @rmdir($directory);
-        }
+        });
     }
 
     /**
@@ -503,8 +513,19 @@ class RedisConnectionTest extends TestCase
         return $certificateOut . $keyOut;
     }
 
-    private function createPersistentSslConnection(string $host, int $port): Connection
+    /**
+     * @param array<string, mixed>|null $sslOptions
+     */
+    private function createPersistentSslConnection(string $host, int $port, ?array $sslOptions = null): Connection
     {
+        if ($sslOptions === null) {
+            $sslOptions = [
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true,
+            ];
+        }
+
         return new Connection([
             'hostname' => $host,
             'port' => $port,
@@ -513,13 +534,63 @@ class RedisConnectionTest extends TestCase
             'socketClientFlags' => STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT,
             'connectionTimeout' => 5,
             'contextOptions' => [
-                'ssl' => [
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                    'allow_self_signed' => true,
-                ],
+                'ssl' => $sslOptions,
             ],
         ]);
+    }
+
+    /**
+     * @param callable(string, int): void $callback
+     */
+    private function withTlsServer(callable $callback): void
+    {
+        $contexts = new \ReflectionProperty(Connection::class, 'persistentSslContexts');
+        $contexts->setAccessible(true);
+        $contexts->setValue(null, []);
+
+        $directory = sys_get_temp_dir() . '/yii2-redis-ssl-' . bin2hex(random_bytes(4));
+        mkdir($directory);
+        $certificate = $directory . '/cert.pem';
+        $portFile = $directory . '/port';
+        file_put_contents($certificate, $this->createSelfSignedCertificate());
+
+        $pid = pcntl_fork();
+        $this->assertNotSame(-1, $pid);
+        if ($pid === 0) {
+            try {
+                $this->serveTlsOnce($certificate, $portFile);
+            } catch (\Throwable $e) {
+                file_put_contents($portFile . '.err', $e->getMessage());
+            }
+            exit(1);
+        }
+
+        try {
+            $address = $this->waitForTlsServer($portFile);
+            [$host, $port] = explode(':', $address, 2);
+            $callback($host, (int) $port);
+        } finally {
+            file_put_contents($portFile . '.done', '1');
+            $status = 0;
+            pcntl_waitpid($pid, $status);
+            @unlink($certificate);
+            @unlink($portFile);
+            @unlink($portFile . '.done');
+            @unlink($portFile . '.err');
+            @rmdir($directory);
+        }
+    }
+
+    /**
+     * @param resource[] $sockets
+     */
+    private function closeSockets(array $sockets): void
+    {
+        foreach ($sockets as $socket) {
+            if (is_resource($socket)) {
+                @fclose($socket);
+            }
+        }
     }
 
     private function serveTlsOnce(string $certificate, string $portFile): void
@@ -546,21 +617,27 @@ class RedisConnectionTest extends TestCase
         if ($server === false) {
             exit(1);
         }
+        // The forked server inherits the test error handler. Handshake failures must not abort it.
+        set_error_handler(static function (): bool {
+            return true;
+        });
+        stream_set_blocking($server, false);
         file_put_contents($portFile, stream_socket_get_name($server, false));
-        $client = stream_socket_accept($server, 5);
-        // The constant's integer value differs between PHP versions, so PHPStan sees a plain int.
-        /** @phpstan-ignore argument.type */
-        $enabled = $client !== false && stream_socket_enable_crypto($client, true, STREAM_CRYPTO_METHOD_TLSv1_2_SERVER) === true;
-        if (!$enabled) {
-            file_put_contents($portFile . '.err', json_encode([
-                'accept' => $client !== false,
-                'error' => error_get_last(),
-            ], JSON_THROW_ON_ERROR));
-            exit(1);
-        }
         $deadline = microtime(true) + 8;
         while (!is_file($portFile . '.done') && microtime(true) < $deadline) {
-            usleep(10000);
+            $read = [$server];
+            $write = null;
+            $except = null;
+            if (@stream_select($read, $write, $except, 0, 200000) <= 0) {
+                continue;
+            }
+            $client = @stream_socket_accept($server, 0);
+            if ($client === false) {
+                continue;
+            }
+            // The constant's integer value differs between PHP versions, so PHPStan sees a plain int.
+            /** @phpstan-ignore argument.type */
+            @stream_socket_enable_crypto($client, true, STREAM_CRYPTO_METHOD_TLSv1_2_SERVER);
         }
         exit(0);
     }
