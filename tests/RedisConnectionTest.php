@@ -626,8 +626,9 @@ class RedisConnectionTest extends TestCase
         $deadline = microtime(true) + 8;
         while (!is_file($portFile . '.done') && microtime(true) < $deadline) {
             $read = [$server];
-            $write = null;
-            $except = null;
+            // PHP 7.4 rejects null for these by-ref array parameters.
+            $write = [];
+            $except = [];
             if (@stream_select($read, $write, $except, 0, 200000) <= 0) {
                 continue;
             }
@@ -635,6 +636,9 @@ class RedisConnectionTest extends TestCase
             if ($client === false) {
                 continue;
             }
+            // A socket accepted from a non-blocking listener stays non-blocking on PHP 7.4,
+            // and the TLS handshake then times out.
+            stream_set_blocking($client, true);
             // The constant's integer value differs between PHP versions, so PHPStan sees a plain int.
             /** @phpstan-ignore argument.type */
             @stream_socket_enable_crypto($client, true, STREAM_CRYPTO_METHOD_TLSv1_2_SERVER);
