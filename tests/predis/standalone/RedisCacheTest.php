@@ -10,7 +10,7 @@ namespace yiiunit\extensions\predis\standalone;
 
 use yii\redis\Cache;
 use yii\redis\Predis\PredisConnection;
-use yiiunit\framework\caching\CacheTestCase;
+use yiiunit\extensions\redis\base\AbstractCacheTestCase;
 
 /**
  * Class for testing redis cache backend
@@ -18,7 +18,7 @@ use yiiunit\framework\caching\CacheTestCase;
  * @group redis
  * @group caching
  */
-class RedisCacheTest extends CacheTestCase
+class RedisCacheTest extends AbstractCacheTestCase
 {
     private $_cacheInstance;
 
