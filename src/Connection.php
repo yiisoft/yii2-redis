@@ -425,7 +425,7 @@ class Connection extends Component implements ConnectionInterface
             $errorDescription,
             $this->connectionTimeout ?: ini_get('default_socket_timeout'),
             $this->socketClientFlags,
-            stream_context_create($this->contextOptions)
+            $this->createStreamContext()
         );
 
         if ($socket) {
@@ -434,7 +434,7 @@ class Connection extends Component implements ConnectionInterface
             if ($this->dataTimeout !== null) {
                 stream_set_timeout($socket, $timeout = (int) $this->dataTimeout, (int) (($this->dataTimeout - $timeout) * 1000000));
             }
-            if ($this->useSSL) {
+            if ($this->useSSL && !$this->isSocketEncrypted($socket)) {
                 stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT);
             }
             if ($this->password !== null) {
@@ -469,6 +469,26 @@ class Connection extends Component implements ConnectionInterface
         }
 
         $this->_pool = [];
+    }
+
+    /**
+     * Creates the stream context used by [[open()]].
+     * @return resource
+     */
+    protected function createStreamContext()
+    {
+        return stream_context_create($this->contextOptions);
+    }
+
+    /**
+     * Persistent sockets keep TLS enabled across requests. Calling
+     * [[stream_socket_enable_crypto()]] again raises "SSL/TLS already set-up for this stream".
+     * @param resource $socket
+     * @return bool whether TLS is already active on the socket
+     */
+    private function isSocketEncrypted($socket): bool
+    {
+        return isset(stream_get_meta_data($socket)['crypto']);
     }
 
     /**

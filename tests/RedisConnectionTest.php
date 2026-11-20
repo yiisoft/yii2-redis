@@ -427,4 +427,155 @@ class RedisConnectionTest extends TestCase
 
         $this->invokeMethod($db, 'sendRawCommand', ["*2\r\n\$3\r\nGET\r\n\$3\r\nfoo\r\n", ['GET', 'foo']]);
     }
+
+    public function testPersistentSslSocketIsReusedWithoutReEnablingCrypto(): void
+    {
+        $directory = sys_get_temp_dir() . '/yii2-redis-ssl-' . bin2hex(random_bytes(4));
+        mkdir($directory);
+        $certificate = $directory . '/cert.pem';
+        $portFile = $directory . '/port';
+        file_put_contents($certificate, $this->createSelfSignedCertificate());
+
+        $pid = pcntl_fork();
+        $this->assertNotSame(-1, $pid);
+        if ($pid === 0) {
+            try {
+                $this->serveTlsOnce($certificate, $portFile);
+            } catch (\Throwable $e) {
+                file_put_contents($portFile . '.err', $e->getMessage());
+            }
+            exit(1);
+        }
+
+        $sockets = [];
+        try {
+            $address = $this->waitForTlsServer($portFile);
+            [$host, $port] = explode(':', $address, 2);
+
+            $connection = $this->createPersistentSslConnection($host, (int) $port);
+            $connection->open();
+            $socket = $connection->getSocket();
+            $this->assertNotFalse($socket);
+            $sockets[] = $socket;
+            $this->assertArrayHasKey('crypto', stream_get_meta_data($socket));
+
+            $reused = $this->createPersistentSslConnection($host, (int) $port);
+            $reused->open();
+            $reusedSocket = $reused->getSocket();
+            $this->assertNotFalse($reusedSocket);
+            $sockets[] = $reusedSocket;
+            $this->assertSame($socket, $reusedSocket);
+            $this->assertArrayHasKey('crypto', stream_get_meta_data($reusedSocket));
+        } finally {
+            foreach ($sockets as $socket) {
+                if (is_resource($socket)) {
+                    @fclose($socket);
+                }
+            }
+            file_put_contents($portFile . '.done', '1');
+            $status = 0;
+            pcntl_waitpid($pid, $status);
+            @unlink($certificate);
+            @unlink($portFile);
+            @unlink($portFile . '.done');
+            @unlink($portFile . '.err');
+            @rmdir($directory);
+        }
+    }
+
+    /**
+     * @return string PEM encoded certificate and private key
+     */
+    private function createSelfSignedCertificate(): string
+    {
+        $key = openssl_pkey_new([
+            'private_key_bits' => 2048,
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+        ]);
+        $this->assertNotFalse($key);
+        $csr = openssl_csr_new(['CN' => 'localhost'], $key, ['digest_alg' => 'sha256']);
+        $this->assertNotFalse($csr);
+        $certificate = openssl_csr_sign($csr, null, $key, 1, ['digest_alg' => 'sha256']);
+        $this->assertNotFalse($certificate);
+        $this->assertTrue(openssl_x509_export($certificate, $certificateOut));
+        $this->assertTrue(openssl_pkey_export($key, $keyOut));
+
+        return $certificateOut . $keyOut;
+    }
+
+    private function createPersistentSslConnection(string $host, int $port): Connection
+    {
+        return new Connection([
+            'hostname' => $host,
+            'port' => $port,
+            'database' => null,
+            'useSSL' => true,
+            'socketClientFlags' => STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT,
+            'connectionTimeout' => 5,
+            'contextOptions' => [
+                'ssl' => [
+                    'verify_peer' => false,
+                    'verify_peer_name' => false,
+                    'allow_self_signed' => true,
+                ],
+            ],
+        ]);
+    }
+
+    private function serveTlsOnce(string $certificate, string $portFile): void
+    {
+        $context = stream_context_create([
+            'ssl' => [
+                'local_cert' => $certificate,
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true,
+                // TLS 1.3 session tickets make PHP treat the idle socket as dead and open a new one.
+                'crypto_method' => STREAM_CRYPTO_METHOD_TLSv1_2_SERVER,
+            ],
+        ]);
+        $errorNumber = 0;
+        $errorMessage = '';
+        $server = stream_socket_server(
+            'tcp://127.0.0.1:0',
+            $errorNumber,
+            $errorMessage,
+            STREAM_SERVER_BIND | STREAM_SERVER_LISTEN,
+            $context
+        );
+        if ($server === false) {
+            exit(1);
+        }
+        file_put_contents($portFile, stream_socket_get_name($server, false));
+        $client = stream_socket_accept($server, 5);
+        // The constant's integer value differs between PHP versions, so PHPStan sees a plain int.
+        /** @phpstan-ignore argument.type */
+        $enabled = $client !== false && stream_socket_enable_crypto($client, true, STREAM_CRYPTO_METHOD_TLSv1_2_SERVER) === true;
+        if (!$enabled) {
+            file_put_contents($portFile . '.err', json_encode([
+                'accept' => $client !== false,
+                'error' => error_get_last(),
+            ], JSON_THROW_ON_ERROR));
+            exit(1);
+        }
+        $deadline = microtime(true) + 8;
+        while (!is_file($portFile . '.done') && microtime(true) < $deadline) {
+            usleep(10000);
+        }
+        exit(0);
+    }
+
+    private function waitForTlsServer(string $portFile): string
+    {
+        $deadline = microtime(true) + 5;
+        do {
+            $address = is_file($portFile) ? file_get_contents($portFile) : false;
+            if (is_string($address) && $address !== '') {
+                return $address;
+            }
+            usleep(10000);
+        } while (microtime(true) < $deadline);
+
+        $this->fail('TLS server did not start.');
+    }
 }
