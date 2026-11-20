@@ -234,8 +234,11 @@ EOF;
      * Builds the Lua that loads primary keys in [[ActiveQuery::orderBy()]] order.
      *
      * `SORT` is a write command, so a read-only replica rejects it and the query used to
-     * return an empty list. Redis 7 and newer provide the read-only `SORT_RO`. Older
-     * replicas sort the key list in Lua with `LRANGE` and `HGET`.
+     * return an empty list. Redis 7 and newer provide the read-only `SORT_RO`. When
+     * `SORT_RO` is missing or denied by ACL, the script retries with `SORT`. An ACL
+     * denial is not catchable with `pcall`, so the command is checked first. Older
+     * replicas sort the key list in Lua with `LRANGE` and `HGET`. A non-numeric score,
+     * including `NaN`, switches that fallback to alphabetical order, matching `SORT`.
      *
      * @param string $key quoted key prefix literal
      * @param string $orderColumn attribute used for sorting
@@ -250,26 +253,39 @@ EOF;
 local column = $orderColumn
 local bypattern = $key .. ':a:*->' .. column
 local function sort_by(command, alpha)
+    -- ACL denials abort the whole script even inside pcall, so skip a forbidden command.
+    if redis.acl_check_cmd ~= nil then
+        local allowed
+        if alpha then
+            allowed = redis.acl_check_cmd(command, $key, 'BY', bypattern, '$orderType', 'ALPHA')
+        else
+            allowed = redis.acl_check_cmd(command, $key, 'BY', bypattern, '$orderType')
+        end
+        if not allowed then
+            return {err = 'NOPERM'}
+        end
+    end
     if alpha then
         return redis.pcall(command, $key, 'BY', bypattern, '$orderType', 'ALPHA')
     end
     return redis.pcall(command, $key, 'BY', bypattern, '$orderType')
 end
-local function unknown_command(result)
+local function should_retry_with_sort(result)
     if result['err'] == nil then
         return false
     end
     local message = string.lower(result['err'])
     return string.find(message, 'unknown command', 1, true) ~= nil
         or string.find(message, 'unknown redis command', 1, true) ~= nil
+        or string.find(message, 'noperm', 1, true) ~= nil
 end
 local allpks = sort_by('SORT_RO', false)
-if unknown_command(allpks) then
+if should_retry_with_sort(allpks) then
     allpks = sort_by('SORT', false)
 end
 if allpks['err'] ~= nil and string.find(allpks['err'], 'converted into double', 1, true) ~= nil then
     allpks = sort_by('SORT_RO', true)
-    if unknown_command(allpks) then
+    if should_retry_with_sort(allpks) then
         allpks = sort_by('SORT', true)
     end
 end
@@ -279,8 +295,11 @@ if allpks['err'] ~= nil and string.find(allpks['err'], 'READONLY', 1, true) ~= n
     local alpha = false
     for index, pk in ipairs(entries) do
         local score = redis.call('HGET', $key .. ':a:' .. pk, column)
-        if score ~= false and tonumber(score) == nil then
-            alpha = true
+        if score ~= false then
+            local numeric = tonumber(score)
+            if numeric == nil or numeric ~= numeric then
+                alpha = true
+            end
         end
         rows[index] = {pk, score}
     end

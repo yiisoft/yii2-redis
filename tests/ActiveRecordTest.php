@@ -134,6 +134,89 @@ class ActiveRecordTest extends TestCase
         }
     }
 
+    public function testOrderByWhenSortRoIsDenied(): void
+    {
+        $master = new Connection([
+            'hostname' => 'redis-order-master',
+            'port' => 6379,
+            'database' => 0,
+        ]);
+        $replica = new Connection([
+            'hostname' => 'redis-order-replica',
+            'port' => 6379,
+            'database' => 0,
+        ]);
+        $restricted = new Connection([
+            'hostname' => 'redis-order-replica',
+            'port' => 6379,
+            'database' => null,
+            'username' => 'order-sort',
+            'password' => 'order-sort',
+        ]);
+
+        try {
+            $master->open();
+            $replica->open();
+        } catch (\Throwable $e) {
+            $master->close();
+            $replica->close();
+            $this->markTestSkipped('Redis replica is not available: ' . $e->getMessage());
+        }
+
+        $role = $replica->executeCommand('ROLE');
+        if (!in_array($role[0] ?? '', ['slave', 'replica'], true)) {
+            $master->close();
+            $replica->close();
+            $this->markTestSkipped('redis-order-replica is not a read-only replica.');
+        }
+
+        $previous = ActiveRecord::$db;
+        ActiveRecord::$db = $master;
+
+        try {
+            $replica->executeCommand('ACL', [
+                'SETUSER',
+                'order-sort',
+                'on',
+                '>order-sort',
+                '~*',
+                '+@read',
+                '-sort_ro',
+                '+sort',
+                '+eval',
+            ]);
+            $restricted->open();
+
+            $master->flushdb();
+            foreach ([['name' => 'user1', 'status' => 2], ['name' => 'user10', 'status' => 10], ['name' => 'user3', 'status' => 'nan']] as $row) {
+                $customer = new Customer();
+                $customer->setAttributes([
+                    'email' => $row['name'] . '@example.com',
+                    'name' => $row['name'],
+                    'address' => 'address',
+                    'status' => $row['status'],
+                ], false);
+                $customer->save(false);
+            }
+
+            $this->assertGreaterThan(0, (int) $master->executeCommand('WAIT', [1, 5000]));
+
+            ActiveRecord::$db = $restricted;
+            $this->assertSame(['user3', 'user1', 'user10'], Customer::find()->orderBy(['status' => SORT_DESC])->column('name'));
+            $this->assertSame(['user10', 'user1', 'user3'], Customer::find()->orderBy(['status' => SORT_ASC])->column('name'));
+        } finally {
+            ActiveRecord::$db = $previous;
+            try {
+                $replica->executeCommand('ACL', ['DELUSER', 'order-sort']);
+            } catch (\Throwable $e) {
+                // Cleanup must not replace the assertion result.
+            }
+            $restricted->close();
+            $master->close();
+            $replica->close();
+        }
+    }
+
     public function setUp(): void
     {
         parent::setUp();
