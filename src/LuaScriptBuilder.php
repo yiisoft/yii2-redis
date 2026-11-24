@@ -234,11 +234,13 @@ EOF;
      * Builds the Lua that loads primary keys in [[ActiveQuery::orderBy()]] order.
      *
      * `SORT` is a write command, so a read-only replica rejects it and the query used to
-     * return an empty list. Redis 7 and newer provide the read-only `SORT_RO`. When
-     * `SORT_RO` is missing or denied by ACL, the script retries with `SORT`. An ACL
-     * denial is not catchable with `pcall`, so the command is checked first. Older
-     * replicas sort the key list in Lua with `LRANGE` and `HGET`. A non-numeric score,
-     * including `NaN`, switches that fallback to alphabetical order, matching `SORT`.
+     * return an empty list. Redis 7 and newer provide the read-only `SORT_RO`. Any
+     * `SORT_RO` error other than a non-numeric score retries with `SORT`. `pcall` catches
+     * an ACL denial, so the command does not need a separate permission check. Older
+     * replicas, and replicas where `SORT_RO` is denied, sort the key list in Lua with
+     * `LRANGE` and `HGET`. An empty score sorts as zero. A non-numeric score, including
+     * `NaN`, switches that fallback to alphabetical order. Equal scores are ordered by
+     * the key, matching `SORT`.
      *
      * @param string $key quoted key prefix literal
      * @param string $orderColumn attribute used for sorting
@@ -253,41 +255,24 @@ EOF;
 local column = $orderColumn
 local bypattern = $key .. ':a:*->' .. column
 local function sort_by(command, alpha)
-    -- ACL denials abort the whole script even inside pcall, so skip a forbidden command.
-    if redis.acl_check_cmd ~= nil then
-        local allowed
-        if alpha then
-            allowed = redis.acl_check_cmd(command, $key, 'BY', bypattern, '$orderType', 'ALPHA')
-        else
-            allowed = redis.acl_check_cmd(command, $key, 'BY', bypattern, '$orderType')
-        end
-        if not allowed then
-            return {err = 'NOPERM'}
-        end
-    end
     if alpha then
         return redis.pcall(command, $key, 'BY', bypattern, '$orderType', 'ALPHA')
     end
     return redis.pcall(command, $key, 'BY', bypattern, '$orderType')
 end
-local function should_retry_with_sort(result)
-    if result['err'] == nil then
-        return false
-    end
-    local message = string.lower(result['err'])
-    return string.find(message, 'unknown command', 1, true) ~= nil
-        or string.find(message, 'unknown redis command', 1, true) ~= nil
-        or string.find(message, 'noperm', 1, true) ~= nil
+local function is_non_numeric(result)
+    return result['err'] ~= nil and string.find(result['err'], 'converted into double', 1, true) ~= nil
 end
-local allpks = sort_by('SORT_RO', false)
-if should_retry_with_sort(allpks) then
-    allpks = sort_by('SORT', false)
-end
-if allpks['err'] ~= nil and string.find(allpks['err'], 'converted into double', 1, true) ~= nil then
-    allpks = sort_by('SORT_RO', true)
-    if should_retry_with_sort(allpks) then
-        allpks = sort_by('SORT', true)
+local function sort_keys(alpha)
+    local result = sort_by('SORT_RO', alpha)
+    if result['err'] ~= nil and not is_non_numeric(result) then
+        result = sort_by('SORT', alpha)
     end
+    return result
+end
+local allpks = sort_keys(false)
+if is_non_numeric(allpks) then
+    allpks = sort_keys(true)
 end
 if allpks['err'] ~= nil and string.find(allpks['err'], 'READONLY', 1, true) ~= nil then
     local entries = redis.call('LRANGE', $key, 0, -1)
@@ -295,7 +280,7 @@ if allpks['err'] ~= nil and string.find(allpks['err'], 'READONLY', 1, true) ~= n
     local alpha = false
     for index, pk in ipairs(entries) do
         local score = redis.call('HGET', $key .. ':a:' .. pk, column)
-        if score ~= false then
+        if score ~= false and score ~= '' then
             local numeric = tonumber(score)
             if numeric == nil or numeric ~= numeric then
                 alpha = true
@@ -310,11 +295,12 @@ if allpks['err'] ~= nil and string.find(allpks['err'], 'READONLY', 1, true) ~= n
             leftScore = left[2] ~= false and left[2] or ''
             rightScore = right[2] ~= false and right[2] or ''
         else
-            leftScore = left[2] ~= false and tonumber(left[2]) or 0
-            rightScore = right[2] ~= false and tonumber(right[2]) or 0
+            leftScore = tonumber(left[2] or '') or 0
+            rightScore = tonumber(right[2] or '') or 0
         end
         if leftScore == rightScore then
-            return false
+            leftScore = left[1]
+            rightScore = right[1]
         end
         if '$orderType' == 'DESC' then
             return leftScore > rightScore
