@@ -453,6 +453,65 @@ class RedisConnectionTest extends TestCase
         });
     }
 
+    public function testAlreadyEncryptedPersistentSslSocketIsReused(): void
+    {
+        $this->withTlsServer(function (string $host, int $port): void {
+            $sockets = [];
+            try {
+                $options = $this->tlsClientOptions();
+                $connection = $this->createPersistentSslConnection($host, $port, $options, 'tls');
+                $connection->open();
+                $socket = $connection->getSocket();
+                $this->assertNotFalse($socket);
+                $sockets[] = $socket;
+                $this->assertArrayHasKey('crypto', stream_get_meta_data($socket));
+
+                $reused = $this->createPersistentSslConnection($host, $port, $options, 'tls');
+                $reused->open();
+                $reusedSocket = $reused->getSocket();
+                $this->assertNotFalse($reusedSocket);
+                $sockets[] = $reusedSocket;
+                $this->assertSame($socket, $reusedSocket);
+            } finally {
+                $this->closeSockets($sockets);
+            }
+        });
+    }
+
+    public function testReconnectedPersistentSslSocketIsReusedOnTheNextOpen(): void
+    {
+        $this->withTlsServer(function (string $host, int $port): void {
+            $sockets = [];
+            try {
+                $looseOptions = $this->tlsClientOptions();
+                $strictOptions = $this->tlsClientOptions();
+                $strictOptions['capture_peer_cert'] = true;
+
+                $loose = $this->createPersistentSslConnection($host, $port, $looseOptions, 'tls');
+                $loose->open();
+                $looseSocket = $loose->getSocket();
+                $this->assertNotFalse($looseSocket);
+                $sockets[] = $looseSocket;
+
+                $strict = $this->createPersistentSslConnection($host, $port, $strictOptions, 'tls');
+                $strict->open();
+                $strictSocket = $strict->getSocket();
+                $this->assertNotFalse($strictSocket);
+                $sockets[] = $strictSocket;
+                $this->assertNotSame($looseSocket, $strictSocket);
+
+                $again = $this->createPersistentSslConnection($host, $port, $strictOptions, 'tls');
+                $again->open();
+                $againSocket = $again->getSocket();
+                $this->assertNotFalse($againSocket);
+                $sockets[] = $againSocket;
+                $this->assertSame($strictSocket, $againSocket);
+            } finally {
+                $this->closeSockets($sockets);
+            }
+        });
+    }
+
     public function testPersistentSslSocketIsNotReusedWhenVerificationDiffers(): void
     {
         $this->withTlsServer(function (string $host, int $port): void {
@@ -514,9 +573,22 @@ class RedisConnectionTest extends TestCase
     }
 
     /**
+     * @return array<string, mixed>
+     */
+    private function tlsClientOptions(): array
+    {
+        return [
+            'verify_peer' => false,
+            'verify_peer_name' => false,
+            'allow_self_signed' => true,
+            'crypto_method' => STREAM_CRYPTO_METHOD_TLSv1_2_CLIENT,
+        ];
+    }
+
+    /**
      * @param array<string, mixed>|null $sslOptions
      */
-    private function createPersistentSslConnection(string $host, int $port, ?array $sslOptions = null): Connection
+    private function createPersistentSslConnection(string $host, int $port, ?array $sslOptions = null, string $scheme = 'tcp'): Connection
     {
         if ($sslOptions === null) {
             $sslOptions = [
@@ -529,6 +601,7 @@ class RedisConnectionTest extends TestCase
         return new Connection([
             'hostname' => $host,
             'port' => $port,
+            'scheme' => $scheme,
             'database' => null,
             'useSSL' => true,
             'socketClientFlags' => STREAM_CLIENT_CONNECT | STREAM_CLIENT_PERSISTENT,
