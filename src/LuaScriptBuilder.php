@@ -207,12 +207,7 @@ EOF;
                 $orderType = $v === SORT_DESC ? 'DESC' : 'ASC';
             }
 
-            $getAllPks = <<<EOF
-local allpks=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType')
-if allpks['err'] then
-    allpks=redis.pcall('SORT', $key, 'BY', $key .. ':a:*->' .. '$orderColumn', '$orderType', 'ALPHA')
-end
-EOF;
+            $getAllPks = $this->buildOrderedPkLookup($key, $orderColumn, $orderType);
         }
 
         return <<<EOF
@@ -232,6 +227,91 @@ for k,pk in ipairs(allpks) do
     end
 end
 return $return
+EOF;
+    }
+
+    /**
+     * Builds the Lua that loads primary keys in [[ActiveQuery::orderBy()]] order.
+     *
+     * `SORT` is a write command, so a read-only replica rejects it and the query used to
+     * return an empty list. Redis 7 and newer provide the read-only `SORT_RO`. Any
+     * `SORT_RO` error other than a non-numeric score retries with `SORT`. `pcall` catches
+     * an ACL denial, so the command does not need a separate permission check. Older
+     * replicas, and replicas where `SORT_RO` is denied, sort the key list in Lua with
+     * `LRANGE` and `HGET`. An empty score sorts as zero. A non-numeric score, including
+     * `NaN`, switches that fallback to alphabetical order. Equal scores are ordered by
+     * the key, matching `SORT`.
+     *
+     * @param string $key quoted key prefix literal
+     * @param string $orderColumn attribute used for sorting
+     * @param string $orderType `ASC` or `DESC`
+     * @return string
+     */
+    private function buildOrderedPkLookup($key, $orderColumn, $orderType)
+    {
+        $orderColumn = $this->quoteValue($orderColumn);
+
+        return <<<EOF
+local column = $orderColumn
+local bypattern = $key .. ':a:*->' .. column
+local function sort_by(command, alpha)
+    if alpha then
+        return redis.pcall(command, $key, 'BY', bypattern, '$orderType', 'ALPHA')
+    end
+    return redis.pcall(command, $key, 'BY', bypattern, '$orderType')
+end
+local function is_non_numeric(result)
+    return result['err'] ~= nil and string.find(result['err'], 'converted into double', 1, true) ~= nil
+end
+local function sort_keys(alpha)
+    local result = sort_by('SORT_RO', alpha)
+    if result['err'] ~= nil and not is_non_numeric(result) then
+        result = sort_by('SORT', alpha)
+    end
+    return result
+end
+local allpks = sort_keys(false)
+if is_non_numeric(allpks) then
+    allpks = sort_keys(true)
+end
+if allpks['err'] ~= nil and string.find(allpks['err'], 'READONLY', 1, true) ~= nil then
+    local entries = redis.call('LRANGE', $key, 0, -1)
+    local rows = {}
+    local alpha = false
+    for index, pk in ipairs(entries) do
+        local score = redis.call('HGET', $key .. ':a:' .. pk, column)
+        if score ~= false and score ~= '' then
+            local numeric = tonumber(score)
+            if numeric == nil or numeric ~= numeric then
+                alpha = true
+            end
+        end
+        rows[index] = {pk, score}
+    end
+    table.sort(rows, function(left, right)
+        local leftScore
+        local rightScore
+        if alpha then
+            leftScore = left[2] ~= false and left[2] or ''
+            rightScore = right[2] ~= false and right[2] or ''
+        else
+            leftScore = tonumber(left[2] or '') or 0
+            rightScore = tonumber(right[2] or '') or 0
+        end
+        if leftScore == rightScore then
+            leftScore = left[1]
+            rightScore = right[1]
+        end
+        if '$orderType' == 'DESC' then
+            return leftScore > rightScore
+        end
+        return leftScore < rightScore
+    end)
+    allpks = {}
+    for index, row in ipairs(rows) do
+        allpks[index] = row[1]
+    end
+end
 EOF;
     }
 

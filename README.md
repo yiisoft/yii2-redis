@@ -24,6 +24,8 @@ Requirements
 
 Redis version 2.6.12 or later is required for all components to work properly.
 
+> If you want to use Redis Sentinel, Redis Cluster, or [Valkey](https://valkey.io) features, use the [Predis connection](docs/guide/predis.md).
+
 Installation
 ------------
 

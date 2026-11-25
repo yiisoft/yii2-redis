@@ -4,6 +4,7 @@ Yii Framework 2 redis extension Change Log
 2.1.4 under development
 -----------------------
 
+- Bug #181: `ActiveQuery::orderBy()` returns rows on a read-only replica in the same order as `SORT`, including when `SORT_RO` is missing or denied (@s1lver)
 - Bug #267: A persistent `Connection` with `useSSL` reuses the socket without enabling TLS a second time when the SSL context options match, and reconnects otherwise (@s1lver)
 
 
