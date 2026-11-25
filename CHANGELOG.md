@@ -4,6 +4,8 @@ Yii Framework 2 redis extension Change Log
 2.1.4 under development
 -----------------------
 
+- Bug #181: `ActiveQuery::orderBy()` returns rows on a read-only replica in the same order as `SORT`, including when `SORT_RO` is missing or denied (@s1lver)
+
 
 2.1.3 November 20, 2026
 -----------------------
